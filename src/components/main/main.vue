@@ -87,7 +87,13 @@ export default {
       return list
     },
     menuList () {
-      return this.$store.getters.menuList
+      //加载当前用户所拥有的模块权限
+
+      //console.log(permissions.length);
+      //在appRouter的基础上过滤出当前用户拥有的菜单
+      let res=filterAsyncRouter(this.$store.getters.menuList,this.$store.state.user.access);
+
+      return res;
     },
     local () {
       return this.$store.state.app.local
@@ -182,6 +188,40 @@ export default {
     }
     // 获取未读消息条数
     this.getUnreadMessageCount()
+  }
+}
+
+/**
+ * 递归过滤异步路由表，返回符合用户权限的路由表
+ * @param asyncRouterMap
+ * @param permissions
+ */
+function filterAsyncRouter(asyncRouterMap, permissions) {
+  const accessedRouters = asyncRouterMap.filter(route => {
+    if (hasPermission(permissions, route)) {
+
+      if (route.children && route.children.length) {
+        route.children = filterAsyncRouter(route.children, permissions)
+      }
+      return true
+    }
+    return false
+  })
+  return accessedRouters
+}
+
+/**
+ * 判断是否与当前用户权限匹配
+ * @param roles 该用户的权限列表
+ * @param route 当前菜单
+ */
+function hasPermission(permissions, route) {
+//如果路由名字不为空 && permissions 不为空
+  if (route.name && route.name.length>1 && permissions) {
+    console.log(route.name);
+    return permissions.some(permission => route.name.indexOf(permission) >= 0)
+  } else {
+    return false;
   }
 }
 </script>

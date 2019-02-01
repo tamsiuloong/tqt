@@ -1,5 +1,6 @@
 import {
   login,
+  register,
   logout,
   getUserInfo,
   getMessage,
@@ -82,7 +83,24 @@ export default {
           password
         }).then(res => {
           const data = res.data
-          commit('setToken', data.token)
+          commit('setToken', data.access_token)
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    // 注册
+    handleRegister ({ commit }, { userName, password,classId,noteUrl,realName }) {
+      userName = userName.trim()
+      return new Promise((resolve, reject) => {
+        register({
+          userName,
+          password,
+          classId,
+          noteUrl,
+          realName
+        }).then(res => {
           resolve()
         }).catch(err => {
           reject(err)
@@ -110,7 +128,7 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
-            const data = res.data
+            const data = res.data.data
             commit('setAvator', data.avator)
             commit('setUserName', data.name)
             commit('setUserId', data.user_id)
