@@ -44,7 +44,7 @@ export default {
     return {
       form: {
         userName: 'cgx',
-        password: '123456'
+        password: '111111'
       }
     }
   },

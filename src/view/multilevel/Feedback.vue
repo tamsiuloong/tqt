@@ -18,7 +18,7 @@
         </Row>
         <br>
         <Row>
-                        <Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"
+                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
                               align="center"></Page>
         </Row>
         <br>

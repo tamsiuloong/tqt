@@ -372,6 +372,46 @@ export default [
   //     }
   //   ]
   // },
+
+  {
+    path: '/system',
+    name: '系统管理',
+    meta: {
+      icon: 'ios-create',
+      title: '系统管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'user',
+        name: '用户管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '用户管理'
+        },
+        component: () => import('@/view/system/User.vue')
+      },
+      {
+        path: 'role',
+        name: '角色管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '角色管理'
+        },
+        component: () => import('@/view/system/Role.vue')
+      },
+      {
+        path: 'module',
+        name: '模块管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '模块管理'
+        },
+        component: () => import('@/view/system/Module.vue')
+      }
+      // { path: 'dept', title: '部门管理', name: 'dept', icon: 'arrow-move', component: () => import('@/view/system/Dept.vue') },
+    ]
+  },
   {
     path: '/learn',
     name: '学习管理',

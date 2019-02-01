@@ -91,8 +91,8 @@ export default {
       form: {
         realName: 'andy',
         userName: 'admin',
-        password: '123456',
-        passwordAgain:'123456',
+        password: '111111',
+        passwordAgain:'111111',
         classId:'1',
         noteUrl:'www.baidu.com'
       },

@@ -11,9 +11,9 @@
     <div>
       <ul>
         <li>
-          <Button type="primary" icon="plus-round" @click="addDept()">新建</Button>
-          <Button type="success" icon="wrench" @click="edit()">修改</Button>
-          <Button type="error" icon="trash-a" @click="remove()">删除</Button>
+          <Button type="primary" iicon="ios-add" @click="addDept()">新建</Button>
+          <Button type="success" icon="ios-build" @click="edit()">修改</Button>
+          <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
         </li>
         <li>
           <div style="padding: 10px 0;">
@@ -22,7 +22,7 @@
         </li>
         <li>
           <div style="text-align: right;">
-            <Page :total="totalCount" :page-size="pageSize" :current="pageNo" @on-change="gopage"
+            <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
                   align="center"></Page>
           </div>
         </li>
@@ -256,7 +256,7 @@
       },
       gopage(){
         const pageNo = this.pageNo;
-        const pageSize = this.pageSize;
+        const pageSize = this.page.sizeSize;
         const deptNo = this.deptNo;
         fetch({
           url: '/system/dept',

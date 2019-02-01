@@ -87,12 +87,8 @@ export default {
       return list
     },
     menuList () {
-      //加载当前用户所拥有的模块权限
-
-      //console.log(permissions.length);
-      //在appRouter的基础上过滤出当前用户拥有的菜单
+      //在完整路由基础上过滤出当前用户拥有的菜单
       let res=filterAsyncRouter(this.$store.getters.menuList,this.$store.state.user.access);
-
       return res;
     },
     local () {
