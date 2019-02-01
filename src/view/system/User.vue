@@ -386,7 +386,8 @@
                 ],
                 self: this,
                 page: {
-                  size:20
+                  size:20,
+                  number:1
                 },
                 addModal: false,
                 updateModal: false,
@@ -547,7 +548,7 @@
                                 managerId:user.userInfo.manager.id
                             }
                         }).then((result) => {
-                            this.gopage(this.pageNo);
+                            this.gopage(this.page.number);
                             this.$refs['addForm'].resetFields();
                             this.$Message.success('Success!');
                             this.addModal = false;
@@ -590,7 +591,7 @@
                         }).then((result) => {
                             this.updateModal = false,
                                 this.$Message.success('Success!');
-                            this.gopage(this.pageNo);
+                            this.gopage(this.page.number);
                         });
                     }
                     else {
@@ -614,7 +615,7 @@
                     }).then((result) => {
                         if (result.data.code === 1) {
                             this.$Message.success('Success!');
-                            this.gopage(this.pageNo);
+                            this.gopage(this.page.number);
                         }
                     });
                 } else {
@@ -637,7 +638,7 @@
             },
 //显示修改角色对话框
             role () {
-                if (this.count != 1) {
+                if (this.count !== 1) {
                     this.roleModal = false;
                     this.$Message.warning('请至少并只能选择一项');
                 }
@@ -665,10 +666,10 @@
                 axios.request({
                     url: '/api/user/role',
                     method: 'put',
-                    params:roleForm
+                    data:roleForm
                 }).then((result) => {
                     this.$Message.success('Success!');
-                    this.gopage(this.pageNo);
+                    this.gopage(this.page.number);
                 });
             }
             // ,

@@ -166,7 +166,7 @@
               method: 'post',
               data: dept
             }).then((result) => {
-              this.gopage(this.pageNo);
+              this.gopage(this.page.number);
               this.$refs['addForm'].resetFields();
               this.$Message.success('Success!');
               this.modal2 = false;
@@ -217,7 +217,7 @@
           }).then((result) => {
             if (result.data == '1') {
               this.$Message.success('Success!');
-              this.gopage(this.pageNo);
+              this.gopage(this.page.number);
             }
           });
         } else {
@@ -236,7 +236,7 @@
               this.modal1 = false,
                 this.$Message.success('Success!');
               //刷新页面数据
-              this.gopage(this.pageNo);
+              this.gopage(this.page.number);
             });
           }
           else
@@ -255,7 +255,7 @@
         this.$refs[form].resetFields();
       },
       gopage(){
-        const pageNo = this.pageNo;
+        const pageNo = this.page.number;
         const pageSize = this.page.sizeSize;
         const deptNo = this.deptNo;
         fetch({
@@ -264,7 +264,7 @@
           params: {pageNo, pageSize,deptNo}
         }).then((result) => {
           this.data1 = result.data.list;
-          this.pageNo = pageNo;
+          this.page.number = pageNo;
           this.pageSize = pageSize;
           this.totalCount = result.data.totalCount;
         });

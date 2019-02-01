@@ -443,10 +443,10 @@ export default [
   },
   {
     path: '/report',
-    name: '统计',
+    name: '统计分析',
     meta: {
       icon: 'md-menu',
-      title: '学习统计'
+      title: '统计分析'
     },
     component: Main,
     children: [

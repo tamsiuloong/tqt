@@ -212,9 +212,6 @@
                 count: 0,
                 groupId: null,
                 keyWord:"",
-                pageSize:5,
-                pageNo:1,
-                totalPage:0,
                 totalCount:0,
                 columns1: [
                     {
@@ -378,7 +375,8 @@
                 ],
                 self: this,
                 page: {
-                  size:20
+                  size:20,
+                  number:1
                 },
                 updateModal: false,
                 addModal: false,
@@ -500,7 +498,7 @@
 
                             this.$refs['addForm'].resetFields();
                             this.addModal=false;
-                            this.gopage(this.pageNo);
+                            this.gopage(this.page.number);
                             this.$Message.success('Success!');
                         });
                     }
@@ -557,7 +555,7 @@
                     if(result.data.code === 1)
                     {
                         this.$Message.success('Success!');
-                        this.gopage(this.pageNo);
+                        this.gopage(this.page.number);
                     }
                 });
             },
@@ -579,7 +577,7 @@
                             data:dataForm
                         }).then((result) => {
                             this.updateModal=false;
-                            this.gopage(this.pageNo);
+                            this.gopage(this.page.number);
                             this.$Message.success('Success!');
                         });
                     }
@@ -611,7 +609,7 @@
             }
         },
         created:function(){
-            this.gopage(this.pageNo);
+            this.gopage(1);
         }
     }
 </script>
