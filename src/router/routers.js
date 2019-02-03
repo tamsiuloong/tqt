@@ -2,7 +2,7 @@ import Main from '@/components/main'
 import parentView from '@/components/parent-view'
 
 /**
- * iview-admin中meta除了原生参数外可配置的参数:
+ * 教学质量跟踪管理平台中meta除了原生参数外可配置的参数:
  * meta: {
  *  title: { String|Number|Function }
  *         显示在侧边栏、面包屑和标签栏的文字

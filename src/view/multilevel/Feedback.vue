@@ -79,7 +79,7 @@
                     </Row>
               <Row>
                 <Col span="22">
-                  <FormItem label="计划" prop="plan">
+                  <FormItem label="明日目标" prop="plan">
                     <Input type="textarea" v-model="addForm.plan"/>
                   </FormItem>
                 </Col>
@@ -94,7 +94,7 @@
               </Row>
               <Row>
                 <Col span="22">
-                  <FormItem label="自我觉察" prop="selfCheck">
+                  <FormItem label="自我觉察" >
                     <Input type="textarea" v-model="addForm.selfCheck"/>
                   </FormItem>
                 </Col>
@@ -102,7 +102,7 @@
 
                     <Row>
                         <Col span="22">
-                          <FormItem label="调整方案" prop="adjustment">
+                          <FormItem label="调整方案" >
                             <Input type="textarea" v-model="addForm.adjustment"/>
                           </FormItem>
                         </Col>
@@ -168,8 +168,8 @@
               </Row>
               <Row>
                 <Col span="22">
-                  <FormItem label="计划" prop="plan">
-                    <Input type="textarea" v-model="updateForm.plan"/>
+                  <FormItem label="明日目标" prop="plan">
+                    <Input type="textarea" readonly v-model="updateForm.plan"/>
                   </FormItem>
                 </Col>
               </Row>
@@ -177,7 +177,7 @@
               <Row>
                 <Col span="22">
                   <FormItem label="实施方案" prop="todo">
-                    <Input type="textarea" v-model="updateForm.todo"/>
+                    <Input type="textarea" readonly v-model="updateForm.todo"/>
                   </FormItem>
                 </Col>
               </Row>
@@ -246,7 +246,7 @@
                         key: 'notClear'
                     },
                     {
-                        title: '计划',
+                        title: '明日目标',
                         key: 'plan'
                     },
                     {
@@ -300,33 +300,33 @@
                 },
                 formRule: {
                     adjustment: [
-                        {required: true, message:'调整方案不能为空',trigger:'blur'}
+                        {required: true, message:'强迫自己跳出舒适区，先自己画图梳理出代码思路，然后再打代码',trigger:'blur'}
                     ],
                     "absorption":[
-                      {required: true, message:'吸收情况',trigger:'blur'}
+                      {required: true, message:'吸收情况是必须要让老师知道滴',trigger:'blur'}
                     ],
                     'dayNum': [
                       {required: true, message:'课程天数不能为空',trigger:'blur'}
                     ]
                     ,
                     notClear: [
-                        {required: true, message:'不清楚的地方不能为空',trigger:'blur'}
+                        {required: true, message:'当日知识点还有哪些不清楚的？',trigger:'blur'}
                     ]
                     ,
                     plan: [
-                        {required: true, message:'计划不能为空',trigger:'blur'}
+                        {required: true, message:'小目标是必须滴，是你通过努力一定可以做到的哟，比如学懂什么是hibernate，hibernate的核心api怎么用等',trigger:'blur'}
                     ]
                     ,
                     selfCheck: [
-                        {required: true, message:'自我觉察不能为空',trigger:'blur'}
+                        {required: true, message:'你该不会以为自己完美了吧！比如：经过今天的执行，感觉自己太喜欢停留在舒适区，不太主动思考，全是照着打代码。',trigger:'blur'}
                     ]
                     ,
                     todo: [
-                        {required: true, message:'实施方案不能为空',trigger:'blur'}
+                        {required: true, message:'针对于目标，你打算采取什么样的措施来帮助你达到目标？比如，1，提前预习，带着问题去听课。2，如果课程听明白了，不看视频，直接看讲义做练习。',trigger:'blur'}
                     ]
                     ,
                     'course.id': [
-                        {required: true, message:'课程不能为空',trigger:'blur'}
+                        {required: true, message:'课程都不选，你想干嘛',trigger:'blur'}
                     ]
 
                 },
