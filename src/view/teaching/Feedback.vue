@@ -1,18 +1,34 @@
 <template>
     <Card>
+      <Card>
         <Row>
-            <Col span="8">
-                学习反馈：<Input v-model="keyWord" placeholder="请输入..." style="width:200px"/>
+
+            <Col span="24">
+              <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
+                <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+              </Select>
+              <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
+                <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              </Select>
+              <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>
+             <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
+              <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
             </Col>
-            <Col span="8"><Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button></Col>
+
         </Row>
-        <br>
-        <Row>
-                    <Button type="primary" icon="ios-add" @click="addFeedback()">新建</Button>
-                    <Button type="success" icon="ios-build" @click="edit()">修改</Button>
-                    <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
-        </Row>
-        <br>
+      </Card>
+      <br>
+      <!--<Row>-->
+        <!--<Col span="24"></Col>-->
+      <!--</Row>-->
+
+        <!--<br>-->
+        <!--<Row>-->
+                    <!--<Button type="primary" icon="ios-add" @click="addFeedback()">新建</Button>-->
+                    <!--<Button type="success" icon="ios-build" @click="edit()">查看</Button>-->
+                    <!--<Button type="error" icon="ios-trash" @click="remove()">删除</Button>-->
+        <!--</Row>-->
+        <!--<br>-->
         <Row>
                         <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
         </Row>
@@ -115,7 +131,7 @@
 
         <Modal
                 v-model="updateModal"
-                title="编辑学习反馈"
+                title="学习反馈详情"
                 :mask-closable="false"
                 :loading="loading"
                 @on-ok="update"
@@ -141,12 +157,6 @@
                 <Col span="2" style="text-align: center"/>
                 <Col span="6">
                   <FormItem label="吸收情况" prop="absorption">
-                    <!--<Input  :max="100" :min="0"  v-model="updateForm.absorption"/>-->
-                    <!--<InputNumber-->
-                      <!--:max="100"-->
-                      <!--v-model="updateForm.absorption"-->
-                      <!--:formatter="value => `${value}%`"-->
-                      <!--:parser="value => value.replace('%', '')"></InputNumber>-->
                     <Select v-model="updateForm.absorption" >
                       <Option  value="0-30">0-30</Option>
                       <Option  value="30-50">30-50</Option>
@@ -161,7 +171,7 @@
                 <!-- 循环便利row中的两个元素-->
                 <Col span="22">
                   <FormItem label="不清楚的地方" prop="notClear">
-                    <Input type="textarea" v-model="updateForm.notClear"/>
+                    <Input type="textarea" readonly v-model="updateForm.notClear"/>
                   </FormItem>
                 </Col>
 
@@ -184,7 +194,7 @@
               <Row>
                 <Col span="22">
                   <FormItem label="自我觉察" prop="selfCheck">
-                    <Input type="textarea" v-model="updateForm.selfCheck"/>
+                    <Input type="textarea" readonly v-model="updateForm.selfCheck"/>
                   </FormItem>
                 </Col>
               </Row>
@@ -192,7 +202,7 @@
               <Row>
                 <Col span="22">
                   <FormItem label="调整方案" prop="adjustment">
-                    <Input type="textarea" v-model="updateForm.adjustment"/>
+                    <Input type="textarea" readonly v-model="updateForm.adjustment"/>
                   </FormItem>
                 </Col>
 
@@ -225,6 +235,10 @@
                         align: 'center'
                     },
                     {
+                      title: '学员',
+                      key: 'stuName'
+                    },
+                    {
                       title: '课程',
                       width: 100,
                       key: 'courseId',
@@ -239,32 +253,80 @@
                         key: 'dayNum'
                     },{
                         title: '吸收情况',
-                        key: 'absorption'
+                        key: 'absorption',
+                        sortable: true
                     },
-                    {
-                        title: '不清楚的地方',
-                        key: 'notClear'
-                    },
-                    {
-                        title: '明日目标',
-                        key: 'plan'
-                    },
-                    {
-                      title: '实施方案',
-                      key: 'todo'
-                    },
-                    {
-                        title: '自我觉察',
-                        key: 'selfCheck'
-                    },
-                    {
-                      title: '调整方案',
-                      key: 'adjustment'
-                    },
+                    // {
+                    //     title: '不清楚的地方',
+                    //     key: 'notClear',
+                    //     render: (h, params) => {
+                    //       return h('div', [
+                    //         h('strong',params.row.notClear.length>10? params.row.notClear.substring(0,10):params.row.notClear)
+                    //       ]);
+                    //     }
+                    // },
+                    // {
+                    //     title: '明日目标',
+                    //     key: 'plan',
+                    //   render: (h, params) => {
+                    //     return h('div', [
+                    //       h('strong',params.row.plan.length>10? params.row.plan.substring(0,10):params.row.plan)
+                    //     ]);
+                    //   }
+                    // },
+                    // {
+                    //   title: '实施方案',
+                    //   key: 'todo',
+                    //   render: (h, params) => {
+                    //     return h('div', [
+                    //       h('strong',params.row.todo.length>10? params.row.todo.substring(0,10):params.row.todo)
+                    //     ]);
+                    //   }
+                    // },
+                    // {
+                    //     title: '自我觉察',
+                    //     key: 'selfCheck',
+                    //     render: (h, params) => {
+                    //       return h('div', [
+                    //         h('strong',params.row.selfCheck.length>10? params.row.selfCheck.substring(0,10):params.row.selfCheck)
+                    //       ]);
+                    //     }
+                    // },
+                    // {
+                    //   title: '调整方案',
+                    //   key: 'adjustment',
+                    //   render: (h, params) => {
+                    //     return h('div', [
+                    //       h('strong',params.row.adjustment.length>10? params.row.adjustment.substring(0,10):params.row.adjustment)
+                    //     ]);
+                    //   }
+                    // },
                     {
                       title: '时间',
                       key: 'backTime',
                       width: 160
+                    },
+                    {
+                      title: '操作',
+                      key: 'action',
+                      fixed: 'right',
+                      width: 120,
+                      render: (h, params) => {
+                        return h('div', [
+                          h('Button', {
+                            props: {
+                              type: 'text',
+                              size: 'small'
+                            },
+                            on: {
+                              click: () => {
+                                this.updateForm = params.row;
+                                this.updateModal = true;
+                              }
+                            }
+                          }, '详情')
+                        ]);
+                      }
                     }
 
                 ],
@@ -330,7 +392,14 @@
                     ]
 
                 },
-                courseList:[]
+                courseList:[],
+                classesList:[],
+              searchForm:{
+                classId:"",
+                stuName:"",
+                courseId:"",
+                dayNum:""
+              }
             }
         },
         methods: {
@@ -443,11 +512,11 @@
             gopage(){
                 const pageNo = this.pageNo;
                 const pageSize = this.pageSize;
-                const keyWord = this.keyWord;
                 axios.request({
-                    url: '/api/feedback',
-                    method: 'get',
-                    params: {pageNo, pageSize,keyWord}
+                    url: '/api/feedback/teaching',
+                    method: 'post',
+                    params: {pageNo, pageSize},
+                    data:this.searchForm
                 }).then((result) => {
                     this.page = result.data.data;
                 }).catch((result)=>{
@@ -467,6 +536,15 @@
               method: 'get'
             }).then((result) => {
               this.courseList = result.data.data;
+            }).catch((result)=>{
+              this.$Message.error("操作异常："+result);
+            });
+
+            axios.request({
+              url: '/api/classes/all',
+              method: 'get'
+            }).then((result) => {
+              this.classesList = result.data.data;
             }).catch((result)=>{
               this.$Message.error("操作异常："+result);
             });

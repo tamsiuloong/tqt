@@ -333,26 +333,26 @@ export default [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/error_logger',
-  //   name: 'error_logger',
-  //   meta: {
-  //     hideInBread: true,
-  //     hideInMenu: true
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'error_logger_page',
-  //       name: 'error_logger_page',
-  //       meta: {
-  //         icon: 'ios-bug',
-  //         title: '错误收集'
-  //       },
-  //       component: () => import('@/view/single-page/error-logger.vue')
-  //     }
-  //   ]
-  // },
+  {
+    path: '/error_logger',
+    name: 'error_logger',
+    meta: {
+      hideInBread: true,
+      hideInMenu: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'error_logger_page',
+        name: 'error_logger_page',
+        meta: {
+          icon: 'ios-bug',
+          title: '错误收集'
+        },
+        component: () => import('@/view/single-page/error-logger.vue')
+      }
+    ]
+  },
   // {
   //   path: '/directive',
   //   name: 'directive',
@@ -413,6 +413,44 @@ export default [
     ]
   },
   {
+    path: '/teaching',
+    name: '教学管理',
+    meta: {
+      icon: 'ios-create',
+      title: '教学管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'teaching',
+        name: '教学反馈',
+        meta: {
+          icon: 'md-funnel',
+          title: '教学反馈'
+        },
+        component: () => import('@/view/teaching/Feedback.vue')
+      },
+      {
+        path: 'tracking',
+        name: '学员信息跟踪',
+        meta: {
+          icon: 'md-funnel',
+          title: '学员信息跟踪'
+        },
+        component: () => import('@/view/teaching/Tracking.vue')
+      },
+      {
+        path: 'course',
+        name: '课程管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '课程管理'
+        },
+        component: () => import('@/view/teaching/Course.vue')
+      }
+    ]
+  },
+  {
     path: '/learn',
     name: '学习管理',
     meta: {
@@ -428,7 +466,7 @@ export default [
           icon: 'md-funnel',
           title: '学习反馈'
         },
-        component: () => import('@/view/multilevel/Feedback.vue')
+        component: () => import('@/view/learn/Feedback.vue')
       },
       {
         path: 'level_2_3',

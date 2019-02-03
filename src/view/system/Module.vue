@@ -2,7 +2,7 @@
     <div class="animated fadeIn">
         <Card>
             <Row>
-                <Col span="6">
+                <Col span="12">
                     模块：<Input v-model="keyWord" placeholder="请输入..." style="width:200px"/>
                 </Col>
                 <Col span="8"><Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button></Col>
@@ -34,11 +34,11 @@
                         <Col span="14">
                             <FormItem label="等级" prop="ctype" >
                                 <RadioGroup v-model="dataForm.ctype" @on-change="changeCType" >
-                                    <Radio label="0">主菜单</Radio>
-                                    <Radio label="1">左侧菜单</Radio>
-                                    <Radio label="2">按钮</Radio>
-                                    <Radio label="3">链接</Radio>
-                                    <Radio label="4">状态</Radio>
+                                    <Radio label="0">一级菜单</Radio>
+                                    <Radio label="1">二级菜单</Radio>
+                                    <!--<Radio label="2">按钮</Radio>-->
+                                    <!--<Radio label="3">链接</Radio>-->
+                                    <!--<Radio label="4">状态</Radio>-->
                                 </RadioGroup>
                             </FormItem>
                         </Col>
@@ -60,54 +60,57 @@
                             </FormItem>
                         </Col>
                         <Col span="2" style="text-align: center"/>
-                        <Col span="11">
-                            <FormItem label="层数"  >
-                                <Input type="text" v-model="dataForm.layerNum"/>
-                            </FormItem>
-                        </Col>
+                      <Col span="11">
+                        <FormItem label="权限标识" prop="cpermission" >
+                          <Input type="text" v-model="dataForm.cpermission"/>
+                        </FormItem>
+                      </Col>
+                        <!--<Col span="11">-->
+                            <!--<FormItem label="层数"  >-->
+                                <!--<Input type="text" v-model="dataForm.layerNum"/>-->
+                            <!--</FormItem>-->
+                        <!--</Col>-->
                     </Row>
-                    <Row>
-                        <Col span="11">
-                            <FormItem label="权限标识" prop="cpermission" >
-                                <Input type="text" v-model="dataForm.cpermission"/>
-                            </FormItem>
-                        </Col>
-                        <Col span="2" style="text-align: center"/>
-                        <Col span="11">
-                            <FormItem label="链接" prop="curl" >
-                                <Input type="text" v-model="dataForm.curl"/>
-                            </FormItem>
-                        </Col>
-                    </Row>
+                    <!--<Row>-->
+                        <!--&lt;!&ndash;<Col span="11">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<FormItem label="权限标识" prop="cpermission" >&ndash;&gt;-->
+                                <!--&lt;!&ndash;<Input type="text" v-model="dataForm.cpermission"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</Col>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<Col span="2" style="text-align: center"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<Col span="11">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<FormItem label="链接" prop="curl" >&ndash;&gt;-->
+                                <!--&lt;!&ndash;<Input type="text" v-model="dataForm.curl"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</Col>&ndash;&gt;-->
+                    <!--</Row>-->
 
-                    <Row>
+                  <Row>
+                    <Col span="11">
+                      <FormItem label="状态" prop="state" >
+                        <Radio-group v-model="dataForm.state" type="button">
+                          <Radio label="1" >启用</Radio>
+                          <Radio label="0">停用</Radio>
+                        </Radio-group>
+                      </FormItem>
+                    </Col>
+                    <Col span="2" style="text-align: center"/>
+                    <Col span="11">
+                      <FormItem label="说明" prop="remark" >
+                        <Input type="textarea" v-model="dataForm.remark"/>
+                      </FormItem>
+                    </Col>
+                  </Row>
 
-
-                        <Col span="11">
-                            <FormItem label="状态" prop="state" >
-                                <Radio-group v-model="dataForm.state" type="button">
-                                    <Radio label="1" >启用</Radio>
-                                    <Radio label="0">停用</Radio>
-                                </Radio-group>
-                            </FormItem>
-                        </Col>
-                    </Row>
-
-
-                    <Row>
-                        <Col span="11">
-
-                            <FormItem label="排序号" prop="orderNo" >
-                                <Input type="text" v-model="dataForm.orderNo"/>
-                            </FormItem>
-                        </Col>
-                        <Col span="2" style="text-align: center"/>
-                        <Col span="11">
-                            <FormItem label="说明" prop="remark" >
-                                <Input type="textarea" v-model="dataForm.remark"/>
-                            </FormItem>
-                        </Col>
-                    </Row>
+                    <!--<Row>-->
+                        <!--<Col span="11">-->
+                            <!--<FormItem label="排序号" prop="orderNo" >-->
+                                <!--<Input type="text" v-model="dataForm.orderNo"/>-->
+                            <!--</FormItem>-->
+                        <!--</Col>-->
+                        <!--<Col span="2" style="text-align: center"/>-->
+                        <!---->
+                    <!--</Row>-->
 
                 </Form>
             </Modal>
@@ -122,11 +125,11 @@
                         <Col span="14">
                             <FormItem label="等级" prop="ctype" >
                                 <RadioGroup v-model="dataForm.ctype" @on-change="changeCType" >
-                                    <Radio label="0">主菜单</Radio>
-                                    <Radio label="1">左侧菜单</Radio>
-                                    <Radio label="2">按钮</Radio>
-                                    <Radio label="3">链接</Radio>
-                                    <Radio label="4">状态</Radio>
+                                  <Radio label="0">一级菜单</Radio>
+                                  <Radio label="1">二级菜单</Radio>
+                                    <!--<Radio label="2">按钮</Radio>-->
+                                    <!--<Radio label="3">链接</Radio>-->
+                                    <!--<Radio label="4">状态</Radio>-->
                                 </RadioGroup>
                             </FormItem>
                         </Col>
@@ -148,54 +151,63 @@
                             </FormItem>
                         </Col>
                         <Col span="2" style="text-align: center"/>
-                        <Col span="11">
-                            <FormItem label="层数" >
-                                <Input type="text" readonly v-model="dataForm.layerNum"/>
-                            </FormItem>
-                        </Col>
+                      <Col span="11">
+                        <FormItem label="权限标识" prop="cpermission" >
+                          <Input type="text" v-model="dataForm.cpermission"/>
+                        </FormItem>
+                      </Col>
+                        <!--<Col span="11">-->
+                            <!--<FormItem label="层数" >-->
+                                <!--<Input type="text" readonly v-model="dataForm.layerNum"/>-->
+                            <!--</FormItem>-->
+                        <!--</Col>-->
                     </Row>
-                    <Row>
-                        <Col span="11">
-                            <FormItem label="权限标识" prop="cpermission" >
-                                <Input type="text" v-model="dataForm.cpermission"/>
-                            </FormItem>
-                        </Col>
-                        <Col span="2" style="text-align: center"/>
-                        <Col span="11">
-                            <FormItem label="链接" prop="curl" >
-                                <Input type="text" v-model="dataForm.curl"/>
-                            </FormItem>
-                        </Col>
-                    </Row>
-
-                    <Row>
-
-
-                        <Col span="11">
-                            <FormItem label="状态" prop="state" >
-                                <Radio-group v-model="dataForm.state" type="button">
-                                    <Radio label="1" >启用</Radio>
-                                    <Radio label="0">停用</Radio>
-                                </Radio-group>
-                            </FormItem>
-                        </Col>
-                    </Row>
-
+                    <!--<Row>-->
+                        <!--<Col span="11">-->
+                            <!--<FormItem label="权限标识" prop="cpermission" >-->
+                                <!--<Input type="text" v-model="dataForm.cpermission"/>-->
+                            <!--</FormItem>-->
+                        <!--</Col>-->
+                        <!--<Col span="2" style="text-align: center"/>-->
+                        <!--<Col span="11">-->
+                            <!--<FormItem label="链接" prop="curl" >-->
+                                <!--<Input type="text" v-model="dataForm.curl"/>-->
+                            <!--</FormItem>-->
+                        <!--</Col>-->
+                    <!--</Row>-->
 
                     <Row>
-                        <Col span="11">
-
-                            <FormItem label="排序号" prop="orderNo" >
-                                <Input type="text" v-model="dataForm.orderNo"/>
-                            </FormItem>
-                        </Col>
-                        <Col span="2" style="text-align: center"/>
-                        <Col span="11">
-                            <FormItem label="说明" prop="remark" >
-                                <Input type="textarea" v-model="dataForm.remark"/>
-                            </FormItem>
-                        </Col>
+                      <Col span="11">
+                        <FormItem label="状态" prop="state" >
+                          <Radio-group v-model="dataForm.state" type="button">
+                            <Radio label="1" >启用</Radio>
+                            <Radio label="0">停用</Radio>
+                          </Radio-group>
+                        </FormItem>
+                      </Col>
+                      <Col span="2" style="text-align: center"/>
+                      <Col span="11">
+                        <FormItem label="说明" prop="remark" >
+                          <Input type="textarea" v-model="dataForm.remark"/>
+                        </FormItem>
+                      </Col>
                     </Row>
+
+
+                    <!--<Row>-->
+                        <!--<Col span="11">-->
+
+                            <!--<FormItem label="排序号" prop="orderNo" >-->
+                                <!--<Input type="text" v-model="dataForm.orderNo"/>-->
+                            <!--</FormItem>-->
+                        <!--</Col>-->
+                        <!--<Col span="2" style="text-align: center"/>-->
+                        <!--<Col span="11">-->
+                            <!--<FormItem label="说明" prop="remark" >-->
+                                <!--<Input type="textarea" v-model="dataForm.remark"/>-->
+                            <!--</FormItem>-->
+                        <!--</Col>-->
+                    <!--</Row>-->
 
                 </Form>
             </Modal>
@@ -223,42 +235,43 @@
                         title: '模块名',
                         key: 'name'
                     },
-                    {
-                        title: '层数',
-                        key: 'layerNum'
-                    },
+                    // {
+                    //     title: '层数',
+                    //     key: 'layerNum'
+                    // },
                     {
                         title: '权限标识',
                         key: 'cpermission'
                     },
-                    {
-                        title: '链接',
-                        key: 'curl'
-                    },
+                    // {
+                    //     title: '链接',
+                    //     key: 'curl'
+                    // },
                     {
                         title: '类型',
                         key: 'ctype',
                         filters: [
                             {
-                                label: '主菜单',
+                                label: '一级菜单',
                                 value: 0
                             },
                             {
-                                label: '左侧菜单',
+                                label: '二级菜单',
                                 value: 1
-                            },
-                            {
-                                label: '按钮',
-                                value: 2
-                            },
-                            {
-                                label: '链接',
-                                value: 3
-                            },
-                            {
-                                label: '状态',
-                                value: 4
                             }
+                            // ,
+                            // {
+                            //     label: '按钮',
+                            //     value: 2
+                            // },
+                            // {
+                            //     label: '链接',
+                            //     value: 3
+                            // },
+                            // {
+                            //     label: '状态',
+                            //     value: 4
+                            // }
                         ],
                         filterMultiple: false,
                         filterMethod (value, row) {
@@ -275,54 +288,26 @@
                             }
                         },
                         render: (h, params) => {
-                            const task_status=parseInt(params.row.state);
+                            const task_status=parseInt(params.row.ctype);
 
                             if(task_status===0)
                                 return h('div', [
                                     h('Tag', {
                                         props: {
-                                            type: 'dot',
-                                            color: "green"
+                                            color: "primary"
                                         }
-                                    }, "主菜单"),
+                                    }, "一级菜单"),
                                 ]);
 
                             else if(task_status===1)
                                 return h('div', [
                                     h('Tag', {
                                         props: {
-                                            type: 'dot',
-                                            color: "green"
+                                            color: "success"
                                         }
-                                    }, "左侧菜单"),
+                                    }, "二级菜单"),
                                 ]);
-                            else if(task_status===2)
-                                return h('div', [
-                                    h('Tag', {
-                                        props: {
-                                            type: 'dot',
-                                            color: "green"
-                                        }
-                                    }, "按钮"),
-                                ]);
-                            else if(task_status===3)
-                                return h('div', [
-                                    h('Tag', {
-                                        props: {
-                                            type: 'dot',
-                                            color: "green"
-                                        }
-                                    }, "链接"),
-                                ]);
-                            else if(task_status===4)
-                                return h('div', [
-                                    h('Tag', {
-                                        props: {
-                                            type: 'dot',
-                                            color: "green"
-                                        }
-                                    }, "状态"),
-                                ]);
+
                         }
                     },
                     {
@@ -354,7 +339,6 @@
                                 return h('div', [
                                     h('Tag', {
                                         props: {
-                                            type: 'dot',
                                             color: "green"
                                         }
                                     }, "启用"),
@@ -362,10 +346,8 @@
 
                             else if(task_status===0)
                                 return h('div', [
-
                                     h('Tag', {
                                         props: {
-                                            type: 'dot',
                                             color: "red"
                                         }
                                     }, "禁用"),
