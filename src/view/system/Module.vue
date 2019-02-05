@@ -2,10 +2,10 @@
     <div class="animated fadeIn">
         <Card>
             <Row>
-                <Col span="12">
+                <Col span="24">
                     模块：<Input v-model="keyWord" placeholder="请输入..." style="width:200px"/>
+                  <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
                 </Col>
-                <Col span="8"><Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button></Col>
             </Row>
             <br>
             <Row>

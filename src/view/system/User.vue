@@ -1,11 +1,9 @@
 <template>
   <Card>
     <Row>
-        <Col span="6">用户名：
+        <Col span="24">用户名：
             <Input v-model="keyWord" placeholder="请输入..." style="width:200px"/>
-        </Col>
-        <Col span="8">
-            <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+          <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
         </Col>
     </Row>
     <br>
@@ -352,7 +350,6 @@
                 loading: true,
                 count: 0,
                 gourpId: null,
-
                 keyWord: "",
                 columns1: [
                     {

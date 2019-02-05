@@ -83,7 +83,7 @@ export default {
           { required: true, message: '真实名字不能为空', trigger: 'blur' }
         ]
       }
-    },
+    }
   },
   data () {
 

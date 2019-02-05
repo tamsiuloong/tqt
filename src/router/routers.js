@@ -98,6 +98,26 @@ export default [
       }
     ]
   },
+  {
+    path: '/myinfo',
+    name: '我的资料',
+    component: Main,
+    meta: {
+      hideInBread: true,
+      hideInMenu: true
+    },
+    children: [
+      {
+        path: 'myinfo',
+        name: '我的资料',
+        meta: {
+          icon: 'md-notifications',
+          title: '我的资料'
+        },
+        component: () => import('@/view/single-page/myinfo/index.vue')
+      }
+    ]
+  },
   // {
   //   path: '/components',
   //   name: 'components',
@@ -447,6 +467,26 @@ export default [
           title: '课程管理'
         },
         component: () => import('@/view/teaching/Course.vue')
+      }
+    ]
+  },
+  {
+    path: '/leave',
+    name: '请假管理',
+    meta: {
+      icon: 'ios-create',
+      title: '请假管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'leave',
+        name: '请假申请',
+        meta: {
+          icon: 'md-funnel',
+          title: '请假申请'
+        },
+        component: () => import('@/view/single-page/leave/index.vue')
       }
     ]
   },
