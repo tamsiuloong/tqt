@@ -44,7 +44,7 @@ export default {
     },
     message () {
       this.$router.push({
-        name: 'message_page'
+        name: '我的任务'
       })
     },
     myinfo () {

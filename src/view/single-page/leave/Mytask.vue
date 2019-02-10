@@ -14,12 +14,12 @@
         </Row>
         <br>
         <Row>
-                        <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+                        <Table border :columns="columns1" :data="list" @on-selection-change="change"></Table>
         </Row>
         <br>
         <Row>
-                        <Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                              align="center"></Page>
+                        <!--<Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"-->
+                              <!--align="center"></Page>-->
         </Row>
         <br>
 
@@ -30,7 +30,7 @@
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
-                width="60%">
+                width="60%" >
             <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
                 <!--一次性取两个元素放在row集合中 -->
                     <Row>
@@ -50,8 +50,8 @@
                     <Row>
                       <!-- 循环便利row中的两个元素-->
                       <Col span="22">
-                        <FormItem label="审批老师" prop="reviewer">
-                          <Select v-model="addForm.reviewer" style="width:200px">
+                        <FormItem label="审批老师" prop="reason">
+                          <Select v-model="teacher" style="width:200px">
                             <Option v-for="item in teacherList" :value="item.userName" :key="item.userName">{{ item.userInfo.name }}</Option>
                           </Select>
                         </FormItem>
@@ -73,24 +73,73 @@
 
 
         <Modal
-                v-model="imgModal"
-                title="流程进度跟踪"
+                v-model="updateModal"
+                title="任务详情"
                 :mask-closable="false"
                 :loading="loading"
+                @on-ok="update"
                 @on-cancel="cancel"
-                width="60%">
-            <Form ref="imgForm" :label-width="80">
+                width="60%" ok-text="批准" cancel-text="取消">
+            <Form ref="updateForm" :model="updateForm" :rules="formRule" :label-width="80">
 
-                    <Row>
-                            <Col span="22">
-                            <FormItem label="" prop="id">
-                                <img :src="img" />
-                            </FormItem>
-                            </Col>
+              <Row>
+                <!-- 循环便利row中的两个元素-->
+                <Col span="11">
+                  <FormItem label="开始日期" >
+                    <Input type="text" disabled="" v-model="updateForm.startDate"/>
+                  </FormItem>
+                </Col>
+                <Col span="2" style="text-align: center"/>
+                <Col span="11">
+                <FormItem label="结束日期" >
+                  <Input type="text" disabled="" v-model="updateForm.endDate"/>
+                </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <!-- 循环便利row中的两个元素-->
+                <Col span="11">
+                  <FormItem label="审批老师" prop="reason">
+                    <Select v-model="updateForm.reviewer" style="width:200px">
+                      <Option v-for="item in teacherList" :value="item.userName" :key="item.userName">{{ item.userInfo.name }}</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col span="2" style="text-align: center"/>
+                <Col span="11">
+                  <FormItem label="天数">
+                    <Input type="text" disabled="" v-model="updateForm.totalDay"/>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <!-- 循环便利row中的两个元素-->
+                <Col span="22">
+                  <FormItem label="原因" prop="reason">
+                    <Input type="textarea" disabled="" v-model="updateForm.reason"/>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row v-for="comment in comments">
+                <!-- 循环便利row中的两个元素-->
+                <Col span="22">
+                  <FormItem label="历史备注" >
+                    <ul>
+                      <li>
+                        <input  type="textarea" disabled="" :value="comment.fullMessage"/>
+                      </li>
+                    </ul>
 
-                    </Row>
-
-
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span="22">
+                  <FormItem label="备注" prop="comment">
+                    <Input type="textarea"  v-model="updateForm.comment"/>
+                  </FormItem>
+                </Col>
+              </Row>
             </Form>
         </Modal>
     </Card>
@@ -98,12 +147,9 @@
 
 <script type="text/ecmascript-6">
     // import fetch from '../../utils/fetch';
-    // import {dateFormat} from '../../utils/date';
-    import { setToken, getToken } from '@/libs/util'
+    import {dateFormat} from '@/libs/date';
     import axios from '@/libs/api.request'
-    import config from '@/config'
-    const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
-
+    import { mapMutations, mapActions, mapGetters } from 'vuex'
     export default {
         data() {
             return {
@@ -122,49 +168,65 @@
                         align: 'center'
                     },
                     {
-                        title: '开始日期',
-                        key: 'startDate'
+                        title: '名字',
+                        key: 'name'
                     },
                     {
-                        title: '结束日期',
-                        key: 'endDate'
+                        title: '审核人',
+                        key: 'assignee'
                     },
                     {
-                        title: '天数',
-                        key: 'totalDay'
-                    },
-                    {
-                        title: '原因',
-                        key: 'reason'
-                    },
-                  {
-                    title: '操作',
-                    key: 'action',
-                    fixed: 'right',
-                    width: 120,
-                    render: (h, params) => {
-                      return h('div', [
-                        h('Button', {
-                          props: {
-                            type: 'text',
-                            size: 'small'
-                          },
-                          on: {
-                            click: () => {
-                              this.img = baseUrl+"api/leave/read-img/"+params.row.processInstanceId+"?access_token="+getToken()+"&time="+new Date();
-                              //加载历史备注
-                              this.imgModal = true;
-                            }
-                          }
-                        }, '流程跟踪')
-                      ]);
-                    }
-                  }
+                      title: '操作',
+                      key: 'action',
+                      fixed: 'right',
+                      width: 120,
+                      render: (h, params) => {
+                        return h('div', [
+                          h('Button', {
+                            props: {
+                              type: 'text',
+                              size: 'small'
+                            },
+                            on: {
+                              click: () => {
+                                //加载历史备注
+                                axios.request({
+                                  url: '/api/leave/comments/'+params.row.id,
+                                  method: 'get'
+                                }).then((result) => {
+                                  this.comments = result.data;
 
+
+                                  axios.request({
+                                    url: '/api/leave/taskDetail/'+params.row.processInstanceId,
+                                    method: 'get'
+                                  }).then((result) => {
+
+                                    this.updateForm = result.data;
+                                    this.updateForm.reviewer = '';
+                                    // this.updateForm.startDate = dateFormat(this.updateForm.startDate);
+                                    // this.updateForm.endDate = dateFormat(this.updateForm.endDate);
+                                    this.updateModal = true;
+                                    this.taskId = params.row.id;
+
+                                  });
+                                }).catch((result)=>{
+                                  this.$Message.error("操作异常："+result);
+                                });
+
+
+
+                              }
+                            }
+                          }, '详情')
+                        ]);
+                      }
+                    }
 
                 ],
+                taskId:null,
                 self: this,
-                page: [],
+                list: [],
                 updateModal: false,
                 addModal: false,
                 updateForm: {
@@ -174,14 +236,16 @@
                         totalDay:"",
                         reason:"",
                         taskId:"",
+                        reviewer:"",
+                        comment:""
                 },
                 addForm: {
-                        startDate:"",
+                        startDate:null,
                         endDate:"",
                         totalDay:"",
                         reason:"",
                         taskId:"",
-                        reviewer:""
+                        teacher:""
                 },
                 formRule: {
                     startDate: [
@@ -204,11 +268,14 @@
                 teacherList: [
 
                 ],
-                imgModal:false,
-                img:''
+                //历史备注
+                comments:[]
             }
         },
         methods: {
+            ...mapActions([
+              'getUnreadMessageCount'
+            ]),
             change(e){
                 this.count = e.length;
                 if (e.length == 1) {
@@ -221,7 +288,7 @@
                 this.groupId = [];
 
                 for (var i = 0; i < e.length; i++) {
-                    this.groupId.push(e[i].id);
+                    this.groupId.push(e[i].processInstanceId);
                 }
             },
             reset(form){
@@ -272,13 +339,16 @@
                     if(valid)
                     {
                         axios.request({
-                            url: '/api/leave',
+                            url: '/api/leave/complete/'+this.taskId,
                             method: 'put',
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                                    this.$Message.success('Success!');
+                            this.$Message.success('Success!');
                             this.gopage(this.pageNo);
+
+                            // 获取未读消息条数
+                            this.getUnreadMessageCount();
                         }).catch((result)=>{
                             this.$Message.error("操作异常："+result);
                         });
@@ -318,11 +388,11 @@
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
                 axios.request({
-                    url: '/api/leave',
+                    url: '/api/leave/myTaskList',
                     method: 'get',
                     params: {pageNo, pageSize,keyWord}
                 }).then((result) => {
-                    this.page = result.data.data;
+                    this.list = result.data;
                 }).catch((result)=>{
                     this.$Message.error("操作异常："+result);
                 });
@@ -348,6 +418,8 @@
             }).catch((result)=>{
               this.$Message.error("操作异常："+result);
             });
+
+
         }
     }
 //两个时间相差天数 兼容firefox chrome
@@ -363,3 +435,11 @@ function datedifference(sDate1, sDate2) {    //sDate1和sDate2是2006-12-18格�
 };
 
 </script>
+
+<style type="text/css" scoped="scoped">
+  ul li{
+
+    list-style: none;
+
+  }
+</style>

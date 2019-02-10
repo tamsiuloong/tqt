@@ -362,6 +362,15 @@
                         key: 'userName'
                     },
                     {
+                      title: '名字',
+                      key: 'userName',
+                      render: (h, params) => {
+                        return h('div', [
+                          h('strong', params.row.userInfo.name)
+                        ]);
+                      }
+                    },
+                    {
                         title: '状态',
                         key: 'state',
                         render: (h, params) => {
@@ -401,7 +410,7 @@
                             id: ""
                         },
                         "joinDate": "",
-                        "salary": "",
+                        "salary": "0",
                         "degree": "4",
                         "gender": "1",
                         "station": "",
@@ -450,15 +459,15 @@
                     },
                     {
                         value: '1',
-                        label: '跨部门跨人员'
+                        label: '跨班级跨人员'
                     },
                     {
                         value: '2',
-                        label: '管理所有下属部门和人员'
+                        label: '管理所有下属班级和人员'
                     },
                     {
                         value: '3',
-                        label: '管理本部门'
+                        label: '管理本班级'
                     },
                     {
                         value: '4',

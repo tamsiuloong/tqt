@@ -471,11 +471,11 @@ export default [
     ]
   },
   {
-    path: '/leave',
-    name: '请假管理',
+    path: '/workflow',
+    name: '工作流',
     meta: {
       icon: 'ios-create',
-      title: '请假管理'
+      title: '工作流'
     },
     component: Main,
     children: [
@@ -487,6 +487,15 @@ export default [
           title: '请假申请'
         },
         component: () => import('@/view/single-page/leave/index.vue')
+      },
+      {
+        path: 'mytask',
+        name: '我的任务',
+        meta: {
+          icon: 'md-funnel',
+          title: '我的任务'
+        },
+        component: () => import('@/view/single-page/leave/Mytask.vue')
       }
     ]
   },
