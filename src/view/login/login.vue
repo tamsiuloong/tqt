@@ -8,7 +8,8 @@
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可<a @click="loop">注册</a></p>
+          <p class="login-tip">输入任意用户名和密码即可</p><br>
+          <p class="login-tip"> <a @click="loop">注册</a></p>
         </div>
       </Card>
     </div>
@@ -52,12 +53,28 @@ export default {
             name: this.$config.homeName
           })
         })
+      }).catch(err=>{
+        if(err.response.status === 401)
+        {
+          this.$Message.error('用户名不存在');
+        }
+        else if(err.response.status === 400){
+          this.$Message.error('密码错误');
+        }
       })
     },
     register({ userName, password,classId,noteUrl,realName }) {
       this.handleRegister({ userName, password,classId,noteUrl,realName }).then(res => {
-        this.isLogin=true;
-        alert("注册成功，可以登陆了！");
+        if(res.data.code === 1)
+        {
+          this.isLogin=true;
+          this.$Message.success('注册成功，可以登陆了');
+        }
+        else
+        {
+          this.$Message.error('注册失败，用户名重复');
+        }
+
       })
     },
     loop() {

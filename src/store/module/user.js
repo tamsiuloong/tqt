@@ -101,7 +101,7 @@ export default {
           noteUrl,
           realName
         }).then(res => {
-          resolve()
+          resolve(res)
         }).catch(err => {
           reject(err)
         })

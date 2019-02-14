@@ -23,9 +23,9 @@ export const register = ({ userName, password ,classId,noteUrl,realName}) => {
   const params = {
     userName,
     password,
-    classId,
+    'classes.id':classId,
     noteUrl,
-    "userInfo.name":realName
+    'userInfo.name': realName
   }
   return axios.request({
     url: '/api/user/register',

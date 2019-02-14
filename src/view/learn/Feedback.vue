@@ -218,56 +218,108 @@
                 totalPage: 0,
                 totalCount: 0,
                 keyWord:"",
-                columns1: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                      title: '课程',
-                      width: 100,
-                      key: 'courseId',
-                      render: (h, params) => {
-                        return h('div', [
-                          h('strong', params.row.course.name)
-                        ]);
-                      }
-                    },
-                    {
-                        title: '第几天',
-                        key: 'dayNum'
-                    },{
-                        title: '吸收情况',
-                        key: 'absorption'
-                    },
-                    {
-                        title: '不清楚的地方',
-                        key: 'notClear'
-                    },
-                    {
-                        title: '明日目标',
-                        key: 'plan'
-                    },
-                    {
-                      title: '实施方案',
-                      key: 'todo'
-                    },
-                    {
-                        title: '自我觉察',
-                        key: 'selfCheck'
-                    },
-                    {
-                      title: '调整方案',
-                      key: 'adjustment'
-                    },
-                    {
-                      title: '时间',
-                      key: 'backTime',
-                      width: 160
-                    }
+              columns1: [
+                {
+                  type: 'selection',
+                  width: 60,
+                  align: 'center'
+                },
+                {
+                  title: '学员',
+                  key: 'stuName'
+                },
+                {
+                  title: '课程',
+                  width: 100,
+                  key: 'courseId',
+                  render: (h, params) => {
+                    return h('div', [
+                      h('strong', params.row.course.name)
+                    ]);
+                  }
+                },
+                {
+                  title: '第几天',
+                  key: 'dayNum'
+                },{
+                  title: '吸收情况',
+                  key: 'absorption',
+                  sortable: true
+                },
+                // {
+                //     title: '不清楚的地方',
+                //     key: 'notClear',
+                //     render: (h, params) => {
+                //       return h('div', [
+                //         h('strong',params.row.notClear.length>10? params.row.notClear.substring(0,10):params.row.notClear)
+                //       ]);
+                //     }
+                // },
+                // {
+                //     title: '明日目标',
+                //     key: 'plan',
+                //   render: (h, params) => {
+                //     return h('div', [
+                //       h('strong',params.row.plan.length>10? params.row.plan.substring(0,10):params.row.plan)
+                //     ]);
+                //   }
+                // },
+                // {
+                //   title: '实施方案',
+                //   key: 'todo',
+                //   render: (h, params) => {
+                //     return h('div', [
+                //       h('strong',params.row.todo.length>10? params.row.todo.substring(0,10):params.row.todo)
+                //     ]);
+                //   }
+                // },
+                // {
+                //     title: '自我觉察',
+                //     key: 'selfCheck',
+                //     render: (h, params) => {
+                //       return h('div', [
+                //         h('strong',params.row.selfCheck.length>10? params.row.selfCheck.substring(0,10):params.row.selfCheck)
+                //       ]);
+                //     }
+                // },
+                // {
+                //   title: '调整方案',
+                //   key: 'adjustment',
+                //   render: (h, params) => {
+                //     return h('div', [
+                //       h('strong',params.row.adjustment.length>10? params.row.adjustment.substring(0,10):params.row.adjustment)
+                //     ]);
+                //   }
+                // },
+                {
+                  title: '时间',
+                  key: 'backTime',
+                  width: 160
+                },
+                {
+                  title: '操作',
+                  key: 'action',
+                  fixed: 'right',
+                  width: 120,
+                  render: (h, params) => {
+                    return h('div', [
+                      h('Button', {
+                        props: {
+                          type: 'text',
+                          size: 'small'
+                        },
+                        on: {
+                          click: () => {
+                            this.updateForm = params.row;
+                            this.updateModal = true;
+                          }
+                        }
+                      }, '详情')
+                    ]);
+                  }
+                }
 
-                ],
+              ],
                 self: this,
                 page: [],
                 updateModal: false,

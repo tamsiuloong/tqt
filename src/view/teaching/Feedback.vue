@@ -256,15 +256,15 @@
                         key: 'absorption',
                         sortable: true
                     },
-                    // {
-                    //     title: '不清楚的地方',
-                    //     key: 'notClear',
-                    //     render: (h, params) => {
-                    //       return h('div', [
-                    //         h('strong',params.row.notClear.length>10? params.row.notClear.substring(0,10):params.row.notClear)
-                    //       ]);
-                    //     }
-                    // },
+                    {
+                        title: '不清楚的地方',
+                        key: 'notClear',
+                        render: (h, params) => {
+                          return h('div', [
+                            h('strong',params.row.notClear.length>10? params.row.notClear.substring(0,30):params.row.notClear)
+                          ]);
+                        }
+                    },
                     // {
                     //     title: '明日目标',
                     //     key: 'plan',
@@ -394,12 +394,12 @@
                 },
                 courseList:[],
                 classesList:[],
-              searchForm:{
-                classId:"",
-                stuName:"",
-                courseId:"",
-                dayNum:""
-              }
+                searchForm:{
+                  classId:"",
+                  stuName:"",
+                  courseId:"",
+                  dayNum:""
+                }
             }
         },
         methods: {
