@@ -1,12 +1,12 @@
 <template>
     <Card>
-        <Row>
-            <Col span="8">
-                <Input v-model="keyWord" placeholder="请输入请假..." style="width:200px"/>
-                <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
-            </Col>
-        </Row>
-        <br>
+        <!--<Row>-->
+            <!--<Col span="8">-->
+                <!--<Input v-model="keyWord" placeholder="请输入请假..." style="width:200px"/>-->
+                <!--<Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>-->
+            <!--</Col>-->
+        <!--</Row>-->
+        <!--<br>-->
         <Row>
                     <Button type="primary" icon="ios-add" @click="addLeave()">新建</Button>
                     <!--<Button type="success" icon="ios-build" @click="edit()">修改</Button>-->

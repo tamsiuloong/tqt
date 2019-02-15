@@ -457,7 +457,7 @@ export default [
           icon: 'md-funnel',
           title: '学员信息跟踪'
         },
-        component: () => import('@/view/teaching/Tracking.vue')
+        component: () => import('@/view/teaching/Track.vue')
       },
       {
         path: 'course',

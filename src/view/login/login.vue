@@ -61,6 +61,10 @@ export default {
         else if(err.response.status === 400){
           this.$Message.error('密码错误');
         }
+        else
+        {
+          this.$Message.error('哦，天啊，未知问题啊，有可能服务器关了吧');
+        }
       })
     },
     register({ userName, password,classId,noteUrl,realName }) {
