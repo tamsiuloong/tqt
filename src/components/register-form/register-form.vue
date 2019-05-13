@@ -89,12 +89,12 @@ export default {
 
     return {
       form: {
-        realName: 'andy',
-        userName: 'admin',
-        password: '111111',
-        passwordAgain:'111111',
-        classId:'1',
-        noteUrl:'www.baidu.com'
+        realName: '',
+        userName: '',
+        password: '',
+        passwordAgain:'',
+        classId:'',
+        noteUrl:''
       },
       classesList:[]
     }

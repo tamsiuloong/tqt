@@ -17,8 +17,8 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://localhost:8888/',
-    pro: 'https://produce.com'
+    dev: 'http://localhost:9999/',
+    pro: 'http://www.coachtam.cn:9999/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
@@ -28,7 +28,7 @@ export default {
    * @description 登陆页面
    */
   register: 'register',
-  /**
+  /**999
    * @description 需要加载的插件
    */
   plugin: {

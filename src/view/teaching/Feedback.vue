@@ -1,19 +1,32 @@
 <template>
     <Card>
       <Card>
+      <Row>
+
+        <Col span="24">
+          <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
+            <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+          </Select>
+          <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
+            <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          </Select>
+          <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>
+          <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
+          <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+        </Col>
+
+      </Row>
+    </Card>
+      <br>
+      <Card>
         <Row>
 
-            <Col span="24">
-              <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
-                <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
-              </Select>
-              <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
-                <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-              </Select>
-              <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>
-             <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
-              <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
-            </Col>
+          <Col span="24">
+           未提交名单：<br>
+            <ul>
+            <li v-for="s in uncommitList" style="list-style: none">{{s.userInfo.name}}</li>
+            </ul>
+          </Col>
 
         </Row>
       </Card>
@@ -250,6 +263,7 @@
                     },
                     {
                         title: '第几天',
+                        width: 50,
                         key: 'dayNum'
                     },{
                         title: '吸收情况',
@@ -307,6 +321,21 @@
                       width: 160
                     },
                     {
+                      title: '笔记地址',
+                      key: 'noteUrl',
+                      render: (h, params) => {
+                        return h('div', [
+                          h('a', {
+                            on: {
+                              click: () => {
+                                window.open(params.row.noteUrl);
+                              }
+                            }
+                          },params.row.noteUrl)
+                        ]);
+                      }
+                    },
+                    {
                       title: '操作',
                       key: 'action',
                       fixed: 'right',
@@ -360,6 +389,8 @@
                           name:null
                         }
                 },
+                //未提交名单
+                uncommitList:[],
                 formRule: {
                     adjustment: [
                         {required: true, message:'强迫自己跳出舒适区，先自己画图梳理出代码思路，然后再打代码',trigger:'blur'}
@@ -518,7 +549,8 @@
                     params: {pageNo, pageSize},
                     data:this.searchForm
                 }).then((result) => {
-                    this.page = result.data.data;
+                    this.page = result.data.data.page;
+                    this.uncommitList = result.data.data.unCommitedList;
                 }).catch((result)=>{
                   this.$Message.error("操作异常："+result);
                 });

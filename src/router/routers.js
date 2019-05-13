@@ -1,5 +1,5 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
+// import parentView from '@/components/parent-view'
 
 /**
  * 教学质量跟踪管理平台中meta除了原生参数外可配置的参数:
@@ -436,7 +436,7 @@ export default [
     path: '/teaching',
     name: '教学管理',
     meta: {
-      icon: 'ios-create',
+      icon: 'ios-people',
       title: '教学管理'
     },
     component: Main,
@@ -445,7 +445,7 @@ export default [
         path: 'teaching',
         name: '教学反馈',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-paper',
           title: '教学反馈'
         },
         component: () => import('@/view/teaching/Feedback.vue')
@@ -454,7 +454,7 @@ export default [
         path: 'tracking',
         name: '学员信息跟踪',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-magnet',
           title: '学员信息跟踪'
         },
         component: () => import('@/view/teaching/Track.vue')
@@ -463,7 +463,7 @@ export default [
         path: 'course',
         name: '课程管理',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-navigate',
           title: '课程管理'
         },
         component: () => import('@/view/teaching/Course.vue')
@@ -474,7 +474,7 @@ export default [
     path: '/workflow',
     name: '工作流',
     meta: {
-      icon: 'ios-create',
+      icon: 'ios-contacts',
       title: '工作流'
     },
     component: Main,
@@ -483,7 +483,7 @@ export default [
         path: 'leave',
         name: '请假申请',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-hand',
           title: '请假申请'
         },
         component: () => import('@/view/single-page/leave/index.vue')
@@ -492,7 +492,7 @@ export default [
         path: 'mytask',
         name: '我的任务',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-notifications',
           title: '我的任务'
         },
         component: () => import('@/view/single-page/leave/Mytask.vue')

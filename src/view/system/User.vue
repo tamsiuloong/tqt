@@ -1,11 +1,19 @@
 <template>
   <Card>
-    <Row>
-        <Col span="24">用户名：
-            <Input v-model="keyWord" placeholder="请输入..." style="width:200px"/>
-          <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+    <Card>
+      <Row>
+
+        <Col span="24">
+          <Select filterable="true" placeholder="班级" v-model="searchForm.classId" @on-change="initStuList" style="width:200px">
+            <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+          </Select>
+          <Input v-model="searchForm.stuName" placeholder="请输入..." style="width:200px"/>
+          <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
         </Col>
-    </Row>
+
+      </Row>
+    </Card>
+
     <br>
     <Row>
         <Button type="primary" iicon="ios-add" @click="addUser()">新建</Button>
@@ -371,6 +379,21 @@
                       }
                     },
                     {
+                      title: '笔记地址',
+                      key: 'noteUrl',
+                      render: (h, params) => {
+                        return h('div', [
+                          h('a', {
+                            on: {
+                              click: () => {
+                               window.open(params.row.noteUrl);
+                              }
+                            }
+                          },params.row.noteUrl)
+                        ]);
+                      }
+                    },
+                    {
                         title: '状态',
                         key: 'state',
                         render: (h, params) => {
@@ -449,6 +472,7 @@
                     userName: "",
                     roleIds: {}
                 },
+                classesList:[],
                 deptList: {},
                 userList:{},
                 roleList:{},
@@ -482,6 +506,10 @@
                     "userInfo.email":[
                         {required: true, message: 'cannot be empty', trigger: 'blur'}
                     ]
+                },
+                searchForm:{
+                  classId:"",
+                  stuName:"",
                 }
             }
         },
@@ -630,11 +658,11 @@
             },
             gopage(pageNo) {
                 const pageSize = this.page.size;
-                const keyWord = this.keyWord;
                 axios.request({
-                    url: '/api/user',
-                    method: 'get',
-                    params: {pageNo, pageSize, keyWord}
+                    url: '/api/user/search',
+                    method: 'post',
+                    params: {pageNo, pageSize},
+                    data:this.searchForm
                 }).then((result) => {
                     this.page = result.data.data;
                 });
@@ -711,6 +739,16 @@
             }).then((result) => {
                 this.roleList = result.data.data;
             });
+
+
+          axios.request({
+            url: '/api/classes/all',
+            method: 'get'
+          }).then((result) => {
+            this.classesList = result.data.data;
+          }).catch((result)=>{
+            this.$Message.error("操作异常："+result);
+          });
         }
     }
 
