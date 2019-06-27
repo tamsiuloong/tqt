@@ -529,6 +529,36 @@ export default [
     ]
   },
   {
+    path: '/interview',
+    name: '面试管理',
+    meta: {
+      icon: 'md-menu',
+      title: '面试管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'interview',
+        name: '面试记录',
+        meta: {
+          icon: 'md-funnel',
+          title: '面试记录'
+        },
+        component: () => import('@/view/interview/Interview.vue')
+      }
+      ,
+      {
+        path: 'interviewQuestions',
+        name: '面试题',
+        meta: {
+          icon: 'md-funnel',
+          title: '面试题'
+        },
+        component: () => import('@/view/interview/InterviewQuestion.vue')
+      }
+    ]
+  },
+  {
     path: '/report',
     name: '统计分析',
     meta: {
