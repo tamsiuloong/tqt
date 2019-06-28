@@ -1,14 +1,18 @@
 <template>
     <Card>
         <Row>
-            <Col span="8">
-                <Input v-model="keyWord" placeholder="请输入学员信息跟踪..." style="width:200px"/>
+            <Col span="24">
+              <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
+                <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+              </Select>
+              <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
+              <Input v-model="searchForm.companyName" placeholder="公司名字" style="width:200px"/>
                 <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
             </Col>
         </Row>
         <br>
         <Row>
-                    <Button type="primary" icon="ios-add" @click="addInterview()">新建</Button>
+                    <Button type="primary" icon="ios-add" @click="addInterview()">新建面试记录</Button>
                     <Button type="success" icon="ios-build" @click="edit()">修改</Button>
                     <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
         </Row>
@@ -51,7 +55,7 @@
                       <!-- 循环便利row中的两个元素-->
                       <Col span="11">
                         <FormItem label="面试时间" >
-                          <DatePicker type="date" placeholder="Select date" v-model="addForm.interviewTime" style="width: 200px"></DatePicker>
+                          <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd" v-model="addForm.interviewTime" style="width: 200px"></DatePicker>
                         </FormItem>
                       </Col>
                       <Col span="2" style="text-align: center"/>
@@ -74,7 +78,7 @@
                             <Col span="11">
                             <FormItem label="面试情况" prop="msInfo">
                               <Select v-model="addForm.msInfo" style="width:200px">
-                                <Option v-for="item in infoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                <Option v-for="item in infoList" :value="item.value"  :key="item.value">{{ item.label }}</Option>
                               </Select>
                             </FormItem>
                             </Col>
@@ -82,7 +86,7 @@
                     <Row>
                         <!-- 循环便利row中的两个元素-->
                             <Col span="11">
-                            <FormItem label="附件" prop="appendixs">
+                            <FormItem label="附件" >
                               <Upload
                                 multiple :on-success="handleSuccess" :format="['jpg','jpeg','png']"
                                 :max-size="5120" :on-error="handleError"
@@ -96,14 +100,14 @@
                             </Col>
                                 <Col span="2" style="text-align: center"/>
                             <Col span="11">
-                            <FormItem label="录音" prop="soundRecording">
+                            <FormItem label="录音" >
                               <Upload ref="soundRecording"
                                 :on-success="handleSoundSuccess" :format="['mp3','aac','m4a']"
-                                :max-size="51200" :on-error="handleSoundError"
+                                :max-size="51200" :on-error="handleError"
                                 :on-format-error="handleSoundFormatError"
                                 :on-exceeded-size="handleSoundExceededError"
                                 :show-upload-list="true"
-                                      :before-upload="handleSoundBeforeUpload"
+                                :before-upload="handleSoundBeforeUpload"
                                 :action="uploadSoundPath">
                                 <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
                               </Upload>
@@ -123,89 +127,104 @@
                 @on-ok="update"
                 @on-cancel="cancel"
                 width="60%">
-            <Form ref="updateForm" :model="updateForm" :rules="formRule" :label-width="80">
-                    <Row>
-                            <Col span="11">
-                            <FormItem label="" prop="id">
-                                <Input type="text" v-model="updateForm.id"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="学生" prop="userId">
-                                <Input type="text" v-model="updateForm.userId"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                            <Col span="11">
-                            <FormItem label="笔试情况" prop="bsInfo">
-                                <Input type="text" v-model="updateForm.bsInfo"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="面试情况" prop="msInfo">
-                                <Input type="text" v-model="updateForm.msInfo"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                            <Col span="11">
-                            <FormItem label="附件" prop="appendixs">
-                                <Input type="text" v-model="updateForm.appendixs"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="录音" prop="soundRecording">
-                                <Input type="text" v-model="updateForm.soundRecording"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                            <Col span="11">
-                            <FormItem label="面试公司" prop="companyName">
-                                <Input type="text" v-model="updateForm.companyName"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="创建日期" prop="createTime">
-                                <Input type="text" v-model="updateForm.createTime"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                            <Col span="11">
-                            <FormItem label="公司地址" prop="companyAddr">
-                                <Input type="text" v-model="updateForm.companyAddr"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="公司电话" prop="companyTel">
-                                <Input type="text" v-model="updateForm.companyTel"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                            <Col span="11">
-                            <FormItem label="面试时间" prop="interviewTime">
-                                <Input type="text" v-model="updateForm.interviewTime"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                    </Row>
+          <Form ref="updateForm" :model="updateForm" :rules="formRule" :label-width="80">
+            <!--一次性取两个元素放在row集合中 -->
+            <Row>
+              <!-- 循环便利row中的两个元素-->
+              <Col span="11">
+                <FormItem label="面试公司" prop="companyName">
+                  <Input type="text" v-model="updateForm.companyName"/>
+                </FormItem>
+              </Col>
+              <Col span="2" style="text-align: center"/>
+              <Col span="11">
+                <FormItem label="公司地址" prop="companyAddr">
+                  <Input type="text" v-model="updateForm.companyAddr"/>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <!-- 循环便利row中的两个元素-->
+              <Col span="11">
+                <FormItem label="面试时间" >
+                  <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd" v-model="updateForm.interviewTime" style="width: 200px"></DatePicker>
+                </FormItem>
+              </Col>
+              <Col span="2" style="text-align: center"/>
+              <Col span="11">
+                <FormItem label="公司电话" prop="companyTel">
+                  <Input type="text" v-model="updateForm.companyTel"/>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <!-- 循环便利row中的两个元素-->
+              <Col span="11">
+                <FormItem label="笔试情况" prop="bsInfo">
+                  <Select v-model="updateForm.bsInfo" style="width:200px">
+                    <Option v-for="item in infoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="2" style="text-align: center"/>
+              <Col span="11">
+                <FormItem label="面试情况" prop="msInfo">
+                  <Select v-model="updateForm.msInfo" style="width:200px">
+                    <Option v-for="item in infoList" :value="item.value"  :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <!-- 循环便利row中的两个元素-->
+              <Col span="11">
+                <FormItem label="附件" >
+                  <Upload
+                    multiple :on-success="handleSuccess" :format="['jpg','jpeg','png']"
+                    :max-size="5120" :on-error="handleError"
+                    :on-format-error="handleFormatError"
+                    :on-exceeded-size="handleExceededError"
+                    :on-remove="handleRemove"
+                    :action="uploadImagePath">
+                    <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
+                  </Upload>
+                </FormItem>
+              </Col>
+              <Col span="2" style="text-align: center"/>
+              <Col span="11">
+                <FormItem label="录音" >
+                  <Upload ref="soundRecording"
+                          :on-success="handleSoundSuccess" :format="['mp3','aac','m4a']"
+                          :max-size="51200" :on-error="handleSoundError"
+                          :on-format-error="handleSoundFormatError"
+                          :on-exceeded-size="handleSoundExceededError"
+                          :show-upload-list="true"
+                          :before-upload="handleSoundBeforeUpload"
+                          :action="uploadSoundPath">
+                    <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
+                  </Upload>
+                </FormItem>
+              </Col>
+            </Row>
 
-            </Form>
+          </Form>
         </Modal>
+
+      <Modal
+        v-model="appendixsModal"
+        title="面试附件"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <!--<vue-preview :slides="currAppendixs" @close="handleClose"></vue-preview>-->
+        <img v-for="img in currAppendixs" :src="img" width="40px" height="40px" @click="openWindow(img)"/>
+      </Modal>
+
     </Card>
 </template>
 
 <script type="text/ecmascript-6">
     // import fetch from '../../utils/fetch';
-    // import {dateFormat} from '../../utils/date';
+    import { dateFormat } from '@/libs/date';
     import { setToken, getToken } from '@/libs/util'
     import axios from '@/libs/api.request'
     export default {
@@ -248,7 +267,12 @@
                     },
                     {
                       title: '面试时间',
-                      key: 'interviewTime'
+                      key: 'interviewTime',
+                      render: (h, params) => {
+                        return h('div', [
+                          h('strong', params.row.interviewTime.substr(0,10))
+                        ]);
+                      }
                     },
                     {
                         title: '笔试情况',
@@ -299,15 +323,25 @@
                     {
                         title: '附件',
                         key: 'appendixs',
+                    // <vue-preview :slides="slide1" @close="handleClose"></vue-preview>
                       render: (h, params) => {
                         return h('div', [
-                          h('a', {
+                          h('Button', {
+                            props: {
+                              type: 'primary',
+                              size: 'small'
+                            },
+                            style: {
+                              marginRight: '5px'
+                            },
                             on: {
                               click: () => {
-                                window.open(params.row.appendixs);
+                                // this.show(params.index);
+                                this.appendixsModal = true;
+                                this.appendixsIndex = params.index;
                               }
                             }
-                          },'下载')
+                          }, '查看')
                         ]);
                       }
                     },
@@ -322,18 +356,40 @@
                                   window.open(params.row.soundRecording);
                                 }
                               }
-                            },'下载')
+                            },'播放')
                           ]);
                         }
+                    },
+                  {
+                    title: '操作',
+                    key: 'action',
+                    fixed: 'right',
+                    width: 120,
+                    render: (h, params) => {
+                      return h('div', [
+                        h('Button', {
+                          props: {
+                            type: 'text',
+                            size: 'small'
+                          },
+                          on: {
+                            click: () => {
+                              this.$router.push({
+                                name: "面试题",
+                                query: { id: params.row.id }
+                              })
+                            }
+                          }
+                        }, '面试题管理')
+                      ]);
                     }
-
+                  }
                 ],
                 self: this,
                 page: [],
                 updateModal: false,
                 addModal: false,
                 updateForm: {
-                        id:"",
                         bsInfo:"",
                         msInfo:"",
                         appendixs:"",
@@ -422,7 +478,15 @@
                 //录音上传路径
                 uploadSoundPath:"",
                 //附件列表
-                appendixs:[]
+                appendixs:[],
+                appendixsModal:false,
+                appendixsIndex:0,
+                classesList:[],
+                searchForm:{
+                  classId:"",
+                  stuName:"",
+                  companyName:""
+                }
             }
         },
         methods: {
@@ -535,9 +599,10 @@
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
                 axios.request({
-                    url: '/api/interview',
-                    method: 'get',
-                    params: {pageNo, pageSize,keyWord}
+                    url: '/api/interview/search',
+                    method: 'post',
+                    params: {pageNo, pageSize,keyWord},
+                    data:this.searchForm
                 }).then((result) => {
                     this.page = result.data.data;
                 }).catch((result)=>{
@@ -553,9 +618,9 @@
               file.name = res;
               this.addForm.soundRecording = res;
             },
-          handleSoundBeforeUpload(){
-            this.$refs.soundRecording.clearFiles();
-          },
+            handleSoundBeforeUpload(){
+              this.$refs.soundRecording.clearFiles();
+            },
             handleSuccess (res, file,fileList) {
               console.log(res);
               console.log(file);
@@ -588,17 +653,56 @@
             handleExceededError(file){
               this.$Message.error("文件["+file.name+"]不能超过5MB,小伙子手机像素可以呀！");
             },
+            handleSoundFormatError(file) {
+              this.$Message.error("文件["+file.name+"]格式不对，只能是'mp3','aac','m4a'");
+            },
+            handleSoundExceededError(file){
+              this.$Message.error("文件["+file.name+"]不能超过50MB！");
+            },
             handleRemove(file,fileList)
             {
               //清楚在模型数据中的附件
               this.appendixs=this.appendixs.filter(a=>a.name!=file.name);
               this.computeAppendixs(fileList);
+              let s = "";
+              s.split()
+            },
+            openWindow (img) {
+              window.open(img);
             }
         },
         created: function () {
             this.gopage();
             this.uploadImagePath='//localhost:9999/api/uploadFiles/1?access_token='+getToken();
             this.uploadSoundPath='//localhost:9999/api/uploadFiles/2?access_token='+getToken();
+            axios.request({
+              url: '/api/classes/all',
+              method: 'get'
+            }).then((result) => {
+              this.classesList = result.data.data;
+            }).catch((result)=>{
+              this.$Message.error("操作异常："+result);
+            });
+        },
+        computed:{
+          currAppendixs(){
+            if(this.page.content&&this.page.content.length>0)
+            {
+              let result = this.page.content[this.appendixsIndex].appendixs.split(',');
+              // result =  result.map(img=>{
+              //   return {
+              //     src: img,
+              //     msrc: img,
+              //     alt: '附件',
+              //     title: '附件',
+              //     w: 600,
+              //     h: 900
+              //   }
+              // })
+              return result;
+            }
+            return [];
+          }
         }
     }
 

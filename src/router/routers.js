@@ -467,6 +467,15 @@ export default [
           title: '课程管理'
         },
         component: () => import('@/view/teaching/Course.vue')
+      },
+      {
+        path: 'allInterviewQuestions',
+        name: '面试题管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '面试题管理'
+        },
+        component: () => import('@/view/teaching/InterviewQuestion.vue')
       }
     ]
   },
@@ -552,7 +561,8 @@ export default [
         name: '面试题',
         meta: {
           icon: 'md-funnel',
-          title: '面试题'
+          title: '面试题',
+          hideInMenu:true
         },
         component: () => import('@/view/interview/InterviewQuestion.vue')
       }

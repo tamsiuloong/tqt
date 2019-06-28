@@ -1,14 +1,20 @@
 <template>
     <Card>
         <Row>
-            <Col span="8">
-                <Input v-model="keyWord" placeholder="请输入面试题..." style="width:200px"/>
+            <Col span="24">
+              <Select v-model="searchForm.courseId" style="width:200px" filterable @on-change="queryKnowledgePoint">
+                <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              </Select>
+                <Select v-model="searchForm.knowledgePointId" style="width:200px" filterable >
+                  <Option v-for="item in knowledgePointList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+                <Input v-model="searchForm.title" placeholder="请输入面试题题目..." style="width:200px"/>
+
                 <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
             </Col>
         </Row>
         <br>
         <Row>
-                    <Button type="error" icon="md-arrow-back" @click="backToInterviewList">返回</Button>
                     <Button type="primary" icon="ios-add" @click="addInterviewQuestion()">新建面试题</Button>
                     <Button type="success" icon="ios-build" @click="edit()">修改面试题</Button>
                     <Button type="error" icon="ios-trash" @click="remove()">删除面试题</Button>
@@ -339,10 +345,7 @@
                         knowledgePoint:{
                           id:""
                         },
-                        answer:"",
-                        interview:{
-                          id:""
-                        }
+                        answer:""
                 },
                 addForm: {
                         title:"",
@@ -352,10 +355,7 @@
                         knowledgePoint:{
                           id:""
                         },
-                        answer:"",
-                        interview:{
-                          id:""
-                        }
+                        answer:""
                 },
                 //当前面试题详情
                 detail:{
@@ -366,10 +366,7 @@
                   knowledgePoint:{
                     id:""
                   },
-                  answer:"",
-                  interview:{
-                    id:""
-                  }
+                  answer:""
                 },
                 detailModal:false,
                 formRule: {
@@ -393,9 +390,13 @@
                         {required: true, message:'所属面试不能为空',trigger:'blur'}
                     ]
                 },
-                interviewId:null,
                 courseList:[],
-                knowledgePointList:[]
+                knowledgePointList:[],
+                searchForm:{
+                  courseId:"",
+                  knowledgePointId:"",
+                  title:""
+                }
             }
         },
         methods: {
@@ -425,7 +426,6 @@
                     if(valid)
                     {
                         const interviewQuestion = this.addForm;
-                        interviewQuestion.interview.id = this.interviewId;
                         axios.request({
                             url: '/api/interviewQuestion',
                             method: 'post',
@@ -510,11 +510,11 @@
                 const pageNo = this.pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
-                const interviewId = this.interviewId;
                 axios.request({
-                    url: '/api/interviewQuestion',
-                    method: 'get',
-                    params: {pageNo, pageSize,keyWord,interviewId}
+                    url: '/api/interviewQuestion/search',
+                    method: 'post',
+                    params: {pageNo, pageSize,keyWord},
+                    data:this.searchForm
                 }).then((result) => {
                     this.page = result.data.data;
                 }).catch((result)=>{
@@ -533,16 +533,9 @@
               }).catch((result)=>{
                 this.$Message.error("操作异常："+result);
               });
-            },
-            backToInterviewList(){
-              this.$router.push({
-                name: "面试记录"
-              })
             }
         },
         mounted: function () {
-            //面试记录id
-            this.interviewId = getParams(window.location.href).id;
 
             this.gopage();
 
