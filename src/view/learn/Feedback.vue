@@ -338,13 +338,13 @@
                         }
                 },
                 addForm: {
-                        adjustment:"测试",
+                        adjustment:"",
                         dayNum:1,
-                        notClear:"清楚",
-                        plan:"预习hibernate",
-                        selfCheck:"睡得太晚",
+                        notClear:"",
+                        plan:"",
+                        selfCheck:"",
                         absorption:null,
-                        todo:"11：30之前一定要睡觉",
+                        todo:"",
                         course:{
                           id:"1",
                           name:null

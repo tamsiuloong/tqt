@@ -88,7 +88,7 @@
                             <Col span="11">
                             <FormItem label="附件" >
                               <Upload
-                                multiple :on-success="handleSuccess" :format="['jpg','jpeg','png']"
+                                multiple ref="appendixs" :on-success="handleSuccess" :format="['jpg','jpeg','png']"
                                 :max-size="5120" :on-error="handleError"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleExceededError"
@@ -179,7 +179,7 @@
               <!-- 循环便利row中的两个元素-->
               <Col span="11">
                 <FormItem label="附件" >
-                  <Upload
+                  <Upload ref="updateAppendixs"
                     multiple :on-success="handleSuccess" :format="['jpg','jpeg','png']"
                     :max-size="5120" :on-error="handleError"
                     :on-format-error="handleFormatError"
@@ -193,7 +193,7 @@
               <Col span="2" style="text-align: center"/>
               <Col span="11">
                 <FormItem label="录音" >
-                  <Upload ref="soundRecording"
+                  <Upload ref="updateSoundRecording"
                           :on-success="handleSoundSuccess" :format="['mp3','aac','m4a']"
                           :max-size="51200" :on-error="handleSoundError"
                           :on-format-error="handleSoundFormatError"
@@ -227,6 +227,9 @@
     import { dateFormat } from '@/libs/date';
     import { setToken, getToken } from '@/libs/util'
     import axios from '@/libs/api.request'
+    import config from '@/config'
+    const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+
     export default {
         data() {
             return {
@@ -509,7 +512,22 @@
                 this.$refs[form].resetFields();
             },
             addInterview(){
-                this.addModal = true;
+              this.$refs.appendixs.clearFiles();
+              this.$refs.soundRecording.clearFiles();
+              this.reset("addForm");
+              //清空
+              this.addForm={
+                bsInfo:"",
+                msInfo:"",
+                appendixs:"",
+                soundRecording:"",
+                companyName:"",
+                companyAddr:"",
+                companyTel:"",
+                interviewTime:""
+              };
+              this.appendixs=[];
+              this.addModal = true;
             },
             add(){
                 this.$refs['addForm'].validate((valid)=>{
@@ -546,6 +564,11 @@
                 }
                 else {
                     this.updateModal = true;
+                    this.$refs.updateAppendixs.clearFiles();
+                    this.$refs.updateSoundRecording.clearFiles();
+                    this.appendixs=[];
+                    this.updateForm.appendixs="";
+                    this.updateForm.soundRecording="";
                 }
             },
             update () {
@@ -613,8 +636,7 @@
                 this.$Message.info('点击了取消');
             },
             handleSoundSuccess(res, file,fileList) {
-
-              file.url = "http://localhost:9999/"+res;
+              file.url = baseUrl+res;
               file.name = res;
               this.addForm.soundRecording = res;
             },
@@ -624,7 +646,7 @@
             handleSuccess (res, file,fileList) {
               console.log(res);
               console.log(file);
-              file.url = "http://localhost:9999/"+res;
+              file.url = baseUrl+res;
               file.name = res;
               this.appendixs.push(file);
               this.computeAppendixs(this.appendixs)
@@ -643,6 +665,7 @@
                 }
               }
               this.addForm.appendixs = str;
+              this.updateForm.appendixs = str;
             },
             handleError ( error, file, fileList) {
              this.$Message.error(error);
@@ -673,8 +696,8 @@
         },
         created: function () {
             this.gopage();
-            this.uploadImagePath='//localhost:9999/api/uploadFiles/1?access_token='+getToken();
-            this.uploadSoundPath='//localhost:9999/api/uploadFiles/2?access_token='+getToken();
+            this.uploadImagePath=baseUrl+'api/uploadFiles/1?access_token='+getToken();
+            this.uploadSoundPath=baseUrl+'api/uploadFiles/2?access_token='+getToken();
             axios.request({
               url: '/api/classes/all',
               method: 'get'
