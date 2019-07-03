@@ -73,6 +73,13 @@
         </Row>
 
         <Row>
+          <Col span="22">
+            <FormItem label="笔记地址" prop="userInfo.noteUrl">
+              <Input type="textarea" v-model="updateForm.noteUrl"/>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
           <Button type="success" @click="updateInfo">保存</Button>
         </Row>
       </Form>

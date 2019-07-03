@@ -93,6 +93,8 @@
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleExceededError"
                                 :on-remove="handleRemove"
+                                :before-upload="handleBeforeUpload4Add"
+                                :data="{companyName:addForm.companyName}"
                                 :action="uploadImagePath">
                                 <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
                               </Upload>
@@ -107,14 +109,22 @@
                                 :on-format-error="handleSoundFormatError"
                                 :on-exceeded-size="handleSoundExceededError"
                                 :show-upload-list="true"
-                                :before-upload="handleSoundBeforeUpload"
+                                :before-upload="handleSoundBeforeUpload4Add"
+                                :data="{companyName:addForm.companyName}"
                                 :action="uploadSoundPath">
                                 <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
                               </Upload>
                             </FormItem>
                             </Col>
                     </Row>
-
+              <Row>
+                <!-- 循环便利row中的两个元素-->
+                <Col span="22">
+                  <FormItem label="经验积累" >
+                    <Input v-model="addForm.experience" type="textarea" :rows="4" placeholder="说说你的感触,体会,心得或者下次面试需要改进的地方..." />
+                  </FormItem>
+                </Col>
+              </Row>
             </Form>
         </Modal>
 
@@ -185,6 +195,8 @@
                     :on-format-error="handleFormatError"
                     :on-exceeded-size="handleExceededError"
                     :on-remove="handleRemove"
+                    :before-upload="handleBeforeUpload4Update"
+                    :data="{companyName:updateForm.companyName}"
                     :action="uploadImagePath">
                     <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
                   </Upload>
@@ -199,7 +211,8 @@
                           :on-format-error="handleSoundFormatError"
                           :on-exceeded-size="handleSoundExceededError"
                           :show-upload-list="true"
-                          :before-upload="handleSoundBeforeUpload"
+                          :before-upload="handleSoundBeforeUpload4Update"
+                          :data="{companyName:updateForm.companyName}"
                           :action="uploadSoundPath">
                     <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
                   </Upload>
@@ -216,7 +229,7 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <!--<vue-preview :slides="currAppendixs" @close="handleClose"></vue-preview>-->
-        <img v-for="img in currAppendixs" :src="img" width="40px" height="40px" @click="openWindow(img)"/>
+        <img v-for="img in currAppendixs" v-if="img" :src="img" width="40px" height="40px" @click="openWindow(img)"/>
       </Modal>
 
     </Card>
@@ -352,15 +365,23 @@
                         title: '录音',
                         key: 'soundRecording',
                         render: (h, params) => {
-                          return h('div', [
-                            h('a', {
-                              on: {
-                                click: () => {
-                                  window.open(params.row.soundRecording);
+                          if(params.row.soundRecording)
+                          {
+                            return h('div', [
+                              h('a', {
+                                on: {
+                                  click: () => {
+                                    window.open(params.row.soundRecording);
+                                  }
                                 }
-                              }
-                            },'播放')
-                          ]);
+                              },'播放')
+                            ]);
+                          }
+                          else {
+                            return h('div', [
+                              h('strong', "未上传")
+                            ]);
+                          }
                         }
                     },
                   {
@@ -400,7 +421,8 @@
                         companyName:"",
                         companyAddr:"",
                         companyTel:"",
-                        interviewTime:""
+                        interviewTime:"",
+                        experience:""
                 },
                 addForm: {
                         bsInfo:"",
@@ -410,7 +432,8 @@
                         companyName:"",
                         companyAddr:"",
                         companyTel:"",
-                        interviewTime:""
+                        interviewTime:"",
+                        experience:""
                 },
                 formRule: {
                     id: [
@@ -640,7 +663,34 @@
               file.name = res;
               this.addForm.soundRecording = res;
             },
-            handleSoundBeforeUpload(){
+            handleBeforeUpload4Add(){
+              if(!this.addForm.companyName)
+              {
+                this.$Message.warning("请先填写公司名字!")
+                return false;
+              }
+            },
+            handleSoundBeforeUpload4Add(){
+              if(!this.addForm.companyName)
+              {
+                this.$Message.warning("请先填写公司名字!")
+                return false;
+              }
+              this.$refs.soundRecording.clearFiles();
+            },
+            handleBeforeUpload4Update(){
+              if(!this.updateForm.companyName)
+              {
+                this.$Message.warning("请先填写公司名字!")
+                return false;
+              }
+            },
+            handleSoundBeforeUpload4Update(){
+              if(!this.updateForm.companyName)
+              {
+                this.$Message.warning("请先填写公司名字!")
+                return false;
+              }
               this.$refs.soundRecording.clearFiles();
             },
             handleSuccess (res, file,fileList) {

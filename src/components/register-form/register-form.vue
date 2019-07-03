@@ -31,10 +31,10 @@
 
     <FormItem prop="classId">
         <Select v-model="form.classId" style="width:200px">
-          <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+          <Option v-for="c in classesList" :value="c.id">{{c.name+'期_'+c.type+'班'}}</Option>
         </Select>
     </FormItem>
-    <FormItem prop="noteUrl">
+    <FormItem >
       <Input type="textarea" v-model="form.noteUrl" placeholder="笔记地址">
         <span slot="prepend">
           <Icon :size="14" type="md-lock"></Icon>
@@ -167,7 +167,7 @@ export default {
   },
   created:function () {
     axios.request({
-      url: '/api/classes/all',
+      url: '/api/classes/all/false',
       method: 'get'
     }).then((result) => {
       this.classesList = result.data.data;
