@@ -9,9 +9,6 @@
         <br>
         <Row>
                     <Button type="error" icon="md-arrow-back" @click="backToInterviewList">返回</Button>
-                    <Button type="primary" icon="ios-add" @click="addInterviewQuestion()">新建面试题</Button>
-                    <Button type="success" icon="ios-build" @click="edit()">修改面试题</Button>
-                    <Button type="error" icon="ios-trash" @click="remove()">删除面试题</Button>
         </Row>
         <br>
         <Row>
@@ -449,63 +446,6 @@
                     }
                 })
             },
-            edit () {
-                if (this.count != 1) {
-                    this.updateModal = false;
-                    this.$Message.warning('请至少并只能选择一项');
-                }
-                else {
-                    this.updateModal = true;
-                    //加载出当前课程的所有知识点
-                    this.queryKnowledgePoint(this.updateForm.course.id);
-                }
-            },
-            update () {
-                this.$refs['updateForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        axios.request({
-                            url: '/api/interviewQuestion',
-                            method: 'put',
-                            data: this.updateForm
-                        }).then((result) => {
-                            this.updateModal = false,
-                                    this.$Message.success('Success!');
-                            this.gopage();
-                        }).catch((result)=>{
-                            this.$Message.error("操作异常："+result);
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            remove () {
-                if (this.groupId != null && this.groupId != "") {
-                    axios.request({
-                        url: '/api/interviewQuestion',
-                        method: 'delete',
-                        data: this.groupId
-                    }).then((result) => {
-                        if (result.data.code === 1) {
-                            this.$Message.success('Success!');
-                            this.gopage();
-                        }
-                    }).catch((result)=>{
-                        this.$Message.error("操作异常："+result);
-                    });
-                } else {
-                    this.$Message.warning('请至少选择一项');
-                }
-            },
             gopage(){
                 const pageNo = this.pageNo;
                 const pageSize = this.pageSize;
@@ -536,7 +476,7 @@
             },
             backToInterviewList(){
               this.$router.push({
-                name: "我的面试记录"
+                name: "查询面试记录"
               })
             }
         },
@@ -545,7 +485,6 @@
             this.interviewId = getParams(window.location.href).id;
 
             this.gopage();
-
 
             //courseList
             axios.request({

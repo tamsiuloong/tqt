@@ -19,18 +19,15 @@ export const login = ({ userName, password }) => {
     }
   })
 }
-export const register = ({ userName, password ,classId,noteUrl,realName}) => {
-  const params = {
-    userName,
-    password,
-    'classes.id':classId,
-    noteUrl,
-    'userInfo.name': realName
-  }
+export const register = (form) => {
   return axios.request({
     url: '/api/user/register',
-    params,
-    method: 'POST'
+    data:form,
+    method: 'POST',
+    //也不知道为什么，classes.id在服务端获取不到，也不打算浪费时间了。so...
+    params:{
+      classesId:form.classes.id
+    }
   })
 }
 export const getUserInfo = (token) => {

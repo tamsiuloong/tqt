@@ -91,16 +91,10 @@ export default {
       })
     },
     // 注册
-    handleRegister ({ commit }, { userName, password,classId,noteUrl,realName }) {
-      userName = userName.trim()
+    handleRegister ({ commit }, form) {
+      form.userName = form.userName.trim()
       return new Promise((resolve, reject) => {
-        register({
-          userName,
-          password,
-          classId,
-          noteUrl,
-          realName
-        }).then(res => {
+        register(form).then(res => {
           resolve(res)
         }).catch(err => {
           reject(err)

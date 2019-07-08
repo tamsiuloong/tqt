@@ -547,13 +547,23 @@ export default [
     component: Main,
     children: [
       {
-        path: 'interview',
-        name: '面试记录',
+        path: 'mine',
+        name: '我的面试记录',
         meta: {
           icon: 'md-funnel',
-          title: '面试记录'
+          title: '我的面试记录'
         },
-        component: () => import('@/view/interview/Interview.vue')
+        component: () => import('@/view/interview/MyInterview.vue')
+      }
+      ,
+      {
+        path: 'query',
+        name: '查询面试记录',
+        meta: {
+          icon: 'md-funnel',
+          title: '查询面试记录'
+        },
+        component: () => import('@/view/interview/QueryInterview.vue')
       }
       ,
       {
@@ -565,6 +575,16 @@ export default [
           hideInMenu:true
         },
         component: () => import('@/view/interview/InterviewQuestion.vue')
+      },
+      {
+        path: 'queryInterviewQuestions',
+        name: '查看面试题',
+        meta: {
+          icon: 'md-funnel',
+          title: '查看面试题',
+          hideInMenu:true
+        },
+        component: () => import('@/view/interview/QueryInterviewQuestion.vue')
       }
     ]
   },

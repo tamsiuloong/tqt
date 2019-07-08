@@ -71,7 +71,70 @@
             </FormItem>
           </Col>
         </Row>
+        <Row>
+          <Col span="11">
+            <FormItem >
+              <Input v-model="form.userInfo.school" placeholder="请输入学校">
+              </Input>
+            </FormItem>
+          </Col>
+          <Col span="2" style="text-align: center"/>
+          <Col span="11">
+            <FormItem>
+              <Input v-model="form.userInfo.major" placeholder="请输入专业">
+              </Input>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="11">
+            <FormItem>
+              <Select v-model="form.userInfo.education" style="width:200px" placeholder="请选择学历">
+                <Option v-for="c in educationList"  :value="c.value">{{c.label}}</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col span="2" style="text-align: center"/>
+          <Col span="11">
+            <FormItem>
+              <Select v-model="form.userInfo.experience" style="width:200px">
+                <Option v-for="c in workExperienceList" placeholder="工作经历"  :value="c.value">{{c.label}}</Option>
+              </Select>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="11">
+            <FormItem>
+              <DatePicker type="date" v-model="form.userInfo.birthday" placeholder="请输入生日" format="yyyy-MM" style="width: 200px"></DatePicker>
+            </FormItem>
+          </Col>
+          <Col span="2" style="text-align: center"/>
+          <Col span="11">
 
+            <FormItem>
+              <DatePicker type="date" v-model="form.userInfo.educationTime" placeholder="请输入毕业时间" format="yyyy-MM" style="width: 200px"></DatePicker>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="11">
+            <FormItem>
+              <Input v-model="form.userInfo.telephone" placeholder="请输入手机">
+              </Input>
+            </FormItem>
+          </Col>
+          <Col span="2" style="text-align: center"/>
+          <Col span="11">
+            <FormItem >
+              <Input type="textarea" v-model="form.noteUrl" placeholder="笔记地址">
+        <span slot="prepend">
+          <Icon :size="14" type="md-lock"></Icon>
+        </span>
+              </Input>
+            </FormItem>
+          </Col>
+        </Row>
         <Row>
           <Col span="22">
             <FormItem label="笔记地址" prop="userInfo.noteUrl">

@@ -4,7 +4,7 @@
 
 <template>
   <div class="login" v-if="isLogin">
-    <div class="login-con">
+    <div class="login-con" style="width: 300px">
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
@@ -15,8 +15,8 @@
     </div>
   </div>
   <div class="login" v-else="!isLogin">
-    <div class="login-con">
-      <Card icon="log-in" title="写填写基本信息" :bordered="false">
+    <div class="login-con"  style="width: 500px">
+      <Card icon="log-in" title="填写注册信息" :bordered="false">
         <div class="form-con">
           <register-form @on-success-valid="register"></register-form>
           <p class="login-tip"><a @click="loop">直接登陆</a></p>
@@ -67,8 +67,8 @@ export default {
         }
       })
     },
-    register({ userName, password,classId,noteUrl,realName }) {
-      this.handleRegister({ userName, password,classId,noteUrl,realName }).then(res => {
+    register(form) {
+      this.handleRegister(form).then(res => {
         if(res.data.code === 1)
         {
           this.isLogin=true;
