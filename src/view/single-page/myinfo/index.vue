@@ -31,24 +31,16 @@
         </Row>
 
         <Row>
-          <Col span="11">
-            <!--<FormItem label="等级" prop="userInfo.degree">-->
-                <!--<Select v-model="updateForm.userInfo.degree" filterable>-->
-                  <!--<Option v-for="item in degreeList" :value="item.value" :key="item.value">{{ item.label-->
-                  <!--}}-->
-                <!--</Option>-->
-              <!--</Select>-->
-            <!--</FormItem>-->
-          </Col>
-          <Col span="2" style="text-align: center"/>
+
           <Col span="11">
             <FormItem label="性别" prop="userInfo.gender">
               <RadioGroup v-model="updateForm.userInfo.gender" type="button">
-                <Radio label="1">男</Radio>
-                <Radio label="0">女</Radio>
+                <Radio label="true">男</Radio>
+                <Radio label="false">女</Radio>
               </RadioGroup>
             </FormItem>
           </Col>
+          <Col span="2" style="text-align: center"/>
           <Col span="11">
             <FormItem label="电话" prop="userInfo.telephone">
               <Input type="text" v-model="updateForm.userInfo.telephone"/>
@@ -59,45 +51,45 @@
 
         <Row>
           <Col span="11">
-            <FormItem label="邮箱" prop="userInfo.email">
+            <FormItem label="邮箱" >
               <Input type="text" v-model="updateForm.userInfo.email"/>
             </FormItem>
           </Col>
           <Col span="2" style="text-align: center"/>
           <Col span="11">
-            <FormItem label="出生年月" prop="userInfo.birthday">
-              <DatePicker type="date" v-model="updateForm.userInfo.birthday" format="yyyy-MM-dd"
-                          placeholder="Select date" style="width: 200px"></DatePicker>
+            <FormItem label="手机">
+              <Input v-model="updateForm.userInfo.telephone" placeholder="请输入手机">
+              </Input>
             </FormItem>
           </Col>
         </Row>
         <Row>
-          <Col span="11">
-            <FormItem >
-              <Input v-model="form.userInfo.school" placeholder="请输入学校">
+          <Col span="11" >
+            <FormItem label="毕业学校">
+              <Input v-model="updateForm.userInfo.school" placeholder="请输入学校">
               </Input>
             </FormItem>
           </Col>
           <Col span="2" style="text-align: center"/>
           <Col span="11">
-            <FormItem>
-              <Input v-model="form.userInfo.major" placeholder="请输入专业">
+            <FormItem label="专业">
+              <Input v-model="updateForm.userInfo.major" placeholder="请输入专业">
               </Input>
             </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span="11">
-            <FormItem>
-              <Select v-model="form.userInfo.education" style="width:200px" placeholder="请选择学历">
+            <FormItem label="学历">
+              <Select v-model="updateForm.userInfo.education" style="width:200px" placeholder="请选择学历">
                 <Option v-for="c in educationList"  :value="c.value">{{c.label}}</Option>
               </Select>
             </FormItem>
           </Col>
           <Col span="2" style="text-align: center"/>
           <Col span="11">
-            <FormItem>
-              <Select v-model="form.userInfo.experience" style="width:200px">
+            <FormItem label="工作经历">
+              <Select v-model="updateForm.userInfo.experience" style="width:200px">
                 <Option v-for="c in workExperienceList" placeholder="工作经历"  :value="c.value">{{c.label}}</Option>
               </Select>
             </FormItem>
@@ -105,29 +97,33 @@
         </Row>
         <Row>
           <Col span="11">
-            <FormItem>
-              <DatePicker type="date" v-model="form.userInfo.birthday" placeholder="请输入生日" format="yyyy-MM" style="width: 200px"></DatePicker>
+            <FormItem label="生日">
+              <DatePicker type="date" v-model="updateForm.userInfo.birthday" placeholder="请输入生日" format="yyyy-MM" style="width: 200px"></DatePicker>
             </FormItem>
           </Col>
           <Col span="2" style="text-align: center"/>
           <Col span="11">
 
-            <FormItem>
-              <DatePicker type="date" v-model="form.userInfo.educationTime" placeholder="请输入毕业时间" format="yyyy-MM" style="width: 200px"></DatePicker>
+            <FormItem label="毕业时间">
+              <DatePicker type="date" v-model="updateForm.userInfo.graduationTime" placeholder="请输入毕业时间" format="yyyy-MM" style="width: 200px"></DatePicker>
             </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span="11">
-            <FormItem>
-              <Input v-model="form.userInfo.telephone" placeholder="请输入手机">
-              </Input>
+            <FormItem prop="classes.id" label="班级">
+              <Select v-model="updateForm.classes.id" style="width:200px"  placeholder="请选择班级">
+                <Option v-for="c in classesList" :value="c.id">{{c.name+'期_'+c.type+'班'}}</Option>
+              </Select>
             </FormItem>
           </Col>
+
           <Col span="2" style="text-align: center"/>
+
+
           <Col span="11">
-            <FormItem >
-              <Input type="textarea" v-model="form.noteUrl" placeholder="笔记地址">
+            <FormItem label="笔记地址">
+              <Input type="textarea" v-model="updateForm.noteUrl" placeholder="笔记地址">
         <span slot="prepend">
           <Icon :size="14" type="md-lock"></Icon>
         </span>
@@ -135,13 +131,7 @@
             </FormItem>
           </Col>
         </Row>
-        <Row>
-          <Col span="22">
-            <FormItem label="笔记地址" prop="userInfo.noteUrl">
-              <Input type="textarea" v-model="updateForm.noteUrl"/>
-            </FormItem>
-          </Col>
-        </Row>
+
         <Row>
           <Button type="success" @click="updateInfo">保存</Button>
         </Row>
@@ -192,7 +182,46 @@ export default {
         "passAgain":[
           { validator: this.validatePassword, trigger: 'blur' }
         ]
-      }
+      },
+      classesList:[],
+      genderList: [
+        {
+          value: 'true',
+          label: '男'
+        },
+        {
+          value: 'false',
+          label: '女'
+        }
+      ],
+      workExperienceList: [
+        {
+          value: 'true',
+          label: '有工作经历'
+        },
+        {
+          value: 'false',
+          label: '无工作经历'
+        }
+      ],
+      educationList:[
+        {
+          value: '4',
+          label: '研究生'
+        },
+        {
+          value: '3',
+          label: '本科'
+        },
+        {
+          value: '2',
+          label: '大专'
+        },
+        {
+          value: '1',
+          label: '高中'
+        }
+      ]
     }
   },
   methods: {
@@ -224,7 +253,7 @@ export default {
     }
 
   },
-  mounted () {
+  created () {
     axios.request({
       url: '/api/user/myinfo',
       method: 'get'
@@ -247,23 +276,38 @@ export default {
 
         this.updateForm.userName=editUser.userName;
         this.updateForm.id=editUser.id;
-        this.updateForm.userInfo.name=editUser.userInfo.name;
-        this.updateForm.userInfo.salary=editUser.userInfo.salary;
-
-        this.updateForm.userInfo.station=editUser.userInfo.station;
-        this.updateForm.userInfo.telephone=editUser.userInfo.telephone;
-        this.updateForm.userInfo.email=editUser.userInfo.email;
-        this.updateForm.userInfo.orderNo=editUser.userInfo.orderNo;
-        this.updateForm.userInfo.remark=editUser.userInfo.remark;
+        this.updateForm.noteUrl=editUser.noteUrl;
+        // this.updateForm.userInfo.name=editUser.userInfo.name;
+        // this.updateForm.userInfo.salary=editUser.userInfo.salary;
+        //
+        // this.updateForm.userInfo.station=editUser.userInfo.station;
+        // this.updateForm.userInfo.telephone=editUser.userInfo.telephone;
+        // this.updateForm.userInfo.email=editUser.userInfo.email;
+        // this.updateForm.userInfo.orderNo=editUser.userInfo.orderNo;
+        // this.updateForm.userInfo.remark=editUser.userInfo.remark;
+        this.updateForm.userInfo = editUser.userInfo;
         this.updateForm.roleSet=editUser.roleSet;
+        this.updateForm.classes=editUser.classes;
         //数字转字符
         this.updateForm.state=editUser.state+"";
         this.updateForm.userInfo.degree=editUser.userInfo.degree+"";
         this.updateForm.userInfo.gender=editUser.userInfo.gender+"";
+        this.updateForm.userInfo.education=editUser.userInfo.education+"";
+        this.updateForm.userInfo.experience=editUser.userInfo.experience+"";
         //日期转字符
         this.updateForm.userInfo.joinDate=formatDate(editUser.userInfo.joinDate);
         this.updateForm.userInfo.birthday=formatDate(editUser.userInfo.birthday);
       }
+    });
+
+
+    axios.request({
+      url: '/api/classes/all',
+      method: 'get'
+    }).then((result) => {
+      this.classesList = result.data.data;
+    }).catch((result)=>{
+      this.$Message.error("操作异常："+result);
     });
   }
 }

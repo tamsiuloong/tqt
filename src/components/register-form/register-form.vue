@@ -202,7 +202,8 @@ export default {
           experience:'false',
           education:'',
           graduationTime:'',
-          telephone:''
+          telephone:'',
+          school:''
         }
       },
       classesList:[],
