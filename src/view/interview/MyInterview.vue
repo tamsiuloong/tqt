@@ -104,7 +104,7 @@
                             <Col span="11">
                             <FormItem label="录音" >
                               <Upload ref="soundRecording"
-                                :on-success="handleSoundSuccess" :format="['mp3','aac','m4a']"
+                                :on-success="handleSoundSuccess4Add" :format="['mp3','aac','m4a']"
                                 :max-size="51200" :on-error="handleError"
                                 :on-format-error="handleSoundFormatError"
                                 :on-exceeded-size="handleSoundExceededError"
@@ -421,8 +421,8 @@
                 updateModal: false,
                 addModal: false,
                 updateForm: {
-                        bsInfo:"",
-                        msInfo:"",
+                        bsInfo:"0",
+                        msInfo:"0",
                         appendixs:"",
                         soundRecording:"",
                         companyName:"",
@@ -432,8 +432,8 @@
                         experience:""
                 },
                 addForm: {
-                        bsInfo:"",
-                        msInfo:"",
+                        bsInfo:"0",
+                        msInfo:"0",
                         appendixs:"",
                         soundRecording:"",
                         companyName:"",
@@ -489,6 +489,10 @@
                 },
                 //情况列表
                 infoList: [
+                  {
+                    value: '0',
+                    label: '未参加'
+                  },
                   {
                     value: '1',
                     label: '优'
@@ -547,8 +551,8 @@
               this.reset("addForm");
               //清空
               this.addForm={
-                bsInfo:"",
-                msInfo:"",
+                bsInfo:"0",
+                msInfo:"0",
                 appendixs:"",
                 soundRecording:"",
                 companyName:"",
@@ -666,6 +670,12 @@
                 this.$Message.info('点击了取消');
             },
             handleSoundSuccess(res, file,fileList) {
+              file.url = baseUrl+res;
+              file.name = res;
+              this.updateForm.soundRecording = res;
+            },
+
+            handleSoundSuccess4Add(res, file,fileList) {
               file.url = baseUrl+res;
               file.name = res;
               this.addForm.soundRecording = res;

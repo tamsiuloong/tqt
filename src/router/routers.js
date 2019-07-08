@@ -527,11 +527,11 @@ export default [
         component: () => import('@/view/learn/Feedback.vue')
       },
       {
-        path: 'level_2_3',
-        name: 'level_2_3',
+        path: 'votetopic',
+        name: '问卷调查',
         meta: {
           icon: 'md-funnel',
-          title: '二级-3'
+          title: '问卷调查'
         },
         component: () => import('@/view/multilevel/level-2-3.vue')
       }
