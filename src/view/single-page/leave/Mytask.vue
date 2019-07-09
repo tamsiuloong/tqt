@@ -309,7 +309,7 @@
                         }).then((result) => {
                             this.gopage(this.pageNo);
                             this.$refs['addForm'].resetFields();
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.addModal = false;
                         });
                     }
@@ -344,7 +344,7 @@
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
 
                             // 获取未读消息条数
@@ -373,7 +373,7 @@
                         data: this.groupId
                     }).then((result) => {
                         if (result.data.code === 1) {
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{

@@ -9,7 +9,7 @@
         <br>
         <Row>
                     <Button type="primary" icon="ios-add" @click="addVoteTopic()">新建</Button>
-                    <Button type="success" icon="ios-build" @click="edit()">修改</Button>
+                    <!--<Button type="success" icon="ios-build" @click="edit()">修改</Button>-->
                     <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
         </Row>
         <br>
@@ -32,21 +32,7 @@
                 @on-cancel="cancel"
                 width="60%">
             <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
-                <!--一次性取两个元素放在row集合中 -->
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="" prop="votetopicId">
-                                <Input type="text" v-model="addForm.votetopicId"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="" prop="siteId">
-                                <Input type="text" v-model="addForm.siteId"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
+
                     <Row>
                         <!-- 循环便利row中的两个元素-->
                             <Col span="11">
@@ -61,104 +47,52 @@
                             </FormItem>
                             </Col>
                     </Row>
+
                     <Row>
                         <!-- 循环便利row中的两个元素-->
                             <Col span="11">
-                            <FormItem label="开始时间" prop="startTime">
-                                <Input type="text" v-model="addForm.startTime"/>
+                            <FormItem label="班级" prop="classes.id">
+
+                              <Select filterable="true" placeholder="班级" v-model="addForm.classes.id" style="width:200px">
+                                <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+                              </Select>
                             </FormItem>
                             </Col>
                                 <Col span="2" style="text-align: center"/>
                             <Col span="11">
-                            <FormItem label="结束时间" prop="endTime">
-                                <Input type="text" v-model="addForm.endTime"/>
+                            <FormItem label="老师" prop="teacher.id">
+                              <Select filterable="true" placeholder="老师" v-model="addForm.teacher.id" style="width:200px">
+                                <Option v-for="c in teacherList" :value="c.id">{{c.userInfo.name}}</Option>
+                              </Select>
                             </FormItem>
                             </Col>
                     </Row>
+
+                  <FormItem
+                    v-for="(item, index) in addForm.items"
+                    v-if="item.status"
+                    :key="index"
+                    :label="'调查项 ' + item.index"
+                    :prop="'items.' + index + '.value'"
+                    :rules="{required: true, message: '调查项 ' + item.index +'不能为空', trigger: 'blur'}">
                     <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="重复投票限制时间，单位小时，为空不允许重复投票" prop="repeateHour">
-                                <Input type="text" v-model="addForm.repeateHour"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="总投票数" prop="totalCount">
-                                <Input type="text" v-model="addForm.totalCount"/>
-                            </FormItem>
-                            </Col>
+                      <Col span="18">
+                        <Input type="text" v-model="item.value" placeholder="输入"></Input>
+                      </Col>
+                      <Col span="4" offset="1">
+                        <Button @click="handleRemove(index)">删除调查项</Button>
+                      </Col>
                     </Row>
+                  </FormItem>
+
+
+                  <FormItem>
                     <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="最多可以选择几项" prop="multiSelect">
-                                <Input type="text" v-model="addForm.multiSelect"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="是否限制会员" prop="isRestrictMember">
-                                <Input type="text" v-model="addForm.isRestrictMember"/>
-                            </FormItem>
-                            </Col>
+                      <Col span="12">
+                        <Button type="dashed" long @click="handleAdd" icon="md-add">添加调查项</Button>
+                      </Col>
                     </Row>
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="是否限制IP" prop="isRestrictIp">
-                                <Input type="text" v-model="addForm.isRestrictIp"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="是否限制COOKIE" prop="isRestrictCookie">
-                                <Input type="text" v-model="addForm.isRestrictCookie"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="是否禁用" prop="isDisabled">
-                                <Input type="text" v-model="addForm.isDisabled"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="是否默认主题" prop="isDef">
-                                <Input type="text" v-model="addForm.isDef"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="是否限制微信" prop="limitWeixin">
-                                <Input type="text" v-model="addForm.limitWeixin"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次" prop="voteDay">
-                                <Input type="text" v-model="addForm.voteDay"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="班级" prop="classId">
-                                <Input type="text" v-model="addForm.classId"/>
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                            <FormItem label="教师" prop="teacher">
-                                <Input type="text" v-model="addForm.teacher"/>
-                            </FormItem>
-                            </Col>
-                    </Row>
+                  </FormItem>
             </Form>
         </Modal>
 
@@ -415,23 +349,22 @@
                         teacher:""
                 },
                 addForm: {
-                        siteId:"",
                         title:"",
                         description:"",
-                        startTime:"",
-                        endTime:"",
-                        repeateHour:"",
-                        totalCount:"",
-                        multiSelect:"",
-                        isRestrictMember:"",
-                        isRestrictIp:"",
-                        isRestrictCookie:"",
-                        isDisabled:"",
-                        isDef:"",
-                        limitWeixin:"",
-                        voteDay:"",
-                        classId:"",
-                        teacher:""
+                        classes:{
+                          id:""
+                        },
+                        teacher:{
+                          id:""
+                        },
+                        voteSubtopicList:[],
+                        items: [
+                          {
+                            value: '',
+                            index: 1,
+                            status: 1
+                          }
+                        ]
                 },
                 formRule: {
                     votetopicId: [
@@ -498,11 +431,11 @@
                         {required: true, message:'限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次不能为空',trigger:'blur'}
                     ]
                     ,
-                    classId: [
+                    "classes.id": [
                         {required: true, message:'班级不能为空',trigger:'blur'}
                     ]
                     ,
-                    teacher: [
+                    "teacher.id": [
                         {required: true, message:'教师不能为空',trigger:'blur'}
                     ]
                 },
@@ -510,7 +443,10 @@
                 //调查记录
                 voteRecordList:[],
                 //调查项
-                voteSubTopicList:[]
+                voteSubTopicList:[],
+                classesList:[],
+                teacherList:[],
+                index: 1
             }
         },
         methods: {
@@ -533,22 +469,49 @@
                 this.$refs[form].resetFields();
             },
             addVoteTopic(){
+                // this.index = 1;
                 this.addModal = true;
+                // this.addForm.items.splice(0,this.addForm.items.length);
+              //   this.$refs['addForm'].resetFields();
+              // this.addForm.items.push({
+              //   value: '',
+              //   index: 1,
+              //   status: 1
+              // })
             },
             add(){
                 this.$refs['addForm'].validate((valid)=>{
                     if(valid)
                     {
                         const voteTopic = this.addForm;
+
+
+                        this.addForm.items.forEach(item=>{
+                          if(item.status===1)
+                          {
+                            voteTopic.voteSubtopicList.push({
+                              title:item.value,
+                              priority:item.index,
+                              subtopicType:3
+                            })
+                          }
+                        })
+
+                        // delete voteTopic.items;
+                        voteTopic.teacherId = voteTopic.teacher.id;
                         axios.request({
                             url: '/api/voteTopic',
                             method: 'post',
                             data: voteTopic
                         }).then((result) => {
-                            this.gopage(this.pageNo);
-                            this.$refs['addForm'].resetFields();
-                            this.$Message.success('Success!');
+
                             this.addModal = false;
+
+                            this.gopage();
+
+                            this.$Message.success('操作成功!');
+
+                            this.$refs['addForm'].resetFields();
                         });
                     }
                     else
@@ -582,7 +545,7 @@
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
                             this.$Message.error("操作异常："+result);
@@ -608,11 +571,11 @@
                         data: this.groupId
                     }).then((result) => {
                         if (result.data.code === 1) {
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                        this.$Message.error("操作异常："+result);
+                        this.$Message.error("操作异常：已经参与调查后不可以被删除!"+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -652,7 +615,12 @@
               }).then((result) => {
                 this.voteSubTopicList = result.data.data;
 
-                this.columns2=[];
+                this.columns2=[
+                  {
+                    title: '学员',
+                    key: 'stuName'
+                  }
+                ];
                 //拼接表头
                 let i = 0;
                 this.voteSubTopicList.forEach(subTopic=>{
@@ -673,10 +641,40 @@
               }).catch((result)=>{
                 this.$Message.error("操作异常："+result);
               });
+            },
+            handleAdd () {
+              this.index++;
+              this.addForm.items.push({
+                value: '',
+                index: this.index,
+                status: 1
+              });
+            },
+            handleRemove (index) {
+              this.addForm.items[index].status = 0;
             }
         },
-        mounted: function () {
+        created: function () {
+
             this.gopage();
+
+            axios.request({
+              url: '/api/classes/all',
+              method: 'get'
+            }).then((result) => {
+              this.classesList = result.data.data;
+            }).catch((result)=>{
+              this.$Message.error("操作异常："+result);
+            });
+
+            axios.request({
+              url: '/api/user/teachers',
+              method: 'get'
+            }).then((result) => {
+              this.teacherList = result.data.data;
+            }).catch((result)=>{
+              this.$Message.error("操作异常："+result);
+            });
         }
     }
 

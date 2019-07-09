@@ -168,7 +168,7 @@
             }).then((result) => {
               this.gopage(this.page.number);
               this.$refs['addForm'].resetFields();
-              this.$Message.success('Success!');
+              this.$Message.success('操作成功!');
               this.modal2 = false;
             });
           }
@@ -216,7 +216,7 @@
             data: this.groupId
           }).then((result) => {
             if (result.data == '1') {
-              this.$Message.success('Success!');
+              this.$Message.success('操作成功!');
               this.gopage(this.page.number);
             }
           });
@@ -234,7 +234,7 @@
               data: this.updateForm
             }).then((result) => {
               this.modal1 = false,
-                this.$Message.success('Success!');
+                this.$Message.success('操作成功!');
               //刷新页面数据
               this.gopage(this.page.number);
             });
@@ -277,7 +277,7 @@
             data: this.groupId
           }).then((result) => {
             if (result.data == '1') {
-              this.$Message.success('Success!');
+              this.$Message.success('操作成功!');
               this.gopage();
             }
           });

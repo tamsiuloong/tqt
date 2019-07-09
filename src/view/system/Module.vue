@@ -481,7 +481,7 @@
                             this.$refs['addForm'].resetFields();
                             this.addModal=false;
                             this.gopage(this.page.number);
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                         });
                     }
                     else
@@ -536,7 +536,7 @@
                 }).then((result) => {
                     if(result.data.code === 1)
                     {
-                        this.$Message.success('Success!');
+                        this.$Message.success('操作成功!');
                         this.gopage(this.page.number);
                     }
                 });
@@ -560,7 +560,7 @@
                         }).then((result) => {
                             this.updateModal=false;
                             this.gopage(this.page.number);
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                         });
                     }
                     else

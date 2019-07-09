@@ -419,7 +419,7 @@
                         }).then((result) => {
                             this.gopage(this.pageNo);
                             this.$refs['addForm'].resetFields();
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.addModal = false;
                         }).catch((result)=>{
                           this.$Message.error("添加失败："+result);
@@ -456,7 +456,7 @@
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                                    this.$Message.success('Success!');
+                                    this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
                           this.$Message.error("操作异常："+result);
@@ -482,7 +482,7 @@
                         data: this.groupId
                     }).then((result) => {
                         if (result.data.code === 1) {
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{

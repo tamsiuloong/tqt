@@ -430,7 +430,7 @@
                         }).then((result) => {
                             this.gopage();
                             this.$refs['addForm'].resetFields();
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.addModal = false;
                         });
                     }

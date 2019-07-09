@@ -88,7 +88,7 @@
                             <Col span="11">
                             <FormItem label="附件" >
                               <Upload
-                                multiple ref="appendixs" :on-success="handleSuccess" :format="['jpg','jpeg','png']"
+                                multiple ref="appendixs" :on-success="handleSuccess4Add" :format="['jpg','jpeg','png']"
                                 :max-size="5120" :on-error="handleError"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleExceededError"
@@ -104,7 +104,7 @@
                             <Col span="11">
                             <FormItem label="录音" >
                               <Upload ref="soundRecording"
-                                :on-success="handleSoundSuccess4Add" :format="['mp3','aac','m4a']"
+                                :on-success="Success4Add" :format="['mp3','aac','m4a']"
                                 :max-size="51200" :on-error="handleError"
                                 :on-format-error="handleSoundFormatError"
                                 :on-exceeded-size="handleSoundExceededError"
@@ -190,7 +190,7 @@
               <Col span="11">
                 <FormItem label="附件" >
                   <Upload ref="updateAppendixs"
-                    multiple :on-success="handleSuccess" :format="['jpg','jpeg','png']"
+                    multiple :on-success="handleSuccess4Add" :format="['jpg','jpeg','png']"
                     :max-size="5120" :on-error="handleError"
                     :on-format-error="handleFormatError"
                     :on-exceeded-size="handleExceededError"
@@ -575,7 +575,7 @@
                         }).then((result) => {
                             this.gopage(this.pageNo);
                             this.$refs['addForm'].resetFields();
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.addModal = false;
                         });
                     }
@@ -615,7 +615,7 @@
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
                             this.$Message.error("操作异常："+result);
@@ -641,7 +641,7 @@
                         data: this.groupId
                     }).then((result) => {
                         if (result.data.code === 1) {
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
@@ -675,7 +675,7 @@
               this.updateForm.soundRecording = res;
             },
 
-            handleSoundSuccess4Add(res, file,fileList) {
+            Success4Add(res, file,fileList) {
               file.url = baseUrl+res;
               file.name = res;
               this.addForm.soundRecording = res;
@@ -710,7 +710,7 @@
               }
               this.$refs.soundRecording.clearFiles();
             },
-            handleSuccess (res, file,fileList) {
+            handleSuccess4Add (res, file,fileList) {
               console.log(res);
               console.log(file);
               file.url = baseUrl+res;

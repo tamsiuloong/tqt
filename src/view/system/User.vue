@@ -725,7 +725,7 @@
                         }).then((result) => {
                             this.gopage(this.page.number);
                             this.$refs['addForm'].resetFields();
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.addModal = false;
                         }).catch(resp=>{
                             this.$Message.error("网络异常，请稍后再试");
@@ -762,7 +762,7 @@
                             data: this.updateForm,
                         }).then((result) => {
                             this.updateModal = false,
-                                this.$Message.success('Success!');
+                                this.$Message.success('操作成功!');
                             this.gopage(this.page.number);
                         });
                     }
@@ -786,7 +786,7 @@
                         data: this.groupId
                     }).then((result) => {
                         if (result.data.code === 1) {
-                            this.$Message.success('Success!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.page.number);
                         }
                     });
@@ -840,7 +840,7 @@
                     method: 'put',
                     data:roleForm
                 }).then((result) => {
-                    this.$Message.success('Success!');
+                    this.$Message.success('操作成功!');
                     this.gopage(this.page.number);
                 });
             }
