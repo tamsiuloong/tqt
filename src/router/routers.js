@@ -476,6 +476,15 @@ export default [
           title: '面试题管理'
         },
         component: () => import('@/view/teaching/InterviewQuestion.vue')
+      },
+      {
+        path: 'votetopic',
+        name: '问卷调查管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '问卷调查管理'
+        },
+        component: () => import('@/view/teaching/VoteTopic.vue')
       }
     ]
   },
@@ -533,7 +542,7 @@ export default [
           icon: 'md-funnel',
           title: '问卷调查'
         },
-        component: () => import('@/view/multilevel/level-2-3.vue')
+        component: () => import('@/view/learn/VoteTopic.vue')
       }
     ]
   },

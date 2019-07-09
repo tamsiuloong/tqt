@@ -1,16 +1,16 @@
 <template>
     <Card>
-        <!--<Row>-->
-            <!--<Col span="12">-->
-                <!--<Input v-model="keyWord" placeholder="请输入投票主题..." style="width:200px"/>-->
-                <!--<Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>-->
-            <!--</Col>-->
-        <!--</Row>-->
-        <!--<br>-->
         <Row>
-                    <!--<Button type="primary" icon="ios-add" @click="addVoteTopic()">新建</Button>-->
-                    <!--<Button type="success" icon="ios-build" @click="edit()">修改</Button>-->
-                    <!--<Button type="error" icon="ios-trash" @click="remove()">删除</Button>-->
+            <Col span="8">
+                <Input v-model="keyWord" placeholder="请输入投票主题..." style="width:200px"/>
+                <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+            </Col>
+        </Row>
+        <br>
+        <Row>
+                    <Button type="primary" icon="ios-add" @click="addVoteTopic()">新建</Button>
+                    <Button type="success" icon="ios-build" @click="edit()">修改</Button>
+                    <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
         </Row>
         <br>
         <Row>
@@ -164,33 +164,131 @@
 
 
         <Modal
-                v-model="joinVoteModal"
-                :title="joinVoteForm.title"
+                v-model="updateModal"
+                title="编辑投票主题"
                 :mask-closable="false"
                 :loading="loading"
-                @on-ok="submitVote"
+                @on-ok="update"
                 @on-cancel="cancel"
-                ok-text="提交问卷调查"
-                width="80%">
-            <Form ref="joinVoteForm" :model="joinVoteForm" :rules="formRule" :label-width="80">
+                width="60%">
+            <Form ref="updateForm" :model="updateForm" :rules="formRule" :label-width="80">
 
                     <Row>
-                      <Col span="24">
-                       <h2 style="color: red">注意：各个评分项分值范围为1-100分</h2>
-                      </Col>
+                            <Col span="11">
+                            <FormItem label="" prop="votetopicId">
+                                <Input type="text" v-model="updateForm.votetopicId"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="" prop="siteId">
+                                <Input type="text" v-model="updateForm.siteId"/>
+                            </FormItem>
+                            </Col>
                     </Row>
-                    <br>
-                    <Row v-for="(v,i) in voteSubTopicList" :key="i">
-                          <Col span="8">
-                           {{v.title}}
-                          </Col>
-                          <Col span="3"  v-if="v.title!='建议'" >
-                              <Input type="number" maxlength="3" size="small" number="true" @on-blur="validNumber($event,i)"  v-model="voteReply[i]"/>
-                          </Col>
-
-                          <Col span="16" v-else>
-                            <Input type="textarea" v-model="voteReply[i]"/>
-                          </Col>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="标题" prop="title">
+                                <Input type="text" v-model="updateForm.title"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="描述" prop="description">
+                                <Input type="text" v-model="updateForm.description"/>
+                            </FormItem>
+                            </Col>
+                    </Row>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="开始时间" prop="startTime">
+                                <Input type="text" v-model="updateForm.startTime"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="结束时间" prop="endTime">
+                                <Input type="text" v-model="updateForm.endTime"/>
+                            </FormItem>
+                            </Col>
+                    </Row>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="重复投票限制时间，单位小时，为空不允许重复投票" prop="repeateHour">
+                                <Input type="text" v-model="updateForm.repeateHour"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="总投票数" prop="totalCount">
+                                <Input type="text" v-model="updateForm.totalCount"/>
+                            </FormItem>
+                            </Col>
+                    </Row>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="最多可以选择几项" prop="multiSelect">
+                                <Input type="text" v-model="updateForm.multiSelect"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="是否限制会员" prop="isRestrictMember">
+                                <Input type="text" v-model="updateForm.isRestrictMember"/>
+                            </FormItem>
+                            </Col>
+                    </Row>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="是否限制IP" prop="isRestrictIp">
+                                <Input type="text" v-model="updateForm.isRestrictIp"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="是否限制COOKIE" prop="isRestrictCookie">
+                                <Input type="text" v-model="updateForm.isRestrictCookie"/>
+                            </FormItem>
+                            </Col>
+                    </Row>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="是否禁用" prop="isDisabled">
+                                <Input type="text" v-model="updateForm.isDisabled"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="是否默认主题" prop="isDef">
+                                <Input type="text" v-model="updateForm.isDef"/>
+                            </FormItem>
+                            </Col>
+                    </Row>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="是否限制微信" prop="limitWeixin">
+                                <Input type="text" v-model="updateForm.limitWeixin"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次" prop="voteDay">
+                                <Input type="text" v-model="updateForm.voteDay"/>
+                            </FormItem>
+                            </Col>
+                    </Row>
+                    <Row>
+                            <Col span="11">
+                            <FormItem label="班级" prop="classId">
+                                <Input type="text" v-model="updateForm.classId"/>
+                            </FormItem>
+                            </Col>
+                                <Col span="2" style="text-align: center"/>
+                            <Col span="11">
+                            <FormItem label="教师" prop="teacher">
+                                <Input type="text" v-model="updateForm.teacher"/>
+                            </FormItem>
+                            </Col>
                     </Row>
 
             </Form>
@@ -220,6 +318,10 @@
                         align: 'center'
                     },
                     {
+                        title: '',
+                        key: 'siteId'
+                    },
+                    {
                         title: '标题',
                         key: 'title'
                     },
@@ -228,57 +330,67 @@
                         key: 'description'
                     },
                     {
+                        title: '开始时间',
+                        key: 'startTime'
+                    },
+                    {
+                        title: '结束时间',
+                        key: 'endTime'
+                    },
+                    {
+                        title: '重复投票限制时间，单位小时，为空不允许重复投票',
+                        key: 'repeateHour'
+                    },
+                    {
+                        title: '总投票数',
+                        key: 'totalCount'
+                    },
+                    {
+                        title: '最多可以选择几项',
+                        key: 'multiSelect'
+                    },
+                    {
+                        title: '是否限制会员',
+                        key: 'isRestrictMember'
+                    },
+                    {
+                        title: '是否限制IP',
+                        key: 'isRestrictIp'
+                    },
+                    {
+                        title: '是否限制COOKIE',
+                        key: 'isRestrictCookie'
+                    },
+                    {
+                        title: '是否禁用',
+                        key: 'isDisabled'
+                    },
+                    {
+                        title: '是否默认主题',
+                        key: 'isDef'
+                    },
+                    {
+                        title: '是否限制微信',
+                        key: 'limitWeixin'
+                    },
+                    {
+                        title: '限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次',
+                        key: 'voteDay'
+                    },
+                    {
                         title: '班级',
-                        key: 'classId',
-                        render: (h, params) => {
-                          return h('div', [
-                            h('strong', params.row.classes.name+"_"+params.row.classes.type)
-                          ]);
-                        }
+                        key: 'classId'
                     },
                     {
                         title: '教师',
-                        key: 'teacherName'
-                    },
-                    {
-                      title: '操作',
-                      key: 'action',
-                      fixed: 'right',
-                      width: 120,
-                      render: (h, params) => {
-                        return h('div', [
-                          h('Button', {
-                            props: {
-                              type: 'text',
-                              size: 'small'
-                            },
-                            on: {
-                              click: () => {
-                                //获取该调查的调查项目list
-                                let votetopicId = params.row.id;
-                                this.queryVoteSubTopicList(votetopicId);
-                                //初始化调查回复
-                                this.voteReply=[];
-                                // this.voteSubTopicList.forEach(subTopic=>{
-                                //   this.voteReply.push({
-                                //     subtopicId:subTopic.id,
-                                //     reply:""
-                                //   })
-                                // })
-                                this.joinVoteForm = params.row;
-                                this.joinVoteModal = true;
-                              }
-                            }
-                          }, '参与调查')
-                        ]);
-                      }
+                        key: 'teacher'
                     }
                 ],
                 self: this,
                 page: [],
-                joinVoteModal: false,
+                updateModal: false,
                 addModal: false,
-                joinVoteForm: {
+                updateForm: {
                         id:"",
                         siteId:"",
                         title:"",
@@ -389,18 +501,14 @@
                     teacher: [
                         {required: true, message:'教师不能为空',trigger:'blur'}
                     ]
-                },
-                voteSubTopicList:[],
-                voteReply:[],
-                beginTime:{},
-                endTime:{}
+                }
             }
         },
         methods: {
             change(e){
                 this.count = e.length;
                 if (e.length == 1) {
-                    this.joinVoteForm = e[0];
+                    this.updateForm = e[0];
                 }
                 this.setGroupId(e);
             },
@@ -448,61 +556,40 @@
             },
             edit () {
                 if (this.count != 1) {
-                    this.joinVoteModal = false;
+                    this.updateModal = false;
                     this.$Message.warning('请至少并只能选择一项');
                 }
                 else {
-                    this.joinVoteModal = true;
+                    this.updateModal = true;
                 }
             },
-            //提交问卷调查
-            submitVote () {
-                if(this.voteReply.length!=this.voteSubTopicList.length)
-                {
-                  this.$Message.error("这位童鞋，还没有填写完哦!");
-                  setTimeout(()=>{
-                    this.loading=false;
-                    this.$nextTick(()=>{
-                      this.loading=true;
-                    });
-                  },1000);
-                }
-                else {
-                  //提交数据前，先转换数据 str->reply对象
-                  for(let i = 0 ;i < this.voteReply.length;i++)
-                  {
-                    this.voteReply[i]={
-                      subtopicId:this.voteSubTopicList[i].id,
-                      reply:this.voteReply[i]
-                    }
-                  }
-
-                  axios.request({
-                    url: '/api/voteReply',
-                    method: 'post',
-                    data: this.voteReply,
-                    params:{
-                      voteTopicId:this.joinVoteForm.id
-                    }
-                  }).then((result) => {
-                    if(result.data.code===0)
+            update () {
+                this.$refs['updateForm'].validate((valid)=>{
+                    if(valid)
                     {
-                      this.$Message.error(result.data.data);
+                        axios.request({
+                            url: '/api/voteTopic',
+                            method: 'put',
+                            data: this.updateForm
+                        }).then((result) => {
+                            this.updateModal = false,
+                                    this.$Message.success('Success!');
+                            this.gopage(this.pageNo);
+                        }).catch((result)=>{
+                            this.$Message.error("操作异常："+result);
+                        });
                     }
-                    else {
-                      this.$Message.success('提交成功，感谢你的认真！');
-                      this.joinVoteModal = false;
+                    else
+                    {
+                        this.$Message.error("表单验证失败");
+                        setTimeout(()=>{
+                            this.loading=false;
+                            this.$nextTick(()=>{
+                                this.loading=true;
+                            });
+                        },1000);
                     }
-                  }).catch((result)=>{
-                    this.$Message.error(result.response.data.message);
-                    setTimeout(()=>{
-                      this.loading=false;
-                      this.$nextTick(()=>{
-                        this.loading=true;
-                      });
-                    },1000);
-                  });
-                }
+                })
             },
             remove () {
                 if (this.groupId != null && this.groupId != "") {
@@ -538,34 +625,10 @@
             },
             cancel () {
                 this.$Message.info('点击了取消');
-            },
-            queryVoteSubTopicList(votetopicId){
-              axios.request({
-                url: '/api/voteSubtopic/all/'+votetopicId,
-                method: 'get'
-              }).then((result) => {
-                this.voteSubTopicList = result.data.data;
-              }).catch((result)=>{
-                this.$Message.error("操作异常："+result);
-              });
-            },
-            validNumber(event,i){
-              let val = event.target.value;
-              if(val>0&&val<=100)
-              {
-                return;
-              }
-              else
-              {
-                event.target.value="100";
-                this.voteReply[i] = '100'
-              }
             }
         },
         mounted: function () {
             this.gopage();
-            //初始化时间
-            this.beginTime = new Date();
         }
     }
 
