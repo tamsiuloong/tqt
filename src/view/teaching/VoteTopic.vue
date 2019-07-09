@@ -294,286 +294,8 @@
             </Form>
         </Modal>
 
-      <Modal
-        v-model="addModal"
-        title="添加投票主题"
-        :mask-closable="false"
-        :loading="loading"
-        @on-ok="add"
-        @on-cancel="cancel"
-        width="60%">
-        <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
-          <!--一次性取两个元素放在row集合中 -->
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="" prop="votetopicId">
-                <Input type="text" v-model="addForm.votetopicId"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="" prop="siteId">
-                <Input type="text" v-model="addForm.siteId"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="标题" prop="title">
-                <Input type="text" v-model="addForm.title"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="描述" prop="description">
-                <Input type="text" v-model="addForm.description"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="开始时间" prop="startTime">
-                <Input type="text" v-model="addForm.startTime"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="结束时间" prop="endTime">
-                <Input type="text" v-model="addForm.endTime"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="重复投票限制时间，单位小时，为空不允许重复投票" prop="repeateHour">
-                <Input type="text" v-model="addForm.repeateHour"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="总投票数" prop="totalCount">
-                <Input type="text" v-model="addForm.totalCount"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="最多可以选择几项" prop="multiSelect">
-                <Input type="text" v-model="addForm.multiSelect"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="是否限制会员" prop="isRestrictMember">
-                <Input type="text" v-model="addForm.isRestrictMember"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="是否限制IP" prop="isRestrictIp">
-                <Input type="text" v-model="addForm.isRestrictIp"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="是否限制COOKIE" prop="isRestrictCookie">
-                <Input type="text" v-model="addForm.isRestrictCookie"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="是否禁用" prop="isDisabled">
-                <Input type="text" v-model="addForm.isDisabled"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="是否默认主题" prop="isDef">
-                <Input type="text" v-model="addForm.isDef"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="是否限制微信" prop="limitWeixin">
-                <Input type="text" v-model="addForm.limitWeixin"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次" prop="voteDay">
-                <Input type="text" v-model="addForm.voteDay"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="班级" prop="classId">
-                <Input type="text" v-model="addForm.classId"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="教师" prop="teacher">
-                <Input type="text" v-model="addForm.teacher"/>
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
 
-      <Modal
-        v-model="addModal"
-        title="添加投票主题"
-        :mask-closable="false"
-        :loading="loading"
-        @on-ok="add"
-        @on-cancel="cancel"
-        width="60%">
-        <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
-          <!--一次性取两个元素放在row集合中 -->
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="" prop="votetopicId">
-                <Input type="text" v-model="addForm.votetopicId"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="" prop="siteId">
-                <Input type="text" v-model="addForm.siteId"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="标题" prop="title">
-                <Input type="text" v-model="addForm.title"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="描述" prop="description">
-                <Input type="text" v-model="addForm.description"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="开始时间" prop="startTime">
-                <Input type="text" v-model="addForm.startTime"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="结束时间" prop="endTime">
-                <Input type="text" v-model="addForm.endTime"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="重复投票限制时间，单位小时，为空不允许重复投票" prop="repeateHour">
-                <Input type="text" v-model="addForm.repeateHour"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="总投票数" prop="totalCount">
-                <Input type="text" v-model="addForm.totalCount"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="最多可以选择几项" prop="multiSelect">
-                <Input type="text" v-model="addForm.multiSelect"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="是否限制会员" prop="isRestrictMember">
-                <Input type="text" v-model="addForm.isRestrictMember"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="是否限制IP" prop="isRestrictIp">
-                <Input type="text" v-model="addForm.isRestrictIp"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="是否限制COOKIE" prop="isRestrictCookie">
-                <Input type="text" v-model="addForm.isRestrictCookie"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="是否禁用" prop="isDisabled">
-                <Input type="text" v-model="addForm.isDisabled"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="是否默认主题" prop="isDef">
-                <Input type="text" v-model="addForm.isDef"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="是否限制微信" prop="limitWeixin">
-                <Input type="text" v-model="addForm.limitWeixin"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次" prop="voteDay">
-                <Input type="text" v-model="addForm.voteDay"/>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <!-- 循环便利row中的两个元素-->
-            <Col span="11">
-              <FormItem label="班级" prop="classId">
-                <Input type="text" v-model="addForm.classId"/>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
-            <Col span="11">
-              <FormItem label="教师" prop="teacher">
-                <Input type="text" v-model="addForm.teacher"/>
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
-
-
-      <Modal
+        <Modal
         v-model="voteResultModal"
         title="调查结果"
         :mask-closable="false"
@@ -582,28 +304,7 @@
         @on-cancel="cancel"
         ok-text="提交问卷调查"
         width="80%">
-        <Form ref="joinVoteForm" :model="joinVoteForm" :rules="formRule" :label-width="80">
-
-          <Row>
-            <Col span="24">
-              <h2 style="color: red">注意：各个评分项分值范围为1-100分</h2>
-            </Col>
-          </Row>
-          <br>
-          <Row v-for="(v,i) in voteSubTopicList" :key="i">
-            <Col span="8">
-              {{v.title}}
-            </Col>
-            <Col span="3"  v-if="v.title!='建议'" >
-              <Input type="number" maxlength="3" size="small" number="true" @on-blur="validNumber($event,i)"  v-model="voteReply[i]"/>
-            </Col>
-
-            <Col span="16" v-else>
-              <Input type="textarea" v-model="voteReply[i]"/>
-            </Col>
-          </Row>
-
-        </Form>
+          <Table border :columns="columns2" :data="voteRecordList"></Table>
       </Modal>
     </Card>
 </template>
@@ -615,6 +316,7 @@
     export default {
         data() {
             return {
+
                 loading:true,
                 count: 0,
                 gourpId: null,
@@ -670,22 +372,22 @@
                             click: () => {
                               //获取该调查的调查项目list
                               let votetopicId = params.row.id;
+                              this.queryVoteRecordList(votetopicId);
                               this.queryVoteSubTopicList(votetopicId);
-                              //初始化调查回复
-                              this.voteReply=[];
-                              // this.voteSubTopicList.forEach(subTopic=>{
-                              //   this.voteReply.push({
-                              //     subtopicId:subTopic.id,
-                              //     reply:""
-                              //   })
-                              // })
-                              this.joinVoteForm = params.row;
+
+
                               this.voteResultModal = true;
                             }
                           }
                         }, '调查结果')
                       ]);
                     }
+                  }
+                ],
+                columns2: [
+                  {
+                    title: '学员',
+                    key: 'stuName'
                   }
                 ],
                 self: this,
@@ -803,7 +505,12 @@
                     teacher: [
                         {required: true, message:'教师不能为空',trigger:'blur'}
                     ]
-                }
+                },
+                voteResultModal:false,
+                //调查记录
+                voteRecordList:[],
+                //调查项
+                voteSubTopicList:[]
             }
         },
         methods: {
@@ -875,7 +582,7 @@
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                                    this.$Message.success('Success!');
+                            this.$Message.success('Success!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
                             this.$Message.error("操作异常："+result);
@@ -927,6 +634,45 @@
             },
             cancel () {
                 this.$Message.info('点击了取消');
+            },
+            queryVoteRecordList(votetopicId){
+              axios.request({
+                url: '/api/voteRecord/all/'+votetopicId,
+                method: 'get'
+              }).then((result) => {
+                this.voteRecordList = result.data.data;
+              }).catch((result)=>{
+                this.$Message.error("操作异常："+result);
+              });
+            },
+            queryVoteSubTopicList(votetopicId){
+              axios.request({
+                url: '/api/voteSubtopic/all/'+votetopicId,
+                method: 'get'
+              }).then((result) => {
+                this.voteSubTopicList = result.data.data;
+
+                this.columns2=[];
+                //拼接表头
+                let i = 0;
+                this.voteSubTopicList.forEach(subTopic=>{
+                  this.columns2.push({
+                    title: subTopic.title,
+                    key: subTopic.id,
+                    render: (h, params) => {
+                      if(i>=this.voteSubTopicList.length)
+                      {
+                        i=0;
+                      }
+                      return h('div', [
+                        h('strong',params.row.voteReplyList[i++].reply )
+                      ]);
+                    }
+                  })
+                })
+              }).catch((result)=>{
+                this.$Message.error("操作异常："+result);
+              });
             }
         },
         mounted: function () {
