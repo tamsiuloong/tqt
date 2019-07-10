@@ -302,7 +302,7 @@
                         key: 'bsInfo',
                         render: (h, params) => {
                           const state = parseInt(params.row.bsInfo);
-                          let str = "未知";
+                          let str = "未参加";
                           if (state === 1) {
                             str= "优";
                           }
@@ -325,7 +325,7 @@
                         key: 'msInfo',
                         render: (h, params) => {
                           const state = parseInt(params.row.msInfo);
-                          let str = "未知";
+                          let str = "未参加";
                           if (state === 1) {
                             str= "优";
                           }

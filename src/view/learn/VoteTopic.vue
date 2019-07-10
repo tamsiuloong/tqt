@@ -527,7 +527,7 @@
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
                 axios.request({
-                    url: '/api/voteTopic',
+                    url: '/api/voteTopic/mine',
                     method: 'get',
                     params: {pageNo, pageSize,keyWord}
                 }).then((result) => {

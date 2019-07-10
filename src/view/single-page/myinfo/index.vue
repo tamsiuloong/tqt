@@ -287,7 +287,14 @@ export default {
         // this.updateForm.userInfo.remark=editUser.userInfo.remark;
         this.updateForm.userInfo = editUser.userInfo;
         this.updateForm.roleSet=editUser.roleSet;
-        this.updateForm.classes=editUser.classes;
+        if(editUser.classes)
+        {
+          this.updateForm.classes=editUser.classes;
+        }
+        else
+        {
+          this.updateForm.classes={id:""};
+        }
         //数字转字符
         this.updateForm.state=editUser.state+"";
         this.updateForm.userInfo.degree=editUser.userInfo.degree+"";

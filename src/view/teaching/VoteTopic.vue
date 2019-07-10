@@ -14,7 +14,7 @@
         </Row>
         <br>
         <Row>
-                        <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+            <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
         </Row>
         <br>
         <Row>
@@ -231,7 +231,7 @@
 
         <Modal
         v-model="voteResultModal"
-        title="调查结果"
+        :title="'调查结果'"
         :mask-closable="false"
         :loading="loading"
         @on-ok="submitVote"

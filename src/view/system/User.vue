@@ -682,7 +682,15 @@
                         this.updateForm.noteUrl=editUser.noteUrl;
                         this.updateForm.userInfo = editUser.userInfo;
                         this.updateForm.roleSet=editUser.roleSet;
-                        this.updateForm.classes=editUser.classes;
+                        if(editUser.classes)
+                        {
+                          this.updateForm.classes=editUser.classes;
+                        }
+                        else
+                        {
+                          this.updateForm.classes={id:""};
+                        }
+
                         //数字转字符
                         this.updateForm.state=editUser.state+"";
                         this.updateForm.userInfo.degree=editUser.userInfo.degree+"";
@@ -693,6 +701,8 @@
                         this.updateForm.userInfo.joinDate=formatDate(editUser.userInfo.joinDate);
                         this.updateForm.userInfo.birthday=formatDate(editUser.userInfo.birthday);
                     }
+
+
                 }
                 this.setGroupId(e);
             },
