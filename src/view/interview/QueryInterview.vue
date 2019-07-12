@@ -210,24 +210,35 @@
                         key: 'appendixs',
                     // <vue-preview :slides="slide1" @close="handleClose"></vue-preview>
                       render: (h, params) => {
-                        return h('div', [
-                          h('Button', {
-                            props: {
-                              type: 'primary',
-                              size: 'small'
-                            },
-                            style: {
-                              marginRight: '5px'
-                            },
-                            on: {
-                              click: () => {
-                                // this.show(params.index);
-                                this.appendixsModal = true;
-                                this.appendixsIndex = params.index;
+
+                        if(params.row.appendixs)
+                        {
+                          return h('div', [
+                            h('Button', {
+                              props: {
+                                type: 'primary',
+                                size: 'small'
+                              },
+                              style: {
+                                marginRight: '5px'
+                              },
+                              on: {
+                                click: () => {
+                                  // this.show(params.index);
+                                  this.appendixsModal = true;
+                                  this.appendixsIndex = params.index;
+                                }
                               }
-                            }
-                          }, '查看')
-                        ]);
+                            }, '查看')
+                          ]);
+                        }
+                        else
+                        {
+                          return h('div', [
+                            h('strong', "未上传")
+                          ]);
+                        }
+
                       }
                     },
                     {
