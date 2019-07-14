@@ -3,7 +3,7 @@
         <!--<Row>-->
             <!--<Col span="8">-->
                 <!--<Input v-model="keyWord" placeholder="请输入请假..." style="width:200px"/>-->
-                <!--<Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>-->
+                <!--<Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>-->
             <!--</Col>-->
         <!--</Row>-->
         <!--<br>-->
@@ -18,8 +18,8 @@
         </Row>
         <br>
         <Row>
-                        <!--<Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"-->
-                              <!--align="center"></Page>-->
+                        <!--<Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"-->
+                              <!--align="center"show-total></Page>-->
         </Row>
         <br>
 
@@ -383,8 +383,8 @@
                     this.$Message.warning('请至少选择一项');
                 }
             },
-            gopage(){
-                const pageNo = this.pageNo;
+            gopage(pageNo){
+                this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
                 axios.request({
@@ -408,7 +408,7 @@
             }
         },
         mounted: function () {
-            this.gopage();
+            this.gopage(this.pageNo);
 
             axios.request({
               url: '/api/user/teachers',

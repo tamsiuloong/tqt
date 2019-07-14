@@ -5,7 +5,7 @@
             <Input v-model="name" placeholder="请输入..." style="width:200px"/>
         </Col>
         <Col span="8">
-            <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+            <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
         </Col>
     </Row>
     <br>
@@ -21,7 +21,7 @@
     <br>
     <Row>
         <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-              align="center"></Page>
+              align="center" show-total></Page>
     </Row>
 
     <Modal
@@ -306,7 +306,6 @@
                 }
             },
             gopage(pageNo) {
-
                 const pageSize = this.page.size;
                 const name = this.name;
                 axios.request({
@@ -323,7 +322,7 @@
             }
         },
         mounted: function () {
-            this.gopage();
+            this.gopage(1);
 
         }
     }

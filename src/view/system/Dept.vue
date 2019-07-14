@@ -18,7 +18,7 @@
             </Row>
             <br>
             <Row>
-                <Page :total="page.totalCount" :page-size="page.pageSize" align="center" @on-change="gopage"></Page>
+                <Page :total="page.totalCount" :page-size="page.pageSize" align="center" @on-change="gopage" show-total></Page>
             </Row>
 
             <!--新建对话框-->
@@ -264,7 +264,7 @@ export default {
     },
     created:function () {
         //初始化第一页数据
-        this.gopage(1);
+        this.gopage(this.pageNo);
     }
 };
 </script>

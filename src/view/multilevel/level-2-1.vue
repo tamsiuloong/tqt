@@ -23,7 +23,7 @@
         <li>
           <div style="text-align: right;">
             <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                  align="center"></Page>
+                  align="center" show-total></Page>
           </div>
         </li>
       </ul>
@@ -278,7 +278,7 @@
           }).then((result) => {
             if (result.data == '1') {
               this.$Message.success('操作成功!');
-              this.gopage();
+              this.gopage(this.pageNo);
             }
           });
         } else {

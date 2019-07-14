@@ -7,7 +7,7 @@
               </Select>
               <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
               <Input v-model="searchForm.companyName" placeholder="公司名字" style="width:200px"/>
-                <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+                <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
             </Col>
         </Row>
         <br>
@@ -22,8 +22,8 @@
         </Row>
         <br>
         <Row>
-                        <Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                              align="center"></Page>
+                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
+                              align="center" show-total></Page>
         </Row>
         <br>
 
@@ -290,6 +290,7 @@
                     },
                     {
                       title: '面试时间',
+                      width: 120,
                       key: 'interviewTime',
                       render: (h, params) => {
                         return h('div', [
@@ -352,7 +353,8 @@
                           h('Button', {
                             props: {
                               type: 'primary',
-                              size: 'small'
+                              size: 'small',
+                              ghost:''
                             },
                             style: {
                               marginRight: '5px'
@@ -400,8 +402,9 @@
                       return h('div', [
                         h('Button', {
                           props: {
-                            type: 'text',
-                            size: 'small'
+                            type: 'success',
+                            size: 'small',
+                            ghost:''
                           },
                           on: {
                             click: () => {
@@ -651,20 +654,20 @@
                     this.$Message.warning('请至少选择一项');
                 }
             },
-            gopage(){
-                const pageNo = this.pageNo;
-                const pageSize = this.pageSize;
-                const keyWord = this.keyWord;
-                axios.request({
-                    url: '/api/interview/search/false',
-                    method: 'post',
-                    params: {pageNo, pageSize,keyWord},
-                    data:this.searchForm
-                }).then((result) => {
-                    this.page = result.data.data;
-                }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
-                });
+            gopage(pageNo){
+              this.pageNo = pageNo;
+              const pageSize = this.pageSize;
+              const keyWord = this.keyWord;
+              axios.request({
+                url: '/api/interview/search/true',
+                method: 'post',
+                params: {pageNo, pageSize,keyWord},
+                data:this.searchForm
+              }).then((result) => {
+                this.page = result.data.data;
+              }).catch((result)=>{
+                this.$Message.error("操作异常："+result);
+              });
             },
             cancel () {
                 this.$Message.info('点击了取消');
@@ -762,7 +765,7 @@
             }
         },
         created: function () {
-            this.gopage();
+            this.gopage(this.pageNo);
             this.uploadImagePath=baseUrl+'api/uploadFiles/1?access_token='+getToken();
             this.uploadSoundPath=baseUrl+'api/uploadFiles/2?access_token='+getToken();
             axios.request({

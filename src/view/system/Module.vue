@@ -4,7 +4,7 @@
             <Row>
                 <Col span="24">
                     模块：<Input v-model="keyWord" placeholder="请输入..." style="width:200px"/>
-                  <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+                  <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
                 </Col>
             </Row>
             <br>
@@ -20,7 +20,7 @@
             <br>
             <Row>
                 <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                      align="center"></Page>
+                      align="center" show-total></Page>
             </Row>
             <br>
             <Modal

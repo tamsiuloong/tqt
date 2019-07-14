@@ -12,7 +12,7 @@
           </Select>
           <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>
           <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
-          <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+          <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
         </Col>
 
       </Row>
@@ -48,7 +48,7 @@
         <br>
         <Row>
                         <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                              align="center"></Page>
+                              align="center" show-total></Page>
         </Row>
         <br>
 
@@ -540,8 +540,8 @@
                     this.$Message.warning('请至少选择一项');
                 }
             },
-            gopage(){
-                const pageNo = this.pageNo;
+            gopage(pageNo){
+                this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 axios.request({
                     url: '/api/feedback/teaching',
@@ -560,7 +560,7 @@
             }
         },
         created: function () {
-            this.gopage();
+            this.gopage(this.pageNo);
 
             //courseList
             axios.request({

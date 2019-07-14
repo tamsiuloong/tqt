@@ -28,7 +28,7 @@
     <br>
     <Row>
         <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-              align="center"></Page>
+              align="center"  show-sizer show-total @on-page-size-change="changePageSize"></Page>
     </Row>
 
     <Modal
@@ -853,13 +853,17 @@
                     this.$Message.success('操作成功!');
                     this.gopage(this.page.number);
                 });
-            }
+            },
             // ,
             // checkUsername(event){
             //     let username = event.target.value;
 
             //     console.log();
             // }
+          changePageSize(pageSize){
+              this.page.size = pageSize;
+              this.gopage(this.page.number + 1);
+          }
         },
         created: function () {
             this.gopage(1);

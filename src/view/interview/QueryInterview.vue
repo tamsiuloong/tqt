@@ -7,21 +7,21 @@
               </Select>
               <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
               <Input v-model="searchForm.companyName" placeholder="公司名字" style="width:200px"/>
-                <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+                <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
             </Col>
         </Row>
-        <br>
-        <Row>
-                    <Button type="success" icon="ios-build" @click="edit()">查询</Button>
-        </Row>
+<!--        <br>-->
+<!--        <Row>-->
+<!--                    <Button type="success" icon="ios-build" @click="edit()">查询</Button>-->
+<!--        </Row>-->
         <br>
         <Row>
                         <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
         </Row>
         <br>
         <Row>
-                        <Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                              align="center"></Page>
+                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
+                              align="center" show-total></Page>
         </Row>
         <br>
 
@@ -124,11 +124,11 @@
                 totalCount: 0,
                 keyWord:"",
                 columns1: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
+                    // {
+                    //     type: 'selection',
+                    //     width: 60,
+                    //     align: 'center'
+                    // },
                     {
                         title: '学生',
                         key: 'user',
@@ -152,6 +152,7 @@
                     },
                     {
                       title: '面试时间',
+                      width: 120,
                       key: 'interviewTime',
                       render: (h, params) => {
                         return h('div', [
@@ -164,7 +165,7 @@
                         key: 'bsInfo',
                         render: (h, params) => {
                           const state = parseInt(params.row.bsInfo);
-                          let str = "handleSoundSuccess";
+                          let str = "未参加";
                           if (state === 1) {
                             str= "优";
                           }
@@ -217,7 +218,8 @@
                             h('Button', {
                               props: {
                                 type: 'primary',
-                                size: 'small'
+                                size: 'small',
+                                ghost:''
                               },
                               style: {
                                 marginRight: '5px'
@@ -268,13 +270,32 @@
                     title: '操作',
                     key: 'action',
                     fixed: 'right',
-                    width: 120,
+                    width: 140,
                     render: (h, params) => {
                       return h('div', [
                         h('Button', {
+                            props: {
+                              type: 'info',
+                              size: 'small',
+                              ghost:''
+                            },
+                            on: {
+                              click: () => {
+                                this.updateForm = params.row;
+                                this.updateModal = true;
+                                this.$refs.updateAppendixs.clearFiles();
+                                this.$refs.updateSoundRecording.clearFiles();
+                                this.appendixs=[];
+                                this.updateForm.appendixs="";
+                                this.updateForm.soundRecording="";
+                              }
+                            }
+                           }, '详情'),
+                        h('Button', {
                           props: {
-                            type: 'text',
-                            size: 'small'
+                            type: 'success',
+                            size: 'small',
+                            ghost:''
                           },
                           on: {
                             click: () => {
@@ -284,7 +305,7 @@
                               })
                             }
                           }
-                        }, '查看面试题')
+                        }, '面试题')
                       ]);
                     }
                   }
@@ -495,8 +516,8 @@
                     this.$Message.warning('请至少选择一项');
                 }
             },
-            gopage(){
-                const pageNo = this.pageNo;
+            gopage(pageNo){
+                this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
                 axios.request({
@@ -531,7 +552,7 @@
             }
         },
         created: function () {
-            this.gopage();
+            this.gopage(this.pageNo);
             this.uploadImagePath=baseUrl+'api/uploadFiles/1?access_token='+getToken();
             this.uploadSoundPath=baseUrl+'api/uploadFiles/2?access_token='+getToken();
             axios.request({

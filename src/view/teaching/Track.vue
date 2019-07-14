@@ -10,7 +10,7 @@
             <Select filterable="true" v-model="searchForm.stuName" placeholder="学生" style="width:200px">
               <Option v-for="s in stuList" :value="s.userInfo.name">{{s.userInfo.name}}</Option>
             </Select>
-            <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+            <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
           </Col>
 
         </Row>
@@ -27,8 +27,8 @@
         </Row>
         <br>
         <Row>
-                        <Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                              align="center"></Page>
+                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
+                              align="center" show-total></Page>
         </Row>
         <br>
 
@@ -367,8 +367,8 @@
                     this.$Message.warning('请至少选择一项');
                 }
             },
-            gopage(){
-                const pageNo = this.pageNo;
+            gopage(pageNo){
+                this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
                 axios.request({
@@ -406,7 +406,7 @@
             this.$Message.error("操作异常："+result);
           });
 
-            this.gopage();
+            this.gopage(this.pageNo);
         }
     }
 
