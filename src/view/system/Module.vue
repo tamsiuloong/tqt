@@ -15,7 +15,7 @@
             </Row>
             <br>
             <Row>
-                <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+                <Table :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
             </Row>
             <br>
             <Row>
@@ -220,6 +220,7 @@
     export default {
         data() {
             return {
+                tableLoding:true,
                 loading:true,
                 count: 0,
                 groupId: null,
@@ -579,6 +580,7 @@
                 this.$refs[moduleName].resetFields();
             },
             gopage(pageNo){
+                this.tableLoding=true;
                 const pageSize = this.page.size;
                 axios.request({
                     url: '/api/module',
@@ -586,7 +588,7 @@
                     params:{pageNo,pageSize}
                 }).then((result) => {
                     this.page=result.data.data;
-
+                    this.tableLoding=false;
                 });
             }
         },

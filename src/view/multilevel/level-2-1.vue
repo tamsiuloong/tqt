@@ -17,7 +17,7 @@
         </li>
         <li>
           <div style="padding: 10px 0;">
-            <Table border :columns="columns1" :data="data1" @on-selection-change="s=>{change(s)}"></Table>
+            <Table :loading="tableLoding" border :columns="columns1" :data="data1" @on-selection-change="s=>{change(s)}"></Table>
           </div>
         </li>
         <li>

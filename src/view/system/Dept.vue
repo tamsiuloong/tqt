@@ -14,7 +14,7 @@
             </Row>
             <br>
             <Row>
-                <Table border ref="selection" :columns="columns4" :data="page.list" @on-selection-change="recordIds"></Table>
+                <Table :loading="tableLoding" border ref="selection" :columns="columns4" :data="page.list" @on-selection-change="recordIds"></Table>
             </Row>
             <br>
             <Row>

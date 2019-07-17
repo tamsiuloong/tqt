@@ -16,7 +16,7 @@
     </Row>
     <br>
     <Row>
-        <Table border :columns="columns1" :data="page.content" @on-selection-change="s=>{change(s)}"></Table>
+        <Table :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="s=>{change(s)}"></Table>
     </Row>
     <br>
     <Row>
@@ -115,6 +115,7 @@
     export default {
         data() {
             return {
+                tableLoding:true,
                 loading: true,
                 count: 0,
                 gourpId: null,
@@ -306,6 +307,7 @@
                 }
             },
             gopage(pageNo) {
+                this.tableLoding=true;
                 const pageSize = this.page.size;
                 const name = this.name;
                 axios.request({
@@ -314,7 +316,7 @@
                     params: {pageNo, pageSize, name}
                 }).then((result) => {
                     this.page = result.data.data;
-
+                    this.tableLoding=false;
                 });
             },
             cancel() {

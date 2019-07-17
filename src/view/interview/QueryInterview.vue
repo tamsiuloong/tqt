@@ -16,11 +16,11 @@
 <!--        </Row>-->
         <br>
         <Row>
-                        <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+                        <Table  :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
         </Row>
         <br>
         <Row>
-                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
+                        <Page  :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
                               align="center" show-total></Page>
         </Row>
         <br>
@@ -98,7 +98,8 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <!--<vue-preview :slides="currAppendixs" @close="handleClose"></vue-preview>-->
-        <img v-for="img in currAppendixs" v-if="img" :src="img" width="40px" height="40px" @click="openWindow(img)"/>
+<!--        <img v-for="img in currAppendixs" v-if="img" :src="img" width="40px" height="40px" @click="openWindow(img)"/>-->
+        <li v-for="(img,i) in currAppendixs">附件{{i+1}}:<a  @click="openWindow(img)">{{img.substring(img.lastIndexOf("/")+1)}}</a></li>
       </Modal>
 
     </Card>
@@ -115,6 +116,7 @@
     export default {
         data() {
             return {
+                tableLoding:true,
                 loading:true,
                 count: 0,
                 gourpId: null,
@@ -517,6 +519,7 @@
                 }
             },
             gopage(pageNo){
+                this.tableLoding=true;
                 this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
@@ -527,6 +530,7 @@
                     data:this.searchForm
                 }).then((result) => {
                     this.page = result.data.data;
+                    this.tableLoding=false;
                 }).catch((result)=>{
                     this.$Message.error("操作异常："+result);
                 });

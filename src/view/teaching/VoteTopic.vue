@@ -14,7 +14,7 @@
         </Row>
         <br>
         <Row>
-            <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+            <Table :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
         </Row>
         <br>
         <Row>
@@ -238,7 +238,7 @@
         @on-cancel="cancel"
         ok-text="提交问卷调查"
         width="80%">
-          <Table border :columns="columns2" :data="voteRecordList"></Table>
+          <Table :loading="tableLoding" border :columns="columns2" :data="voteRecordList"></Table>
       </Modal>
     </Card>
 </template>
@@ -251,6 +251,7 @@
         data() {
             return {
 
+                tableLoding:true,
                 loading:true,
                 count: 0,
                 gourpId: null,
@@ -582,6 +583,7 @@
                 }
             },
             gopage(pageNo){
+                                this.tableLoding=true;
                 this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
@@ -590,7 +592,8 @@
                     method: 'get',
                     params: {pageNo, pageSize,keyWord}
                 }).then((result) => {
-                    this.page = result.data.data;
+                                        this.page = result.data.data;
+                    this.tableLoding=false;
                 }).catch((result)=>{
                     this.$Message.error("操作异常："+result);
                 });

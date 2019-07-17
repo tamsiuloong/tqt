@@ -14,7 +14,7 @@
         </Row>
         <br>
         <Row>
-                        <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+                        <Table :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
         </Row>
         <br>
         <Row>
@@ -205,6 +205,7 @@
     export default {
         data() {
             return {
+                tableLoding:true,
                 loading:true,
                 count: 0,
                 gourpId: null,
@@ -523,6 +524,7 @@
                 }
             },
             gopage(pageNo){
+                                this.tableLoding=true;
                 this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
@@ -531,7 +533,8 @@
                     method: 'get',
                     params: {pageNo, pageSize,keyWord}
                 }).then((result) => {
-                    this.page = result.data.data;
+                                        this.page = result.data.data;
+                    this.tableLoding=false;
                 }).catch((result)=>{
                     this.$Message.error("操作异常："+result);
                 });

@@ -18,7 +18,7 @@
         </Row>
         <br>
         <Row>
-          <Table border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+          <Table :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
         </Row>
         <br>
         <Row>
@@ -88,8 +88,8 @@
                             <Col span="11">
                             <FormItem label="附件" >
                               <Upload
-                                multiple ref="appendixs" :on-success="handleSuccess4Add" :format="['jpg','jpeg','png']"
-                                :max-size="5120" :on-error="handleError"
+                                multiple ref="appendixs" :on-success="handleSuccess4Add" :format="['jpg','jpeg','png','doc','docx','doc','docx']"
+                                :max-size="102400" :on-error="handleError"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleExceededError"
                                 :on-remove="handleRemove"
@@ -105,7 +105,7 @@
                             <FormItem label="录音" >
                               <Upload ref="soundRecording"
                                 :on-success="Success4Add" :format="['mp3','aac','m4a']"
-                                :max-size="51200" :on-error="handleError"
+                                :max-size="102400" :on-error="handleError"
                                 :on-format-error="handleSoundFormatError"
                                 :on-exceeded-size="handleSoundExceededError"
                                 :show-upload-list="true"
@@ -190,8 +190,8 @@
               <Col span="11">
                 <FormItem label="附件" >
                   <Upload ref="updateAppendixs"
-                    multiple :on-success="handleSuccess4Add" :format="['jpg','jpeg','png']"
-                    :max-size="5120" :on-error="handleError"
+                    multiple :on-success="handleSuccess4Add" :format="['jpg','jpeg','png','doc','docx']"
+                    :max-size="10240" :on-error="handleError"
                     :on-format-error="handleFormatError"
                     :on-exceeded-size="handleExceededError"
                     :on-remove="handleRemove"
@@ -207,7 +207,7 @@
                 <FormItem label="录音" >
                   <Upload ref="updateSoundRecording"
                           :on-success="handleSoundSuccess" :format="['mp3','aac','m4a']"
-                          :max-size="51200" :on-error="handleSoundError"
+                          :max-size="102400" :on-error="handleSoundError"
                           :on-format-error="handleSoundFormatError"
                           :on-exceeded-size="handleSoundExceededError"
                           :show-upload-list="true"
@@ -236,7 +236,9 @@
         @on-ok="ok"
         @on-cancel="cancel">
         <!--<vue-preview :slides="currAppendixs" @close="handleClose"></vue-preview>-->
-        <img v-for="img in currAppendixs" v-if="img" :src="img" width="40px" height="40px" @click="openWindow(img)"/>
+        <li v-for="(img,i) in currAppendixs">附件{{i+1}}:<a  @click="openWindow(img)">{{img.substring(img.lastIndexOf("/")+1)}}</a></li>
+<!--        <img v-for="img in currAppendixs" v-if="img" :src="img" width="40px" height="40px" @click="openWindow(img)"/>-->
+
       </Modal>
 
     </Card>
@@ -253,6 +255,7 @@
     export default {
         data() {
             return {
+                tableLoding:true,
                 loading:true,
                 count: 0,
                 gourpId: null,
@@ -349,25 +352,34 @@
                         key: 'appendixs',
                     // <vue-preview :slides="slide1" @close="handleClose"></vue-preview>
                       render: (h, params) => {
-                        return h('div', [
-                          h('Button', {
-                            props: {
-                              type: 'primary',
-                              size: 'small',
-                              ghost:''
-                            },
-                            style: {
-                              marginRight: '5px'
-                            },
-                            on: {
-                              click: () => {
-                                // this.show(params.index);
-                                this.appendixsModal = true;
-                                this.appendixsIndex = params.index;
+                        if(params.row.appendixs)
+                        {
+                          return h('div', [
+                            h('Button', {
+                              props: {
+                                type: 'primary',
+                                size: 'small',
+                                ghost:''
+                              },
+                              style: {
+                                marginRight: '5px'
+                              },
+                              on: {
+                                click: () => {
+                                  // this.show(params.index);
+                                  this.appendixsModal = true;
+                                  this.appendixsIndex = params.index;
+                                }
                               }
-                            }
-                          }, '查看')
-                        ]);
+                            }, '查看')
+                          ]);
+                        }
+                        else
+                        {
+                          return h('div', [
+                            h('strong', "未上传")
+                          ]);
+                        }
                       }
                     },
                     {
@@ -655,16 +667,18 @@
                 }
             },
             gopage(pageNo){
-              this.pageNo = pageNo;
+                              this.tableLoding=true;
+                this.pageNo = pageNo;
               const pageSize = this.pageSize;
               const keyWord = this.keyWord;
               axios.request({
-                url: '/api/interview/search/true',
+                url: '/api/interview/search/false',
                 method: 'post',
                 params: {pageNo, pageSize,keyWord},
                 data:this.searchForm
               }).then((result) => {
-                this.page = result.data.data;
+                                    this.page = result.data.data;
+                    this.tableLoding=false;
               }).catch((result)=>{
                 this.$Message.error("操作异常："+result);
               });
@@ -741,10 +755,10 @@
              this.$Message.error(error);
             },
             handleFormatError(file) {
-              this.$Message.error("文件["+file.name+"]格式不对，只能是'jpg','jpeg','png'");
+              this.$Message.error("文件["+file.name+"]格式不对，只能是'jpg','jpeg','png','doc','docx'");
             },
             handleExceededError(file){
-              this.$Message.error("文件["+file.name+"]不能超过5MB,小伙子手机像素可以呀！");
+              this.$Message.error("文件["+file.name+"]不能超过10M,小伙子手机像素可以呀！");
             },
             handleSoundFormatError(file) {
               this.$Message.error("文件["+file.name+"]格式不对，只能是'mp3','aac','m4a'");
