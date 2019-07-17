@@ -26,7 +26,7 @@
         <Modal
                 v-model="addModal"
                 title="添加投票主题"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
@@ -166,7 +166,7 @@
         <Modal
                 v-model="joinVoteModal"
                 :title="joinVoteForm.title"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="submitVote"
                 @on-cancel="cancel"
@@ -517,7 +517,7 @@
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                        this.$Message.error("操作异常："+result);
+                        this.$Message.error("哦豁，操作异常："+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -536,7 +536,7 @@
                                         this.page = result.data.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
+                    this.$Message.error("哦豁，操作异常："+result);
                 });
             },
             cancel () {
@@ -549,7 +549,7 @@
               }).then((result) => {
                 this.voteSubTopicList = result.data.data;
               }).catch((result)=>{
-                this.$Message.error("操作异常："+result);
+                this.$Message.error("哦豁，操作异常："+result);
               });
             },
             validNumber(event,i){

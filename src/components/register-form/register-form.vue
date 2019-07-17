@@ -301,7 +301,7 @@ export default {
             callback(new Error('换一个哦，有个哥老官抢先了!'));
           }
         }).catch((result)=>{
-          this.$Message.error("操作异常："+result);
+          this.$Message.error("哦豁，操作异常："+result);
         });
       }
 
@@ -314,7 +314,7 @@ export default {
     }).then((result) => {
       this.classesList = result.data.data;
     }).catch((result)=>{
-      this.$Message.error("操作异常："+result);
+      this.$Message.error("哦豁，操作异常："+result);
     });
   }
 }

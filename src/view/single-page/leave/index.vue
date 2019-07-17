@@ -26,7 +26,7 @@
         <Modal
                 v-model="addModal"
                 title="添加请假"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
@@ -75,7 +75,7 @@
         <Modal
                 v-model="imgModal"
                 title="流程进度跟踪"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-cancel="cancel"
                 width="80%">
@@ -281,7 +281,7 @@
                                     this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
-                            this.$Message.error("操作异常："+result);
+                            this.$Message.error("哦豁，操作异常："+result);
                         });
                     }
                     else
@@ -308,7 +308,7 @@
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                        this.$Message.error("操作异常："+result);
+                        this.$Message.error("哦豁，操作异常："+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -327,7 +327,7 @@
                                         this.page = result.data.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
+                    this.$Message.error("哦豁，操作异常："+result);
                 });
             },
             cancel () {
@@ -349,7 +349,7 @@
             }).then((result) => {
               this.teacherList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
         }
     }

@@ -97,7 +97,7 @@
       }).then((result) => {
         this.courseList = result.data.data;
       }).catch((result)=>{
-        this.$Message.error("操作异常："+result);
+        this.$Message.error("哦豁，操作异常："+result);
       });
 
       axios.request({
@@ -106,7 +106,7 @@
       }).then((result) => {
         this.classesList = result.data.data;
       }).catch((result)=>{
-        this.$Message.error("操作异常："+result);
+        this.$Message.error("哦豁，操作异常："+result);
       });
 
 

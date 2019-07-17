@@ -55,7 +55,7 @@
         <Modal
                 v-model="addModal"
                 title="添加学习反馈"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
@@ -145,7 +145,7 @@
         <Modal
                 v-model="updateModal"
                 title="学习反馈详情"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="update"
                 @on-cancel="cancel"
@@ -321,32 +321,27 @@
                       key: 'backTime',
                       width: 160
                     },
-                    {
-                      title: '笔记地址',
-                      key: 'noteUrl',
-                      render: (h, params) => {
-                        return h('div', [
-                          h('a', {
-                            on: {
-                              click: () => {
-                                window.open(params.row.noteUrl);
-                              }
-                            }
-                          },params.row.noteUrl)
-                        ]);
-                      }
-                    },
+                    // {
+                    //   title: '笔记地址',
+                    //   key: 'noteUrl',
+                    //   render: (h, params) => {
+                    //     return h('div', [
+                    //
+                    //     ]);
+                    //   }
+                    // },
                     {
                       title: '操作',
                       key: 'action',
                       fixed: 'right',
-                      width: 120,
+                      width: 160,
                       render: (h, params) => {
                         return h('div', [
                           h('Button', {
                             props: {
-                              type: 'text',
-                              size: 'small'
+                              type: 'info',
+                              size: 'small',
+                              ghost:''
                             },
                             on: {
                               click: () => {
@@ -354,7 +349,19 @@
                                 this.updateModal = true;
                               }
                             }
-                          }, '详情')
+                          }, '详情'),
+                          h('Button', {
+                            props: {
+                              type: 'success',
+                              size: 'small',
+                              ghost:''
+                            },
+                            on: {
+                              click: () => {
+                                window.open(params.row.noteUrl);
+                              }
+                            }
+                          },"查看笔记")
                         ]);
                       }
                     }
@@ -508,7 +515,7 @@
                                     this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
-                          this.$Message.error("操作异常："+result);
+                          this.$Message.error("哦豁，操作异常："+result);
                         });
                     }
                     else
@@ -535,7 +542,7 @@
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                      this.$Message.error("操作异常："+result);
+                      this.$Message.error("哦豁，操作异常："+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -554,9 +561,7 @@
                     this.page = result.data.data.page;
                     this.uncommitList = result.data.data.unCommitedList;
                     this.tableLoding=false;
-                }).catch((result)=>{
-                  this.$Message.error("操作异常："+result);
-                });
+                })
             },
             cancel () {
                 this.$Message.info('点击了取消');
@@ -572,7 +577,7 @@
             }).then((result) => {
               this.courseList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
 
             axios.request({
@@ -581,7 +586,7 @@
             }).then((result) => {
               this.classesList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
         }
     }

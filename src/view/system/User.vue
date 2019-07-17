@@ -35,7 +35,7 @@
             v-model="updateModal"
             title="编辑用户"
             width="80%"
-            :mask-closable="false"
+            :mask-closable="true"
             :loading="loading"
             @on-ok="update"
             @on-cancel="cancel">
@@ -453,17 +453,93 @@
                       }
                     },
                     {
+                      title: '学校',
+                      key: 'school',
+                      render: (h, params) => {
+                        return h('div', [
+                          h('strong', params.row.userInfo.school)
+                        ]);
+                      }
+                    },
+                    {
+                      title: '专业',
+                      key: 'school',
+                      render: (h, params) => {
+                        return h('div', [
+                          h('strong', params.row.userInfo.major)
+                        ]);
+                      }
+                    },
+                    {
+                      title: '学历',
+                      key: 'school',
+                      render: (h, params) => {
+
+                        const state = parseInt(params.row.userInfo.education);
+                        let stateToStr = "未知";
+                        if (state === 4) {
+                          stateToStr= "研究生";
+                        }
+                        else if (state === 3) {
+                          stateToStr= "本科";
+                        }
+                        else if (state === 2) {
+                          stateToStr= "大专";
+                        }
+                        else if (state === 1) {
+                          stateToStr= "高中";
+                        }
+
+
+                        return h('div', [
+                          h('strong', stateToStr)
+                        ]);
+
+
+                      }
+                    },
+                    {
+                      title: '毕业时间',
+                      key: 'school',
+                      render: (h, params) => {
+                        let graduationTime = "未知";
+                        if(params.row.userInfo.graduationTime)
+                        {
+                          graduationTime=params.row.userInfo.graduationTime.substr(0,7);
+                        }
+                        return h('div', [
+                          h('strong', graduationTime)
+                        ]);
+                      }
+                    }
+                    ,
+                    {
+                      title: '年龄',
+                      key: 'school',
+                      render: (h, params) => {
+                        let age  = "未知";
+                        if(params.row.userInfo.birthday)
+                        {
+                          age=this.computeAge(params.row.userInfo.birthday.substr(0,10));
+                        }
+                        return h('div', [
+                          h('strong', age)
+                        ]);
+                      }
+                    },
+                    {
                       title: '笔记地址',
                       key: 'noteUrl',
                       render: (h, params) => {
                         return h('div', [
                           h('a', {
+
                             on: {
                               click: () => {
                                window.open(params.row.noteUrl);
                               }
                             }
-                          },params.row.noteUrl)
+                          },"查看笔记")
                         ]);
                       }
                     },
@@ -736,6 +812,7 @@
 //更新用户
             update() {
                 this.$refs['updateForm'].validate((valid) => {
+
                     if (valid) {
                         axios.request({
                             url: '/api/user',
@@ -743,7 +820,7 @@
                             data: this.updateForm,
                         }).then((result) => {
                             this.updateModal = false,
-                                this.$Message.success('操作成功!');
+                            this.$Message.success('操作成功!');
                             this.gopage(this.page.number);
                         });
                     }
@@ -784,7 +861,7 @@
                     params: {pageNo, pageSize},
                     data:this.searchForm
                 }).then((result) => {
-                                        this.page = result.data.data;
+                    this.page = result.data.data;
                     this.tableLoding=false;
                 });
             },
@@ -836,7 +913,45 @@
           changePageSize(pageSize){
               this.page.size = pageSize;
               this.gopage(this.page.number + 1);
+          },
+          computeAge(strBirthday) { //传入形式yyyy-MM-dd
+            //strBirthday = util.formatTime(strBirthday);转换成yyyy-MM-dd形式
+            var returnAge
+            var strBirthdayArr = strBirthday.split('-')
+            var birthYear = strBirthdayArr[0]
+            var birthMonth = strBirthdayArr[1]
+            var birthDay = strBirthdayArr[2]
+            var d = new Date()
+            var nowYear = d.getFullYear()
+            var nowMonth = d.getMonth() + 1
+            var nowDay = d.getDate()
+            if (nowYear == birthYear) {
+              returnAge = 0 //同年 则为0岁
+            } else {
+              var ageDiff = nowYear - birthYear //年之差
+              if (ageDiff > 0) {
+                if (nowMonth == birthMonth) {
+                  var dayDiff = nowDay - birthDay //日之差
+                  if (dayDiff < 0) {
+                    returnAge = ageDiff - 1
+                  } else {
+                    returnAge = ageDiff
+                  }
+                } else {
+                  var monthDiff = nowMonth - birthMonth //月之差
+                  if (monthDiff < 0) {
+                    returnAge = ageDiff - 1
+                  } else {
+                    returnAge = ageDiff
+                  }
+                }
+              } else {
+                returnAge = -1 //返回-1 表示出生日期输入错误 晚于今天
+              }
+            }
+            return returnAge //返回周岁年龄
           }
+
         },
         created: function () {
             this.gopage(1);
@@ -872,7 +987,7 @@
           }).then((result) => {
             this.classesList = result.data.data;
           }).catch((result)=>{
-            this.$Message.error("操作异常："+result);
+            this.$Message.error("哦豁，操作异常："+result);
           });
         }
     }

@@ -26,7 +26,7 @@
         <Modal
                 v-model="addModal"
                 title="添加请假"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
@@ -75,7 +75,7 @@
         <Modal
                 v-model="updateModal"
                 title="任务详情"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="update"
                 @on-cancel="cancel"
@@ -212,7 +212,7 @@
 
                                   });
                                 }).catch((result)=>{
-                                  this.$Message.error("操作异常："+result);
+                                  this.$Message.error("哦豁，操作异常："+result);
                                 });
 
 
@@ -351,7 +351,7 @@
                             // 获取未读消息条数
                             this.getUnreadMessageCount();
                         }).catch((result)=>{
-                            this.$Message.error("操作异常："+result);
+                            this.$Message.error("哦豁，操作异常："+result);
                         });
                     }
                     else
@@ -378,7 +378,7 @@
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                        this.$Message.error("操作异常："+result);
+                        this.$Message.error("哦豁，操作异常："+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -397,7 +397,7 @@
                     this.list = result.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
+                    this.$Message.error("哦豁，操作异常："+result);
                 });
             },
             cancel () {
@@ -419,7 +419,7 @@
             }).then((result) => {
               this.teacherList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
 
 

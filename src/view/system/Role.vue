@@ -27,7 +27,7 @@
     <Modal
             v-model="addModal"
             title="添加角色"
-            :mask-closable="false"
+            :mask-closable="true"
             :loading="loading"
             @on-ok="add"
             @on-cancel="cancel"
@@ -62,7 +62,7 @@
     <Modal
             v-model="updateModal"
             title="编辑角色"
-            :mask-closable="false"
+            :mask-closable="true"
             :loading="loading"
             @on-ok="update"
             @on-cancel="cancel"

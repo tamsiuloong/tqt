@@ -34,7 +34,7 @@
       v-model="modal1"
       title="编辑部门"
       width="80%"
-      :mask-closable="false"
+      :mask-closable="true"
       :loading="loading"
       @on-ok="update"
       @on-cancel="cancel">
@@ -61,7 +61,7 @@
     <Modal
       v-model="modal2"
       title="添加部门"
-      :mask-closable="false"
+      :mask-closable="true"
       :loading="loading"
       @on-ok="add"
       @on-cancel="cancel" width="80%">

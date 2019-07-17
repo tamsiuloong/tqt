@@ -26,7 +26,7 @@
         <Modal
                 v-model="addModal"
                 title="添加学习反馈"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
@@ -116,7 +116,7 @@
         <Modal
                 v-model="updateModal"
                 title="编辑学习反馈"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="update"
                 @on-cancel="cancel"
@@ -460,7 +460,7 @@
                                     this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
-                          this.$Message.error("操作异常："+result);
+                          this.$Message.error("哦豁，操作异常："+result);
                         });
                     }
                     else
@@ -487,7 +487,7 @@
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                      this.$Message.error("操作异常："+result);
+                      this.$Message.error("哦豁，操作异常："+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -506,7 +506,7 @@
                                         this.page = result.data.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
-                  this.$Message.error("操作异常："+result);
+                  this.$Message.error("哦豁，操作异常："+result);
                 });
             },
             cancel () {
@@ -523,7 +523,7 @@
             }).then((result) => {
               this.courseList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
         }
     }

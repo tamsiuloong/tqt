@@ -24,7 +24,7 @@
         <Modal
                 v-model="addModal"
                 title="添加面试题"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
@@ -77,7 +77,7 @@
         <Modal
                 v-model="updateModal"
                 title="编辑面试题"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="update"
                 @on-cancel="cancel"
@@ -461,7 +461,7 @@
                                         this.page = result.data.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
+                    this.$Message.error("哦豁，操作异常："+result);
                 });
             },
             cancel () {
@@ -474,7 +474,7 @@
               }).then((result) => {
                 this.knowledgePointList = result.data.data;
               }).catch((result)=>{
-                this.$Message.error("操作异常："+result);
+                this.$Message.error("哦豁，操作异常："+result);
               });
             },
             backToInterviewList(){
@@ -496,7 +496,7 @@
             }).then((result) => {
               this.courseList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
         }
     }

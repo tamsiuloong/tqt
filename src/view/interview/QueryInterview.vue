@@ -28,7 +28,7 @@
         <Modal
                 v-model="updateModal"
                 title="查看学员信息跟踪"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="closeModal"
                 @on-cancel="cancel"
@@ -512,7 +512,7 @@
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                        this.$Message.error("操作异常："+result);
+                        this.$Message.error("哦豁，操作异常："+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -532,7 +532,7 @@
                     this.page = result.data.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
+                    this.$Message.error("哦豁，操作异常："+result);
                 });
             },
             cancel () {
@@ -565,7 +565,7 @@
             }).then((result) => {
               this.classesList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
         },
         computed:{

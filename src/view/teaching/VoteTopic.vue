@@ -26,7 +26,7 @@
         <Modal
                 v-model="addModal"
                 title="添加投票主题"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
@@ -100,7 +100,7 @@
         <Modal
                 v-model="updateModal"
                 title="编辑投票主题"
-                :mask-closable="false"
+                :mask-closable="true"
                 :loading="loading"
                 @on-ok="update"
                 @on-cancel="cancel"
@@ -232,7 +232,7 @@
         <Modal
         v-model="voteResultModal"
         :title="'调查结果'"
-        :mask-closable="false"
+        :mask-closable="true"
         :loading="loading"
         @on-ok="submitVote"
         @on-cancel="cancel"
@@ -549,7 +549,7 @@
                             this.$Message.success('操作成功!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
-                            this.$Message.error("操作异常："+result);
+                            this.$Message.error("哦豁，操作异常："+result);
                         });
                     }
                     else
@@ -576,7 +576,7 @@
                             this.gopage(this.pageNo);
                         }
                     }).catch((result)=>{
-                        this.$Message.error("操作异常：已经参与调查后不可以被删除!"+result);
+                        this.$Message.error("哦豁，操作异常：已经参与调查后不可以被删除!"+result);
                     });
                 } else {
                     this.$Message.warning('请至少选择一项');
@@ -595,7 +595,7 @@
                                         this.page = result.data.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
+                    this.$Message.error("哦豁，操作异常："+result);
                 });
             },
             cancel () {
@@ -608,7 +608,7 @@
               }).then((result) => {
                 this.voteRecordList = result.data.data;
               }).catch((result)=>{
-                this.$Message.error("操作异常："+result);
+                this.$Message.error("哦豁，操作异常："+result);
               });
             },
             queryVoteSubTopicList(votetopicId){
@@ -642,7 +642,7 @@
                   })
                 })
               }).catch((result)=>{
-                this.$Message.error("操作异常："+result);
+                this.$Message.error("哦豁，操作异常："+result);
               });
             },
             handleAdd () {
@@ -667,7 +667,7 @@
             }).then((result) => {
               this.classesList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
 
             axios.request({
@@ -676,7 +676,7 @@
             }).then((result) => {
               this.teacherList = result.data.data;
             }).catch((result)=>{
-              this.$Message.error("操作异常："+result);
+              this.$Message.error("哦豁，操作异常："+result);
             });
         }
     }

@@ -49,7 +49,7 @@ importDirective(Vue)
 Vue.directive('clickOutside', clickOutside)
 
 /* eslint-disable no-new */
-new Vue({
+var vue = new Vue({
   el: '#app',
   router,
   i18n,
