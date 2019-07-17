@@ -34,7 +34,7 @@
     <Modal
             v-model="updateModal"
             title="编辑用户"
-            width="60%"
+            width="80%"
             :mask-closable="false"
             :loading="loading"
             @on-ok="update"
@@ -119,22 +119,10 @@
                 </Col>
             </Row>
 
+
             <Row>
                 <Col span="11">
-                    <FormItem label="岗位" prop="userInfo.station">
-                        <Input type="text" v-model="updateForm.userInfo.station"/>
-                    </FormItem>
-                </Col>
-                <Col span="2" style="text-align: center"/>
-                <Col span="11">
-                    <FormItem label="电话" prop="userInfo.telephone">
-                        <Input type="text" v-model="updateForm.userInfo.telephone"/>
-                    </FormItem>
-                </Col>
-            </Row>
-            <Row>
-                <Col span="11">
-                    <FormItem label="邮箱" prop="userInfo.email">
+                    <FormItem label="邮箱" >
                         <Input type="text" v-model="updateForm.userInfo.email"/>
                     </FormItem>
                 </Col>
@@ -148,29 +136,11 @@
             </Row>
 
 
-          <Row>
 
-            <Col span="11">
-              <FormItem label="性别" prop="userInfo.gender">
-                <RadioGroup v-model="updateForm.userInfo.gender" type="button">
-                  <Radio label="true">男</Radio>
-                  <Radio label="false">女</Radio>
-                </RadioGroup>
-              </FormItem>
-            </Col>
-            <Col span="2" style="text-align: center"/>
+          <Row>
             <Col span="11">
               <FormItem label="电话" prop="userInfo.telephone">
                 <Input type="text" v-model="updateForm.userInfo.telephone"/>
-              </FormItem>
-            </Col>
-          </Row>
-
-
-          <Row>
-            <Col span="11">
-              <FormItem label="邮箱" >
-                <Input type="text" v-model="updateForm.userInfo.email"/>
               </FormItem>
             </Col>
             <Col span="2" style="text-align: center"/>
@@ -269,7 +239,7 @@
     <Modal
             v-model="addModal"
             title="添加用户"
-            width="60%"
+            width="80%"
             @on-ok="add"
             @on-cancel="cancel"
             :loading="loading">
@@ -367,7 +337,7 @@
             </Row>
             <Row>
                 <Col span="11">
-                    <FormItem label="邮箱" prop="userInfo.email">
+                    <FormItem label="邮箱" >
                         <Input type="text" v-model="addForm.userInfo.email"/>
                     </FormItem>
                 </Col>
@@ -401,7 +371,7 @@
             v-model="roleModal"
             title="分配角色"
             @on-ok="updateRole"
-            @on-cancel="cancel" width="60%">
+            @on-cancel="cancel" width="80%">
         <Form ref="roleForm" :model="roleForm" :label-width="80">
 
             <Row>
@@ -542,7 +512,7 @@
                         "gender": "1",
                         "station": "",
                         "telephone": "",
-                        "email": "yaorange_mail@sina.com",
+                        "email": "",
                         "birthday": "",
                         "orderNo": "",
                         "remark": ""
@@ -607,11 +577,11 @@
                 ],
                 ruleCustom: {
                     userName: [
-                        { required: true,message:'cannot be empty', trigger: 'blur' },
+                        { required: true,message:'不能为空', trigger: 'blur' },
                         { validator: checkUsername, trigger: 'blur' }
                     ],
                     "userInfo.email":[
-                        {required: true, message: 'cannot be empty', trigger: 'blur'}
+                        {required: true, message: '不能为空', trigger: 'blur'}
                     ]
                 },
                 searchForm:{

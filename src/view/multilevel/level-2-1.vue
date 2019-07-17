@@ -33,7 +33,7 @@
     <Modal
       v-model="modal1"
       title="编辑部门"
-      width="60%"
+      width="80%"
       :mask-closable="false"
       :loading="loading"
       @on-ok="update"
@@ -64,7 +64,7 @@
       :mask-closable="false"
       :loading="loading"
       @on-ok="add"
-      @on-cancel="cancel" width="60%">
+      @on-cancel="cancel" width="80%">
       <Form  ref="addForm" :model="addForm" :rules="ruleCustom"  :label-width="80">
         <Row>
           <Col span="11">

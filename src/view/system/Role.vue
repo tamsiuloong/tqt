@@ -31,7 +31,7 @@
             :loading="loading"
             @on-ok="add"
             @on-cancel="cancel"
-            width="60%">
+            width="80%">
         <Form ref="addForm" :model="addForm" :rules="ruleCustom" :label-width="80">
             <Row>
                 <Col span="11">
@@ -66,7 +66,7 @@
             :loading="loading"
             @on-ok="update"
             @on-cancel="cancel"
-            width="60%">
+            width="80%">
         <Form ref="updateForm" :model="updateForm" :rules="ruleCustom" :label-width="80">
 
             <Row>

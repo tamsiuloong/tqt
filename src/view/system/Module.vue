@@ -27,7 +27,7 @@
                     v-model="updateModal"
                     title="编辑模块"
                     @on-ok="update"
-                    @on-cancel="cancel" width="60%" :loading="loading">
+                    @on-cancel="cancel" width="80%" :loading="loading">
                 <Form ref="updateForm" :model="dataForm" :rules="formRule" :label-width="80">
                     <Row>
 
@@ -118,7 +118,7 @@
                     v-model="addModal"
                     title="添加模块"
                     @on-ok="add"
-                    @on-cancel="cancel" width="60%" :loading="loading">
+                    @on-cancel="cancel" width="80%" :loading="loading">
                 <Form ref="addForm" :model="dataForm" :rules="formRule" :label-width="80">
                     <Row>
 

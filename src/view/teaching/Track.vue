@@ -39,7 +39,7 @@
                 :loading="loading"
                 @on-ok="add"
                 @on-cancel="cancel"
-                width="60%">
+                width="80%">
             <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
                 <!--一次性取两个元素放在row集合中 -->
                     <Row>
@@ -93,7 +93,7 @@
                 :loading="loading"
                 @on-ok="update"
                 @on-cancel="cancel"
-                width="60%">
+                width="80%">
             <Form ref="updateForm" :model="updateForm" :rules="formRule" :label-width="80">
 
                     <Row>

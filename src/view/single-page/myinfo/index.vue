@@ -174,7 +174,7 @@ export default {
       },
       ruleCustom: {
         "userInfo.email":[
-          {required: true, message: 'cannot be empty', trigger: 'blur'}
+          {required: true, message: '不能为空', trigger: 'blur'}
         ],
         "pass":[
           { validator: this.validatePassword, trigger: 'blur' }
