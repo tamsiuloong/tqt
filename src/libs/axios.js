@@ -75,6 +75,11 @@ class HttpRequest {
           request: { responseURL: config.url }
         }
       }
+      // console.log(error);
+      if(error&&error.message.indexOf('401')!=-1)
+      {
+        window.location.href="/";
+      }
       // addErrorLog(errorInfo)
       return Promise.reject(error)
     })
