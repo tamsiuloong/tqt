@@ -85,7 +85,13 @@
               <!-- 循环便利row中的两个元素-->
               <Col span="22">
                 <FormItem label="经验积累" >
-                  <Input v-model="updateForm.experience" type="textarea" :rows="4" placeholder="说说你的感触,体会,心得或者下次面试需要改进的地方..." />
+<!--                  <Input v-model="updateForm.experience" type="textarea" :rows="4" placeholder="说说你的感触,体会,心得或者下次面试需要改进的地方..." />-->
+
+                  <quill-editor v-model="updateForm.experience"
+                                ref="myQuillEditor"
+                                :options="editorOptionForShow"
+                  >
+                  </quill-editor>
                 </FormItem>
               </Col>
             </Row>
@@ -111,11 +117,27 @@
     import { setToken, getToken } from '@/libs/util'
     import axios from '@/libs/api.request'
     import config from '@/config'
+    import 'quill/dist/quill.core.css'
+    import 'quill/dist/quill.snow.css'
+    import 'quill/dist/quill.bubble.css'
+    import { quillEditor } from 'vue-quill-editor'
     const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
 
     export default {
+      components: {
+        quillEditor
+      },
         data() {
             return {
+                editorOptionForShow: {
+                  // modules: {
+                  //   toolbar: [
+                  //     ['clean']
+                  //   ]
+                  // },
+                  readOnly: true,
+                  theme: 'snow'
+                },
                 tableLoding:true,
                 loading:true,
                 count: 0,
