@@ -84,6 +84,15 @@
 
               <Row>
                 <!-- 循环便利row中的两个元素-->
+                <Col span="22">
+                  <FormItem label="申请人" >
+                    <Input type="text" disabled="" v-model="updateForm.createBy"/>
+                  </FormItem>
+                </Col>
+
+              </Row>
+              <Row>
+                <!-- 循环便利row中的两个元素-->
                 <Col span="11">
                   <FormItem label="开始日期" >
                     <Input type="text" disabled="" v-model="updateForm.startDate"/>

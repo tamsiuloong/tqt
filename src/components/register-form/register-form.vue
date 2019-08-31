@@ -150,6 +150,7 @@ import axios from '@/libs/api.request'
 export default {
   name: 'RegisterForm',
   props: {
+
     passwordRules: {
       type: Array,
       default: () => {
@@ -252,7 +253,7 @@ export default {
     rules () {
       return {
         userName:[
-          { validator: this.registerForm.userName, trigger: 'blur' }
+          { validator: this.checkUserrealName, trigger: 'blur' }
         ],
         "userInfo.name": this.realNameRules,
         password: this.passwordRules,
@@ -298,7 +299,7 @@ export default {
           }
           else
           {
-            callback(new Error('换一个哦，有个哥老官抢先了!'));
+            callback(new Error(result.data.desc));
           }
         }).catch((result)=>{
           this.$Message.error("哦豁，操作异常："+result);
