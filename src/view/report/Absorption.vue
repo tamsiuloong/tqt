@@ -4,7 +4,7 @@
 
       <Col span="24">
         <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
-          <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+          <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
         </Select>
         <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
           <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>

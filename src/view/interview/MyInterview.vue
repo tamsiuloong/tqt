@@ -3,7 +3,7 @@
         <Row>
             <Col span="24">
               <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
-                <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+                <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
               </Select>
               <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
               <Input v-model="searchForm.companyName" placeholder="公司名字" style="width:200px"/>

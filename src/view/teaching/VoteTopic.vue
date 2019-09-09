@@ -54,7 +54,7 @@
                             <FormItem label="班级" prop="classes.id">
 
                               <Select filterable="true" placeholder="班级" v-model="addForm.classes.id" style="width:200px">
-                                <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+                                <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
                               </Select>
                             </FormItem>
                             </Col>

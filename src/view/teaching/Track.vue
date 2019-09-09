@@ -5,7 +5,7 @@
 
           <Col span="24">
             <Select filterable="true" placeholder="班级" v-model="searchForm.classId" @on-change="initStuList" style="width:200px">
-              <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+              <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
             </Select>
             <Select filterable="true" v-model="searchForm.stuName" placeholder="学生" style="width:200px">
               <Option v-for="s in stuList" :value="s.userInfo.name">{{s.userInfo.name}}</Option>
@@ -47,7 +47,7 @@
                             <Col span="11">
                             <FormItem label="班级" >
                               <Select filterable="true" placeholder="班级" style="width:200px" @on-change="initStuList">
-                                <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+                                <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
                               </Select>
                             </FormItem>
                             </Col>

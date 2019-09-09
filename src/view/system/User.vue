@@ -5,7 +5,7 @@
 
         <Col span="24">
           <Select filterable="true" placeholder="班级" v-model="searchForm.classId"  style="width:200px">
-            <Option v-for="c in classesList" :value="c.id">{{c.name}}</Option>
+            <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
           </Select>
           <Input v-model="searchForm.stuName" placeholder="请输入..." style="width:200px"/>
           <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
