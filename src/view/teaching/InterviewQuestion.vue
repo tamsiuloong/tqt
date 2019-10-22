@@ -16,18 +16,22 @@
         <br>
         <Row>
                     <Button type="primary" icon="ios-add" @click="addInterviewQuestion()">新建面试题</Button>
+                    <Button type="primary" icon="ios-add" @click="batchInterviewQuestions()">批量导入面试题</Button>
                     <Button type="success" icon="ios-build" @click="edit()">修改面试题</Button>
                     <Button type="error" icon="ios-trash" @click="remove()">删除面试题</Button>
         </Row>
         <br>
         <Row>
-                        <Table :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+                  <Table  ref="table" :loading="tableLoding" border :columns="columns1" :data="page.content" @on-selection-change="change"></Table>
+          <br>
+          <Button type="primary" size="large" @click="exportData()"><Icon type="ios-download-outline"></Icon>导出面试题</Button>
+
         </Row>
         <br>
         <Row>
-                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                              align="center" show-total></Page>
-        </Row>
+                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage" @on-page-size-change="changePS"
+                              align="center" show-total show-sizer :page-size-opts="pageSizeOpts"></Page>
+             </Row>
         <br>
 
         <Modal
@@ -79,9 +83,67 @@
                           </FormItem>
                         </Col>
                       </Row>
+
+
             </Form>
         </Modal>
+        <Modal
+        v-model="batchModal"
+        title="批量导入面试题"
+        :mask-closable="true"
+        :loading="loading"
+        @on-ok="batchImport"
+        @on-cancel="cancel"
+        width="95%">
+        <Form ref="batchForm" :model="batchForm" :rules="batchFormRule"  :label-width="80">
+          <!--一次性取两个元素放在row集合中 -->
+          <Row>
+            <!-- 循环便利row中的两个元素-->
+            <Col span="22">
+              <FormItem label="公司名字" prop="company">
+                  <Input type="text" v-model="batchForm.company"/>
+              </FormItem>
+            </Col>
+          </Row>
 
+          <Row>
+            <Col span="22">
+              <FormItem label="word文本" prop="text">
+                <quill-editor v-model="batchForm.text"
+                              ref="myQuillEditor"
+                              :options="editorOption"
+                >
+                </quill-editor>
+                <br>
+                <Button type="success" icon="ios-build" @click="wordToTable()">word转table</Button>
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span="22">
+              <FormItem label="数据">
+                <Table border :columns="batchImportColumns" :data="batchImportData">
+                  <template slot-scope="{ row, index }" slot="course">
+
+                     <Select v-model="batchImportData[index].course.id" style="width:200px" @on-change="queryKnowledgePointForBatch(batchImportData[index].course.id,index)">
+                       <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                     </Select>
+
+                  </template>
+                  <template slot-scope="{ row, index }" slot="knowledgePoint">
+
+                    <Select v-model="batchImportData[index].knowledgePoint.id" style="width:200px">
+                      <Option v-for="item in knowledgePointLists[index]" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+
+                  </template>
+                </Table>
+              </FormItem>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
 
         <Modal
                 v-model="updateModal"
@@ -202,6 +264,59 @@
         },
         data() {
             return {
+              pageSizeOpts:[10, 20, 30, 50,100],
+              batchImportColumns: [
+                {
+                  title: '题目',
+                  key: 'title'
+                },
+                {
+                  title: '答案',
+                  key: 'answer'
+                },
+                {
+                  title: '课程',
+                  slot: 'course',
+                  key: 'courseId',
+                  slot: 'course',
+                  // render: (h, params) => {
+                  // //   //   <Select v-model="model1" style="width:200px">
+                  // //   //   <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  // //   // </Select>
+                  //   let options = [];
+                  //   this.courseList.forEach(course=>{
+                  //     options.push(
+                  //       h('Option',{
+                  //         props: {
+                  //           value: course.id,
+                  //           key:course.id
+                  //         }
+                  //       },course.name)
+                  //     );
+                  //   })
+                  //
+                  //   return h('Select', {
+                  //       props:{
+                  //         "v-model": params.row.course.name,
+                  //       },
+                  //       on: {
+                  //         'on-change':(event) => {}
+                  //       },
+                  //     },
+                  //     options
+                  //   );
+                  // }
+
+                },
+                {
+                  title: '知识点',
+                  slot: 'knowledgePoint',
+                  key: 'knowledgePointId'
+                }
+              ],
+              batchImportData: [
+
+              ],
               editorOption: {
                 modules: {
                   toolbar: [
@@ -288,14 +403,14 @@
                         width: 260,
                         key: 'title'
                     },
-                    // {
-                    //   title: '答案',
-                    //   width: 260,
-                    //   key: 'answer'
-                    // },
+                    {
+                      title: '答案',
+                      width: 260,
+                      key: 'answer'
+                    },
                     {
                         title: '课程',
-                        key: 'courseId',
+                        key: 'courseName',
                         render: (h, params) => {
                           return h('div', [
                             h('strong', params.row.course.name)
@@ -304,7 +419,7 @@
                     },
                     {
                         title: '知识点',
-                        key: 'knowledgePointId',
+                        key: 'knowledgePointName',
                         render: (h, params) => {
                           return h('div', [
                             h('strong', params.row.knowledgePoint.name)
@@ -325,6 +440,14 @@
                             },
                             on: {
                               click: () => {
+                                if(!params.row.course)
+                                {
+                                  params.row.course = {}
+                                }
+                                if(!params.row.knowledgePoint)
+                                {
+                                  params.row.knowledgePoint = {}
+                                }
                                 this.detail = params.row;
                                 this.detailModal = true;
                               }
@@ -335,7 +458,9 @@
                     }
                 ],
                 self: this,
-                page: [],
+                page: {
+                  size : 20
+                },
                 updateModal: false,
                 addModal: false,
                 updateForm: {
@@ -358,6 +483,10 @@
                         },
                         answer:""
                 },
+                batchForm: {
+                  company:"",
+                  text:""
+                },
                 //当前面试题详情
                 detail:{
                   title:"",
@@ -370,6 +499,7 @@
                   answer:""
                 },
                 detailModal:false,
+                batchModal:false,
                 formRule: {
                     title: [
                         {required: true, message:'题目不能为空',trigger:'blur'}
@@ -391,8 +521,19 @@
                         {required: true, message:'所属面试不能为空',trigger:'blur'}
                     ]
                 },
+              batchFormRule: {
+                company: [
+                  {required: true, message:'公司名字不能为空',trigger:'blur'}
+                ]
+                ,
+                text: [
+                  {required: true, message:'不能为空',trigger:'blur'}
+                ]
+              },
                 courseList:[],
                 knowledgePointList:[],
+                //批量导入为每个面试题准备单独的知识点列表
+                knowledgePointLists:[],
                 searchForm:{
                   courseId:"",
                   knowledgePointId:"",
@@ -404,6 +545,14 @@
             change(e){
                 this.count = e.length;
                 if (e.length == 1) {
+                  if(!e[0].course)
+                  {
+                    e[0].course = {}
+                  }
+                  if(!e[0].knowledgePoint)
+                  {
+                    e[0].knowledgePoint = {}
+                  }
                     this.updateForm = e[0];
                 }
                 this.setGroupId(e);
@@ -421,6 +570,10 @@
             },
             addInterviewQuestion(){
                 this.addModal = true;
+            },
+            //批量导入面试题
+            batchInterviewQuestions(){
+              this.batchModal = true;
             },
             add(){
                 this.$refs['addForm'].validate((valid)=>{
@@ -449,6 +602,36 @@
                         },1000);
                     }
                 })
+            },
+            batchImport(){
+              this.$refs['batchForm'].validate((valid)=>{
+                if(valid)
+                {
+                  axios.request({
+                    url: '/api/interviewQuestion/batchImport',
+                    method: 'post',
+                    data: {
+                      company:this.batchForm.company,
+                      interviewQuestionList:this.batchImportData
+                    }
+                  }).then((result) => {
+                    this.gopage(this.pageNo);
+                    this.$refs['batchForm'].resetFields();
+                    this.$Message.success('批量导入成功!');
+                    this.batchModal = false;
+                  });
+                }
+                else
+                {
+                  this.$Message.error("表单验证失败");
+                  setTimeout(()=>{
+                    this.loading=false;
+                    this.$nextTick(()=>{
+                      this.loading=true;
+                    });
+                  },1000);
+                }
+              })
             },
             edit () {
                 if (this.count != 1) {
@@ -508,9 +691,9 @@
                 }
             },
             gopage(pageNo){
-                                this.tableLoding=true;
+                this.tableLoding=true;
                 this.pageNo = pageNo;
-                const pageSize = this.pageSize;
+                const pageSize = this.page.size;
                 const keyWord = this.keyWord;
                 axios.request({
                     url: '/api/interviewQuestion/search',
@@ -528,6 +711,8 @@
                 this.$Message.info('点击了取消');
             },
             queryKnowledgePoint(courseId){
+
+              // this.knowledgePointList = [];
               axios.request({
                 url: '/api/knowledgePoint/all/'+courseId,
                 method: 'get'
@@ -536,7 +721,80 @@
               }).catch((result)=>{
                 this.$Message.error("哦豁，操作异常："+result);
               });
-            }
+            },
+            queryKnowledgePointForBatch(courseId,i){
+              axios.request({
+                url: '/api/knowledgePoint/all/'+courseId,
+                method: 'get'
+              }).then((result) => {
+                if(result.data.data.length==0)
+                {
+                  this.knowledgePointLists[i] = [];
+                }
+                else
+                {
+                  //官网文档“以下两种数据变化vue无法检测，1.通过索引修改值。2.改变数组长度。”。。？
+                  //so 需要概念数组引用
+                  let newArray = JSON.parse(JSON.stringify(this.knowledgePointLists));
+                  newArray[i] = result.data.data;
+                  this.knowledgePointLists = newArray;
+                }
+                console.log('nothing')
+              }).catch((result)=>{
+                this.$Message.error("哦豁，操作异常："+result);
+              });
+            },
+            wordToTable(){
+              axios.request({
+                url: '/api/interviewQuestion/wordToTable',
+                method: 'post',
+                data: {
+                  text:this.batchForm.text
+                }
+              }).then((result) => {
+                this.batchImportData = result.data.data;
+              }).catch((result)=>{
+                this.$Message.error({
+                  content: '数据格式有错，在一问一答之间只能有两个换行符！',
+                  duration: 10
+                })
+
+              });
+            },
+          //导出面试题
+          exportData () {
+              let data = JSON.parse(JSON.stringify(this.page.content)).map(i=>{
+                if(i.knowledgePoint)
+                {
+                  i.knowledgePointName = i.knowledgePoint.name;
+                }
+                else
+                {
+                  i.knowledgePointName = '未知';
+                }
+
+                if(i.course)
+                {
+                  i.courseName = i.course.name;
+                }
+                else
+                {
+                  i.courseName = '未知';
+                }
+                return i;
+              });
+              // console.log(data);
+              this.$refs.table.exportCsv({
+                filename: '面试题',
+                columns: this.columns1.filter((col, index) => index < 5),
+                data: data
+              });
+          },
+          changePS(size){
+              this.page.size = size;
+              this.gopage(this.pageNo);
+          }
+
         },
         mounted: function () {
 
@@ -552,6 +810,7 @@
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });
+
         }
     }
 

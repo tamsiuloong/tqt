@@ -76,18 +76,24 @@ export default {
   actions: {
     // 登录
     handleLogin ({ commit }, { userName, password }) {
+      console.log(userName);
+
       userName = userName.trim()
       return new Promise((resolve, reject) => {
+        console.log(1);
         login({
           userName,
           password
         }).then(res => {
+          console.log(3);
           const data = res.data
           commit('setToken', data.access_token)
           resolve()
         }).catch(err => {
+          console.log(2);
           reject(err)
         })
+        console.log(4);
       })
     },
     // 注册

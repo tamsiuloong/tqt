@@ -7,7 +7,6 @@ export const login = ({ userName, password }) => {
     password
   }
   return axios.request({
-
     url: '/oauth/token',
     params,
     method: 'POST',

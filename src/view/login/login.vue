@@ -47,25 +47,26 @@ export default {
       'getUserInfo'
     ]),
     handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
-          })
+      this.handleLogin({ userName, password })
+        .then(res => {
+            console.log(5);
+            this.getUserInfo().then(res => {
+              console.log(5);
+              this.$router.push({
+                name: this.$config.homeName
+              })
+            })
         })
-      }).catch(err=>{
-        if(err.response.status === 401)
-        {
-          this.$Message.error('用户名不存在');
-        }
-        else if(err.response.status === 400){
-          this.$Message.error('密码错误');
-        }
-        else
-        {
-          this.$Message.error('哦，天啊，未知问题啊，有可能服务器关了吧');
-        }
-      })
+        .catch(err=>{
+          if(err.response.status === 400){
+            this.$Message.error(err.response.data.error_description);
+          }
+          else
+          {
+            this.$Message.error('哦，天啊，未知问题啊，有可能服务器关了吧');
+          }
+        })
+      console.log(5);
     },
     register(form) {
       this.handleRegister(form).then(res => {

@@ -428,6 +428,15 @@ export default [
           title: '模块管理'
         },
         component: () => import('@/view/system/Module.vue')
+      },
+      {
+        path: 'classes',
+        name: '班级管理',
+        meta: {
+          icon: 'md-paper',
+          title: '班级管理'
+        },
+        component: () => import('@/view/system/Classes.vue')
       }
       // { path: 'dept', title: '部门管理', name: 'dept', icon: 'arrow-move', component: () => import('@/view/system/Dept.vue') },
     ]
@@ -441,6 +450,7 @@ export default [
     },
     component: Main,
     children: [
+
       {
         path: 'teaching',
         name: '教学反馈',
