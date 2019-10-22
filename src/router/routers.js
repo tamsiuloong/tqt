@@ -479,6 +479,15 @@ export default [
         component: () => import('@/view/teaching/Course.vue')
       },
       {
+        path: 'knowledgepoint',
+        name: '知识点管理',
+        meta: {
+          icon: 'md-navigate',
+          title: '知识点管理'
+        },
+        component: () => import('@/view/teaching/KnowledgePoint.vue')
+      },
+      {
         path: 'allInterviewQuestions',
         name: '面试题管理',
         meta: {
