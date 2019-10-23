@@ -214,7 +214,7 @@ function filterAsyncRouter(asyncRouterMap, permissions) {
 function hasPermission(permissions, route) {
 //如果路由名字不为空 && permissions 不为空
   if (route.name && route.name.length>1 && permissions) {
-    console.log(route.name);
+    //console.log(route.name);
     return permissions.some(permission => route.name.indexOf(permission) >= 0)
   } else {
     return false;

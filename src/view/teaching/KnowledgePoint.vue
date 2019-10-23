@@ -1,9 +1,12 @@
 <template>
     <Card>
         <Row>
-            <Col span="8">
-                <Input v-model="keyWord" placeholder="请输入知识点..." style="width:200px"/>
-                <Button type="primary" shape="circle" icon="ios-search" @click="gopage()">搜索</Button>
+            <Col span="22">
+              所属课程：<Select v-model="courseId" style="width:200px" filterable >
+                <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              </Select>
+               课程名字： <Input v-model="keyWord" placeholder="请输入知识点..." style="width:200px"/>
+                <Button type="primary" shape="circle" icon="ios-search" @click="gopage(pageNo)">搜索</Button>
             </Col>
         </Row>
         <br>
@@ -18,8 +21,8 @@
         </Row>
         <br>
         <Row>
-                        <Page :total="totalCount" :page-size="page.size" :current="page.number+1" @on-change="gopage"
-                              align="center"></Page>
+                        <Page :total="page.totalElements" :page-size="page.size" :current="page.number+1" @on-change="gopage"
+                              align="center" show-total></Page>
         </Row>
         <br>
 
@@ -106,6 +109,7 @@
                 totalPage: 0,
                 totalCount: 0,
                 keyWord:"",
+                courseId:"",
                 columns1: [
                     {
                         type: 'selection',
@@ -263,14 +267,14 @@
                     this.$Message.warning('请至少选择一项');
                 }
             },
-            gopage(){
-                const pageNo = this.pageNo;
+            gopage(pageNo){
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
+                const courseId = this.courseId;
                 axios.request({
                     url: '/api/knowledgePoint',
                     method: 'get',
-                    params: {pageNo, pageSize,keyWord}
+                    params: {pageNo, pageSize,keyWord,courseId}
                 }).then((result) => {
                     this.page = result.data.data;
                 }).catch((result)=>{
@@ -282,13 +286,19 @@
             }
         },
         mounted: function () {
-            this.gopage();
+            this.gopage(1);
           //courseList
           axios.request({
             url: '/api/course/all',
             method: 'get'
           }).then((result) => {
             this.courseList = result.data.data;
+            this.courseList.splice(0,0,{
+              id: "",
+              name: "--全部课程--",
+              orderNo: 0,
+              state: 1,
+            })
           }).catch((result)=>{
             this.$Message.error("哦豁，操作异常："+result);
           });

@@ -336,7 +336,7 @@
             chooseDate(e1){
               this.addForm.startDate = e1[0];
               this.addForm.endDate = e1[1];
-              console.log(datedifference(e1[0],e1[1]));
+              //console.log(datedifference(e1[0],e1[1]));
               this.addForm.totalDay = datedifference(e1[0],e1[1])+1;
             }
         },

@@ -582,8 +582,7 @@ export default [
           title: '我的面试记录'
         },
         component: () => import('@/view/interview/MyInterview.vue')
-      }
-      ,
+      },
       {
         path: 'query',
         name: '查询面试记录',
@@ -592,15 +591,14 @@ export default [
           title: '查询面试记录'
         },
         component: () => import('@/view/interview/QueryInterview.vue')
-      }
-      ,
+      },
       {
         path: 'interviewQuestions',
         name: '面试题',
         meta: {
           icon: 'md-funnel',
           title: '面试题',
-          hideInMenu:true
+          hideInMenu: true
         },
         component: () => import('@/view/interview/InterviewQuestion.vue')
       },
@@ -610,7 +608,7 @@ export default [
         meta: {
           icon: 'md-funnel',
           title: '查看面试题',
-          hideInMenu:true
+          hideInMenu: true
         },
         component: () => import('@/view/interview/QueryInterviewQuestion.vue')
       }

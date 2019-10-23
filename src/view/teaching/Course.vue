@@ -51,6 +51,15 @@
                             </Col>
                     </Row>
 
+                    <Row>
+                      <!-- 循环便利row中的两个元素-->
+                      <Col span="11">
+                        <FormItem label="排序号" prop="orderNo">
+                          <Input type="text" v-model="addForm.orderNo"/>
+                        </FormItem>
+                      </Col>
+
+                    </Row>
             </Form>
         </Modal>
 
@@ -81,7 +90,15 @@
                               </FormItem>
                             </Col>
                     </Row>
+                    <Row>
+                      <!-- 循环便利row中的两个元素-->
+                      <Col span="11">
+                        <FormItem label="排序号" prop="orderNo">
+                          <Input type="text" v-model="updateForm.orderNo"/>
+                        </FormItem>
+                      </Col>
 
+                    </Row>
 
             </Form>
         </Modal>
@@ -113,6 +130,10 @@
                     {
                         title: '名字',
                         key: 'name'
+                    },
+                    {
+                      title: '排序号',
+                      key: 'orderNo'
                     },
                     {
                       title: '状态',

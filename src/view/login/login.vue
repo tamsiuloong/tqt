@@ -49,9 +49,9 @@ export default {
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password })
         .then(res => {
-            console.log(5);
+            //console.log(5);
             this.getUserInfo().then(res => {
-              console.log(5);
+              //console.log(5);
               this.$router.push({
                 name: this.$config.homeName
               })
@@ -66,7 +66,7 @@ export default {
             this.$Message.error('哦，天啊，未知问题啊，有可能服务器关了吧');
           }
         })
-      console.log(5);
+      //console.log(5);
     },
     register(form) {
       this.handleRegister(form).then(res => {

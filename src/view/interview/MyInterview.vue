@@ -756,8 +756,8 @@
               this.$refs.soundRecording.clearFiles();
             },
             handleSuccess4Add (res, file,fileList) {
-              console.log(res);
-              console.log(file);
+              //console.log(res);
+              //console.log(file);
               file.url = baseUrl+res;
               file.name = res;
               this.appendixs.push(file);

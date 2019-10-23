@@ -739,7 +739,7 @@
                   newArray[i] = result.data.data;
                   this.knowledgePointLists = newArray;
                 }
-                console.log('nothing')
+                //console.log('nothing')
               }).catch((result)=>{
                 this.$Message.error("哦豁，操作异常："+result);
               });
