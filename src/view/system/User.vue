@@ -393,6 +393,81 @@
 
         </Form>
     </Modal>
+    <!--offer管理-->
+    <Modal
+      v-model="offerModal"
+      title="offer管理"
+       width="80%" ok-text="关闭">
+      <Form ref="offer"  :label-width="80">
+
+        <Row>
+          <Col span="24">
+              <Table border :columns="offerColumns" :data="offerData"></Table>
+          </Col>
+        </Row>
+        <br>
+        <Row>
+          <Col span="22">
+            <Button type="primary" iicon="ios-add" @click="addOffer()">添加offer</Button>
+          </Col>
+        </Row>
+        <br>
+        <Card :title="offerCmd">
+        <Row>
+
+            <Col span="22">
+            <Form ref="offerForm" :model="offerForm" :label-width="80">
+              <Row>
+                <Col span="11">
+                  <FormItem label="公司名字">
+                    <Input type="text" v-model="offerForm.company"/><br>
+                  </FormItem>
+                </Col>
+                <Col span="2"/>
+                <Col span="11">
+                  <FormItem label="薪资">
+                    <InputNumber type="text" number="true" v-model="offerForm.salary"/><br>
+                  </FormItem>
+                </Col>
+              </Row>
+
+              <Row>
+                  <Col span="11">
+                    <FormItem label="入职日期">
+                      <DatePicker type="date" v-model="offerForm.joinDate" placeholder="Select date"
+                                  style="width: 200px"></DatePicker>
+                    </FormItem>
+                  </Col>
+                  <Col span="2"/>
+                  <Col span="11">
+                    <FormItem label="福利待遇">
+                      <Input type="textarea" v-model="offerForm.welfare"/><br>
+                    </FormItem>
+                  </Col>
+              </Row>
+              <Row>
+                <Col span="22">
+                  <FormItem label="是否入职">
+                    <Radio-group v-model="offerForm.isEntry" type="button">
+                      <Radio label="true">已入职</Radio>
+                      <Radio label="false">放弃</Radio>
+                    </Radio-group>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span="22">
+                  <Button type="success" style="margin-left: 80px" icon="ios-build" @click="saveOffer()">保存数据</Button>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+
+        </Row>
+        </Card>
+      </Form>
+
+    </Modal>
   </Card>
 </template>
 
@@ -428,6 +503,122 @@
 
             };
             return {
+                offerCmd:"添加offer",
+                offerData:[],
+                offerColumns: [
+                  {
+                    title: '公司',
+                    key: 'company'
+                  },
+                  {
+                    title: '薪资',
+                    key: 'salary'
+                  },
+                  {
+                    title: '入职日期',
+                    key: 'joinDate',
+                    render: (h, params) => {
+                      let time = "未知";
+                      if(params.row.joinDate)
+                      {
+                        time=params.row.joinDate.substr(0,7);
+                      }
+                      return h('div', [
+                        h('strong', time)
+                      ]);
+                    }
+                  },
+                  {
+                    title: '是否入职',
+                    key: 'isEntry',
+                    render: (h, params) => {
+
+                      return h('div', [
+                        h('strong', params.row.isEntry?"已入职":"放弃入职")
+                      ]);
+                    }
+                  },
+                  {
+                    title: '操作',
+                    key: 'action',
+                    width: 250,
+                    align: 'center',
+                    render: (h, params) => {
+                      return h('div', [
+                        h('Button', {
+                          props: {
+                            type: 'primary',
+                            size: 'small'
+                          },
+                          style: {
+                            marginRight: '5px'
+                          },
+                          on: {
+                            click: () => {
+                              this.offerForm = params.row;
+                              //数据转换
+                              this.offerForm.isEntry = params.row?"true":"false";
+                              this.offerCmd = "编辑offer";
+
+                            }
+                          }
+                        }, '编辑'),
+                        h('Button', {
+                          props: {
+                            type: 'error',
+                            size: 'small'
+                          },
+                          style: {
+                            marginRight: '5px'
+                          },
+                          on: {
+                            click: () => {
+                              axios.request({
+                                url: '/api/offer/entry/'+params.row.id+"/"+(!params.row.isEntry),
+                                method: 'put'
+                              }).then((result) => {
+                                this.loadOffers(this.offerForm.userId);
+                                this.$Message.success('操作成功!');
+                              }).catch(resp=>{
+                                this.$Message.error("网络异常，请稍后再试");
+                              });
+                            }
+                          }
+                        }, params.row.isEntry?"取消入职":"确定入职"),
+                        h('Button', {
+                          props: {
+                            type: 'error',
+                            size: 'small'
+                          },
+                          on: {
+                            click: () => {
+                              axios.request({
+                                url: '/api/offer',
+                                method: 'delete',
+                                data:[params.row.id]
+                              }).then((result) => {
+
+                                this.offerData.splice(params.index, 1);
+                                this.loadOffers(this.offerForm.userId);
+                                this.$Message.success('操作成功!');
+                              }).catch(resp=>{
+                                this.$Message.error("网络异常，请稍后再试");
+                              });
+
+                            }
+                          }
+                        }, '删除')
+                      ]);
+                    }
+                  }
+                ],
+                offerForm:{
+                  company:"",
+                  salary:"",
+                  joinDate:"",
+                  isEntry:"false",
+                  welfare:""
+                },
                 tableLoding:true,
                 loading: true,
                 count: 0,
@@ -561,6 +752,31 @@
                             h('strong', stateToStr)
                           ]);
                         }
+                    },
+                    {
+                      title: '操作',
+                      key: 'action',
+                      fixed: 'right',
+                      width: 160,
+                      render: (h, params) => {
+                        return h('div', [
+                          h('Button', {
+                            props: {
+                              type: 'info',
+                              size: 'small',
+                              ghost:''
+                            },
+                            on: {
+                              click: () => {
+
+                                this.loadOffers(params.row.id);
+
+                                this.offerModal = true;
+                              }
+                            }
+                          }, 'offer/入职管理')
+                        ]);
+                      }
                     }
                 ],
                 self: this,
@@ -570,6 +786,7 @@
                 },
                 addModal: false,
                 updateModal: false,
+                offerModal: false,
                 roleModal: false,
                 addForm: {
                     "dept": {
@@ -950,6 +1167,66 @@
               }
             }
             return returnAge //返回周岁年龄
+          },
+          loadOffers(userId){
+            this.offerForm.userId = userId;
+            axios.request({
+              url: '/api/offer/uid/'+userId,
+              method: 'get'
+            }).then((result) => {
+              this.offerData = result.data.data;
+            }).catch((result)=>{
+              this.$Message.error("哦豁，操作异常："+result);
+            });
+          },
+          saveOffer(){
+              //判断是什么操作
+
+              if(this.offerCmd==='添加offer')
+              {
+                axios.request({
+                  url: '/api/offer',
+                  method: 'post',
+                  data: this.offerForm
+                }).then((result) => {
+                  this.loadOffers(this.offerForm.userId);
+                  this.$refs['offerForm'].resetFields();
+                  this.offerForm={
+                    company:"",
+                    salary:"",
+                    joinDate:"",
+                    isEntry:"false",
+                    welfare:"",
+                    userId:this.offerForm.userId
+                  };
+                  this.$Message.success('操作成功!');
+                }).catch(resp=>{
+                  this.$Message.error("网络异常，请稍后再试");
+                });
+              }
+              else if(this.offerCmd==='编辑offer'){
+                axios.request({
+                  url: '/api/offer',
+                  method: 'put',
+                  data: this.offerForm
+                }).then((result) => {
+                  this.loadOffers(this.offerForm.userId);
+                  this.$Message.success('操作成功!');
+                }).catch(resp=>{
+                  this.$Message.error("网络异常，请稍后再试");
+                });
+              }
+          },
+          addOffer(){
+            this.offerForm={
+              company:"",
+              salary:"",
+              joinDate:"",
+              isEntry:"false",
+              welfare:"",
+              userId:this.offerForm.userId
+            };
+            this.offerCmd="添加offer";
           }
 
         },

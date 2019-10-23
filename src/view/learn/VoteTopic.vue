@@ -176,7 +176,7 @@
 
                     <Row>
                       <Col span="24">
-                       <h2 style="color: red">注意：各个评分项分值范围为1-100分</h2>
+<!--                       <h2 style="color: red">注意：各个评分项分值范围为1-100分</h2>-->
                       </Col>
                     </Row>
                     <br>
@@ -184,7 +184,7 @@
                           <Col span="8">
                            {{v.title}}
                           </Col>
-                          <Col span="3"  v-if="v.title!='建议'" >
+                          <Col span="3"  v-if="v.title.indexOf('建议')==-1" >
                               <Input type="number" maxlength="3" size="small" number="true" @on-blur="validNumber($event,i)"  v-model="voteReply[i]"/>
                           </Col>
 

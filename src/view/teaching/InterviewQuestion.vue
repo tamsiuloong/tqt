@@ -48,7 +48,7 @@
                         <!-- 循环便利row中的两个元素-->
                             <Col span="11">
                             <FormItem label="课程" >
-                                <Select v-model="addForm.course.id" style="width:200px" filterable @on-change="queryKnowledgePoint">
+                                <Select v-model="addForm.course.id" style="width:200px"  @on-change="queryKnowledgePoint" filterable>
                                   <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                 </Select>
                             </FormItem>
@@ -56,7 +56,7 @@
                                 <Col span="2" style="text-align: center"/>
                             <Col span="11">
                             <FormItem label="知识点" >
-                              <Select v-model="addForm.knowledgePoint.id" style="width:200px" filterable >
+                              <Select v-model="addForm.knowledgePoint.id" style="width:200px" filterable>
                                 <Option v-for="item in knowledgePointList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                               </Select>
                             </FormItem>
@@ -126,14 +126,14 @@
                 <Table border :columns="batchImportColumns" :data="batchImportData">
                   <template slot-scope="{ row, index }" slot="course">
 
-                     <Select v-model="batchImportData[index].course.id" style="width:200px" @on-change="queryKnowledgePointForBatch(batchImportData[index].course.id,index)">
+                     <Select v-model="batchImportData[index].course.id" style="width:200px" filterable  @on-change="queryKnowledgePointForBatch(batchImportData[index].course.id,index)">
                        <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                      </Select>
 
                   </template>
                   <template slot-scope="{ row, index }" slot="knowledgePoint">
 
-                    <Select v-model="batchImportData[index].knowledgePoint.id" style="width:200px">
+                    <Select v-model="batchImportData[index].knowledgePoint.id" filterable style="width:200px">
                       <Option v-for="item in knowledgePointLists[index]" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
 
