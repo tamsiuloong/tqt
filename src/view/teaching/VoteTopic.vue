@@ -70,7 +70,7 @@
 
                   <FormItem
                     v-for="(item, index) in addForm.items"
-                    v-if="item.status"
+
                     :key="index"
                     :label="'调查项 ' + item.index"
                     :prop="'items.' + index + '.value'"
@@ -654,7 +654,8 @@
               });
             },
             handleRemove (index) {
-              this.addForm.items[index].status = 0;
+              this.addForm.items.splice(index, 1);
+              //this.addForm.items[index].status = 0;
             }
         },
         created: function () {
