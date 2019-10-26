@@ -10,7 +10,12 @@
         <Row>
                     <!--<Button type="primary" icon="ios-add" @click="addVoteTopic()">新建</Button>-->
                     <!--<Button type="success" icon="ios-build" @click="edit()">修改</Button>-->
-                    <!--<Button type="error" icon="ios-trash" @click="remove()">删除</Button>-->
+                    <!--<Poptip
+            confirm
+            title="确定要删除选中的内容吗?"
+            @on-ok="remove()" placement="bottom-start">
+            <Button type="error" icon="ios-trash" >删除</Button>
+          </Poptip>-->
         </Row>
         <br>
         <Row>
@@ -176,7 +181,7 @@
 
                     <Row>
                       <Col span="24">
-<!--                       <h2 style="color: red">注意：各个评分项分值范围为1-100分</h2>-->
+                       <h2 style="color: red">注意各个调查项的分值范围哦</h2>
                       </Col>
                     </Row>
                     <br>
@@ -194,6 +199,19 @@
                     </Row>
 
             </Form>
+        </Modal>
+
+        <Modal v-model="confirmModal" width="360">
+          <p slot="header" style="color:#f60;text-align:center">
+            <Icon type="ios-information-circle"></Icon>
+            <span>删除确认</span>
+          </p>
+          <div style="text-align:center">
+            <p>确定要删除吗?</p>
+          </div>
+          <div slot="footer">
+            <Button type="error" size="large" long :loading="modal_loading" @click="del">Delete</Button>
+          </div>
         </Modal>
     </Card>
 </template>
@@ -524,7 +542,7 @@
                 }
             },
             gopage(pageNo){
-                                this.tableLoding=true;
+                this.tableLoding=true;
                 this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;

@@ -5,7 +5,7 @@
               所属课程：<Select v-model="courseId" style="width:200px" filterable >
                 <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
               </Select>
-               课程名字： <Input v-model="keyWord" placeholder="请输入知识点..." style="width:200px"/>
+               知识点名字： <Input v-model="keyWord" placeholder="请输入知识点..." style="width:200px"/>
                 <Button type="primary" shape="circle" icon="ios-search" @click="gopage(pageNo)">搜索</Button>
             </Col>
         </Row>
@@ -13,7 +13,12 @@
         <Row>
                     <Button type="primary" icon="ios-add" @click="addKnowledgePoint()">新建</Button>
                     <Button type="success" icon="ios-build" @click="edit()">修改</Button>
-                    <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
+                    <Poptip
+            confirm
+            title="确定要删除选中的内容吗?"
+            @on-ok="remove()" placement="bottom-start">
+            <Button type="error" icon="ios-trash" >删除</Button>
+          </Poptip>
         </Row>
         <br>
         <Row>

@@ -10,7 +10,12 @@
             <Row>
                 <Button type="primary" icon="plus" @click="addDeptUI">新增</Button>
                 <Button type="success" icon="ios-build" @click="updateDeptUI">修改</Button>
-                <Button type="error" icon="ios-trash" @click="deleteDept">删除</Button>
+              <Poptip
+                confirm
+                title="确定要删除选中的内容吗?"
+                @on-ok="deleteDept">
+                <Button type="error" icon="ios-trash" >删除</Button>
+              </Poptip>
             </Row>
             <br>
             <Row>

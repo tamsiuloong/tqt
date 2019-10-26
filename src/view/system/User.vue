@@ -18,7 +18,12 @@
     <Row>
         <Button type="primary" iicon="ios-add" @click="addUser()">新建</Button>
         <Button type="success" icon="ios-build" @click="edit()">修改</Button>
-        <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
+        <Poptip
+            confirm
+            title="确定要删除这个用户吗?删了之后可能会导致系统爆炸哦"
+            @on-ok="remove()" placement="bottom-start">
+            <Button type="error" icon="ios-trash" >删除</Button>
+          </Poptip>
         <Button type="success" icon="ios-build" @click="role()">修改角色</Button>
     </Row>
     <br>

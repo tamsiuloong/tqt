@@ -10,7 +10,13 @@
         <Row>
                     <Button type="primary" icon="ios-add" @click="addVoteTopic()">新建</Button>
                     <!--<Button type="success" icon="ios-build" @click="edit()">修改</Button>-->
-                    <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
+          <Poptip
+            confirm
+            title="确定要删除选中的内容吗?"
+            @on-ok="remove()" placement="bottom-start">
+            <Button type="error" icon="ios-trash" >删除</Button>
+          </Poptip>
+
         </Row>
         <br>
         <Row>
@@ -361,8 +367,58 @@
                         voteSubtopicList:[],
                         items: [
                           {
-                            value: '',
+                            value: '总体评价(百分制)',
                             index: 1,
+                            status: 1
+                          },
+                          {
+                            value: '学习方法和解决问题能力(十分制)',
+                            index: 2,
+                            status: 1
+                          },
+                          {
+                            value: '上课激情(十分制)',
+                            index: 3,
+                            status: 1
+                          },
+                          {
+                            value: '备课充分(十分制)',
+                            index: 4,
+                            status: 1
+                          },
+                          {
+                            value: '讲课清晰(十分制)',
+                            index: 5,
+                            status: 1
+                          },
+                          {
+                            value: '课程信息量(十分制)',
+                            index: 6,
+                            status: 1
+                          },
+                          {
+                            value: '重点难点突出(十分制)',
+                            index: 7,
+                            status: 1
+                          },
+                          {
+                            value: '关注学员消化(十分制)',
+                            index: 8,
+                            status: 1
+                          },
+                          {
+                            value: '学生学习效果(十分制)',
+                            index: 9,
+                            status: 1
+                          },
+                          {
+                            value: '激发学生学习兴趣(十分制)',
+                            index: 10,
+                            status: 1
+                          },
+                          {
+                            value: '建议',
+                            index: 11,
                             status: 1
                           }
                         ]

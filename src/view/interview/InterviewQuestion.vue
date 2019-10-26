@@ -11,7 +11,12 @@
                     <Button type="error" icon="md-arrow-back" @click="backToInterviewList">返回</Button>
                     <Button type="primary" icon="ios-add" @click="addInterviewQuestion()">新建面试题</Button>
                     <Button type="success" icon="ios-build" @click="edit()">修改面试题</Button>
-                    <Button type="error" icon="ios-trash" @click="remove()">删除面试题</Button>
+                    <Poptip
+                      confirm
+                      title="确定要删除选中的内容吗?"
+            @on-ok="remove()" placement="bottom-start">
+                      <Button type="error" icon="ios-trash" >删除面试题</Button>
+                    </Poptip>
         </Row>
         <br>
         <Row>

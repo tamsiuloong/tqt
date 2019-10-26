@@ -13,7 +13,12 @@
       <Row>
         <Button type="primary" iicon="ios-add" @click="addRole()">新建</Button>
         <Button type="success" icon="ios-build" @click="edit()">修改</Button>
-        <Button type="error" icon="ios-trash" @click="remove()">删除</Button>
+        <Poptip
+            confirm
+            title="确定要删除选中的内容吗?"
+            @on-ok="remove()" placement="bottom-start">
+            <Button type="error" icon="ios-trash" >删除</Button>
+          </Poptip>
       </Row>
       <br>
       <Row>
