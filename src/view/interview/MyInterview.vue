@@ -615,6 +615,9 @@
                 this.$refs['addForm'].validate((valid)=>{
                     if(valid)
                     {
+                        //莫名奇妙就少一天
+                        let interviewTime = this.addForm.interviewTime;
+                        interviewTime.setDate(interviewTime.getDate() + 1);
                         const interview = this.addForm;
                         axios.request({
                             url: '/api/interview',
@@ -657,6 +660,8 @@
                 this.$refs['updateForm'].validate((valid)=>{
                     if(valid)
                     {
+                        let interviewTime = this.updateForm.interviewTime;
+                        interviewTime.setDate(interviewTime.getDate() + 1);
                         axios.request({
                             url: '/api/interview',
                             method: 'put',
