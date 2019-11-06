@@ -257,7 +257,14 @@
 <!--        <img v-for="img in currAppendixs" v-if="img" :src="img" width="40px" height="40px" @click="openWindow(img)"/>-->
 
       </Modal>
-
+      <Modal
+        v-model="audioModal"
+        :title="audioTitle"
+        @on-ok="closeAudioModal"
+        @on-cancel="closeAudioModal"
+      >
+        <audio-x :audioSrc="audioSrc" ref="audiox"/>
+      </Modal>
     </Card>
 </template>
 
@@ -270,12 +277,14 @@
     import 'quill/dist/quill.core.css'
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
+    import AudioX from '_c/audiox'
     import { quillEditor } from 'vue-quill-editor'
     const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
 
     export default {
       components: {
-        quillEditor
+        quillEditor,
+        AudioX
       },
         data() {
             return {
@@ -425,7 +434,10 @@
                               h('a', {
                                 on: {
                                   click: () => {
-                                    window.open(params.row.soundRecording);
+                                    // window.open(params.row.soundRecording);
+                                    this.audioTitle = "面试录音:"+params.row.user.userInfo.name + "-"+params.row.companyName;
+                                    this.audioSrc = params.row.soundRecording;
+                                    this.audioModal = true;
                                   }
                                 }
                               },'播放')
@@ -571,7 +583,10 @@
                   classId:"",
                   stuName:"",
                   companyName:""
-                }
+                },
+                audioModal:false,
+                audioSrc:"",
+                audioTitle:""
             }
         },
         methods: {
@@ -814,6 +829,13 @@
             },
             openWindow (img) {
               window.open(img);
+            },
+            //关闭播放窗口
+            closeAudioModal(){
+              this.audioModal = false;
+              // this.pauseAudio();
+
+              this.$refs.audiox.pauseAudio();
             }
         },
         created: function () {
