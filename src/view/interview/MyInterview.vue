@@ -94,7 +94,7 @@
                             <FormItem label="附件" >
                               <Upload
                                 multiple ref="appendixs" :on-success="handleSuccess4Add" :format="['jpg','jpeg','png','doc','docx','doc','docx']"
-                                :max-size="102400" :on-error="handleError"
+                                :max-size="204800" :on-error="handleError"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleExceededError"
                                 :on-remove="handleRemove"
@@ -110,7 +110,7 @@
                             <FormItem label="录音" >
                               <Upload ref="soundRecording"
                                 :on-success="Success4Add" :format="['mp3','aac','m4a']"
-                                :max-size="102400" :on-error="handleError"
+                                :max-size="204800" :on-error="handleError"
                                 :on-format-error="handleSoundFormatError"
                                 :on-exceeded-size="handleSoundExceededError"
                                 :show-upload-list="true"
@@ -632,7 +632,11 @@
                     {
                         //莫名奇妙就少一天
                         let interviewTime = this.addForm.interviewTime;
-                        interviewTime.setDate(interviewTime.getDate() + 1);
+                        if(interviewTime instanceof Date)
+                        {
+                          interviewTime.setDate(interviewTime.getDate() + 1);
+                        }
+
                         const interview = this.addForm;
                         axios.request({
                             url: '/api/interview',
@@ -676,7 +680,11 @@
                     if(valid)
                     {
                         let interviewTime = this.updateForm.interviewTime;
-                        interviewTime.setDate(interviewTime.getDate() + 1);
+                        if(interviewTime instanceof Date)
+                        {
+                          interviewTime.setDate(interviewTime.getDate() + 1);
+                        }
+
                         axios.request({
                             url: '/api/interview',
                             method: 'put',
