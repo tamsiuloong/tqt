@@ -528,6 +528,8 @@
             addVoteTopic(){
                 // this.index = 1;
                 this.addModal = true;
+                //清空投票项列表
+                this.addForm.voteSubtopicList=[];
                 // this.addForm.items.splice(0,this.addForm.items.length);
               //   this.$refs['addForm'].resetFields();
               // this.addForm.items.push({
@@ -540,8 +542,9 @@
                 this.$refs['addForm'].validate((valid)=>{
                     if(valid)
                     {
-                        const voteTopic = this.addForm;
+                        const voteTopic = JSON.parse(JSON.stringify(this.addForm));
 
+                        voteTopic.voteSubtopicList=[];
 
                         this.addForm.items.forEach(item=>{
                           if(item.status===1)
@@ -553,7 +556,8 @@
                             })
                           }
                         })
-
+                        //删除无用属性
+                        delete voteTopic.items;
                         // delete voteTopic.items;
                         voteTopic.teacherId = voteTopic.teacher.id;
                         axios.request({
