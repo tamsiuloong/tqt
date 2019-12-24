@@ -388,7 +388,12 @@
                     ]
 
                 },
-                courseList:[]
+                courseList:[
+          {
+            id:"",
+            name:"--全部--"
+          }
+        ]
             }
         },
         methods: {

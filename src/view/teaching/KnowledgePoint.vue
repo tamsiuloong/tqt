@@ -105,7 +105,12 @@
     export default {
         data() {
             return {
-              courseList:[],
+              courseList:[
+          {
+            id:"",
+            name:"--全部--"
+          }
+        ],
                 loading:true,
                 count: 0,
                 gourpId: null,

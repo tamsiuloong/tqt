@@ -536,7 +536,12 @@
                   {required: true, message:'不能为空',trigger:'blur'}
                 ]
               },
-                courseList:[],
+                courseList:[
+          {
+            id:"",
+            name:"--全部--"
+          }
+        ],
                 knowledgePointList:[],
                 //批量导入为每个面试题准备单独的知识点列表
                 knowledgePointLists:[],

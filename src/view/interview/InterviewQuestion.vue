@@ -400,7 +400,12 @@
                     ]
                 },
                 interviewId:null,
-                courseList:[],
+                courseList:[
+          {
+            id:"",
+            name:"--全部--"
+          }
+        ],
                 knowledgePointList:[]
             }
         },

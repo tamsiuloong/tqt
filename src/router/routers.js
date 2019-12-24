@@ -632,16 +632,16 @@ export default [
         },
         component: () => import('@/view/report/Absorption.vue')
       }
-      // ,
-      // {
-      //   path: 'notClear',
-      //   name: '不清楚知识点',
-      //   meta: {
-      //     icon: 'md-funnel',
-      //     title: '不清楚知识点'
-      //   },
-      //   component: () => import('@/view/multilevel/level-2-3.vue')
-      // }
+      ,
+      {
+        path: 'learnCurve',
+        name: '学习曲线',
+        meta: {
+          icon: 'md-funnel',
+          title: '学习曲线'
+        },
+        component: () => import('@/view/report/LearnCurve.vue')
+      }
     ]
   },
   {

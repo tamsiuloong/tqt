@@ -6,10 +6,10 @@
         <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
           <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
         </Select>
-        <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
+        <Select v-model="searchForm.courseId"  placeholder="课程" style="width:200px">
           <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
-        <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>
+<!--        <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>-->
         <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>
         <Button type="primary" shape="circle" icon="ios-search" @click="initReport()">搜索</Button>
       </Col>
@@ -47,7 +47,12 @@
             name:"--全部--"
           }
         ],
-        classesList:[],
+        classesList:[
+          {
+            id:"",
+            name:"--全部--"
+          }
+        ],
         searchForm:{
           classId:"",
           stuName:"",
@@ -58,40 +63,42 @@
     },
     methods:{
       initReport:function () {
-        axios.request({
-          url:"/api/report/absorption",
-          method: "post",
-          data:this.searchForm
-        }).then((resp)=>{
-          let echart = echarts.init(document.getElementById("echarts"));
-          // 指定图表的配置项和数据
-          let option = {
-            title: {
-              text: ''
-            },
-            tooltip: {},
-            legend: {
-              data:['学习吸收情况']
-            },
-            xAxis: {
-              data:resp.data.titles
-            },
-            yAxis: {},
-            series: [{
-              name: '学习吸收情况',
-              type: 'bar',
-              data:resp.data.values
-            }]
-          };
+        if(this.searchForm.stuName){
+          axios.request({
+            url:"/api/report/learncurve",
+            method: "post",
+            data:this.searchForm
+          }).then((resp)=>{
+            let echart = echarts.init(document.getElementById("echarts"));
+            // 指定图表的配置项和数据
+            let option = {
+              xAxis: {
+                type: 'category',
+                data: resp.data.titles
+              },
+              yAxis: {
+                type: 'value'
+              },
+              series: [{
+                data: resp.data.values,
+                type: 'line',
+                smooth: true
+              }]
+            };
 
-          // 使用刚指定的配置项和数据显示图表。
-          echart.setOption(option);
+            // 使用刚指定的配置项和数据显示图表。
+            echart.setOption(option);
 
-          //给window添加一个resize事件
-          window.onresize=function () {
-            echart.resize();
-          }
-        })
+            //给window添加一个resize事件
+            window.onresize=function () {
+              echart.resize();
+            }
+          })
+        }
+        else {
+          this.$Message.warning("必须输入学生明查询");
+        }
+
       }
     },
     mounted:function(){
@@ -100,7 +107,10 @@
         url: '/api/course/all',
         method: 'get'
       }).then((result) => {
-        this.courseList = result.data.data;
+        result.data.data.forEach(course=>{
+          this.courseList.push(course);
+        })
+
       }).catch((result)=>{
         this.$Message.error("哦豁，操作异常："+result);
       });
@@ -109,14 +119,18 @@
         url: '/api/classes/all',
         method: 'get'
       }).then((result) => {
-        this.classesList = result.data.data;
+        result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
       }).catch((result)=>{
         this.$Message.error("哦豁，操作异常："+result);
       });
 
 
+      if(this.searchForm.stuName){
+        this.initReport();
+      }
 
-      this.initReport();
 
 
 
