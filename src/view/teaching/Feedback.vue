@@ -97,7 +97,7 @@
                             <Option  value="30-50">30-50</Option>
                             <Option  value="50-70">50-70</Option>
                             <Option  value="70-90">70-90</Option>
-                            <Option  value="90以上">90以上</Option>
+                            <Option  value="90-100">90-100</Option>
                           </Select>
                         </FormItem>
                       </Col>
@@ -180,7 +180,7 @@
                       <Option  value="30-50">30-50</Option>
                       <Option  value="50-70">50-70</Option>
                       <Option  value="70-90">70-90</Option>
-                      <Option  value="90以上">90以上</Option>
+                      <Option  value="90-100">90-100</Option>
                     </Select>
                   </FormItem>
                 </Col>
@@ -437,12 +437,17 @@
 
                 },
                 courseList:[
+                  {
+                    id:"",
+                    name:"--所有--"
+                  }
+                ],
+                classesList:[
           {
             id:"",
-            name:"--全部--"
+            name:"--所有--"
           }
         ],
-                classesList:[],
                 searchForm:{
                   classId:"",
                   stuName:"",
@@ -585,7 +590,9 @@
               url: '/api/course/all',
               method: 'get'
             }).then((result) => {
-              this.courseList = result.data.data;
+              result.data.data.forEach(course=>{
+          this.courseList.push(course);
+        })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });
@@ -594,7 +601,9 @@
               url: '/api/classes/all',
               method: 'get'
             }).then((result) => {
-              this.classesList = result.data.data;
+              result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });

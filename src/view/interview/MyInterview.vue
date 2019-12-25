@@ -578,7 +578,12 @@
                 appendixs:[],
                 appendixsModal:false,
                 appendixsIndex:0,
-                classesList:[],
+                classesList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
                 searchForm:{
                   classId:"",
                   stuName:"",
@@ -854,7 +859,9 @@
               url: '/api/classes/all',
               method: 'get'
             }).then((result) => {
-              this.classesList = result.data.data;
+              result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });

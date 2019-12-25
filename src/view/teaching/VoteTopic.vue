@@ -501,7 +501,12 @@
                 voteRecordList:[],
                 //调查项
                 voteSubTopicList:[],
-                classesList:[],
+                classesList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
                 teacherList:[],
                 index: 1
             }
@@ -726,7 +731,9 @@
               url: '/api/classes/all',
               method: 'get'
             }).then((result) => {
-              this.classesList = result.data.data;
+              result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });

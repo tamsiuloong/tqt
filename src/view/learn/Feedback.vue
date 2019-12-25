@@ -64,11 +64,16 @@
                             <!--:formatter="value => `${value}%`"-->
                             <!--:parser="value => value.replace('%', '')"></InputNumber>-->
                           <Select v-model="addForm.absorption" style="width:200px">
-                            <Option  value="0-30">0-30</Option>
-                            <Option  value="30-50">30-50</Option>
-                            <Option  value="50-70">50-70</Option>
-                            <Option  value="70-90">70-90</Option>
-                            <Option  value="90以上">90以上</Option>
+                            <Option  value="0-10">10%</Option>
+                            <Option  value="10-20">20%</Option>
+                            <Option  value="20-30">30%</Option>
+                            <Option  value="30-40">40%</Option>
+                            <Option  value="40-50">50%</Option>
+                            <Option  value="50-60">60%</Option>
+                            <Option  value="60-70">70%</Option>
+                            <Option  value="70-80">80%</Option>
+                            <Option  value="80-90">90%</Option>
+                            <Option  value="90-100">100%</Option>
                           </Select>
                         </FormItem>
                       </Col>
@@ -157,7 +162,7 @@
                       <Option  value="30-50">30-50</Option>
                       <Option  value="50-70">50-70</Option>
                       <Option  value="70-90">70-90</Option>
-                      <Option  value="90以上">90以上</Option>
+                      <Option  value="90-100">90-100</Option>
                     </Select>
                   </FormItem>
                 </Col>
@@ -389,11 +394,11 @@
 
                 },
                 courseList:[
-          {
-            id:"",
-            name:"--全部--"
-          }
-        ]
+                {
+                  id:"",
+                  name:"--所有--"
+                }
+              ]
             }
         },
         methods: {
@@ -531,7 +536,9 @@
               url: '/api/course/all',
               method: 'get'
             }).then((result) => {
-              this.courseList = result.data.data;
+              result.data.data.forEach(course=>{
+          this.courseList.push(course);
+        })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });

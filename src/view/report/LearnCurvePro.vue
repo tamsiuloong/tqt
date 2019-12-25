@@ -1,0 +1,256 @@
+<template>
+  <Card>
+    <Row>
+
+      <Col span="24">
+        <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
+          <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+        </Select>
+        <Select v-model="searchForm.courseId"  placeholder="课程" style="width:200px">
+          <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+        </Select>
+<!--        <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>-->
+<!--        <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>-->
+        <Button type="primary" shape="circle" icon="ios-search" @click="initReport()">搜索</Button>
+      </Col>
+
+    </Row>
+  <br>
+    <Row>
+      <Col span="24">
+        <div id="echarts" style="height: 500px;width: 100%;"></div>
+      </Col>
+    </Row>
+  </Card>
+
+
+</template>
+
+<style scoped>
+  .echarts {
+    height: 500px;
+    width: 100%;
+    border-radius: 25px;
+  }
+
+</style>
+
+<script>
+  import echarts from 'echarts';
+  import axios from '@/libs/api.request'
+  export default {
+    data: function () {
+      return {
+        courseList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
+        classesList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
+        searchForm:{
+          classId:"",
+          stuName:"",
+          courseId:"",
+          dayNum:""
+        }
+      }
+    },
+    methods:{
+      initReport:function () {
+        if(this.searchForm.classId){
+          axios.request({
+            url:"/api/report/learncurvepro",
+            method: "post",
+            data:this.searchForm
+          }).then((resp)=>{
+            let selected = {};
+
+
+            let echart = echarts.init(document.getElementById("echarts"));
+            // 指定图表的配置项和数据
+            // let option = {
+            //   title: {
+            //     text: ''
+            //   },
+            //   tooltip: {
+            //     trigger: 'axis'
+            //   },
+            //   legend: {
+            //     data:resp.data.legendData,
+            //     selected:resp.data.selected
+            //   },
+            //   grid: {
+            //     left: '3%',
+            //     right: '4%',
+            //     bottom: '3%',
+            //     containLabel: true
+            //   },
+            //   toolbox: {
+            //     feature: {
+            //       saveAsImage: {}
+            //     }
+            //   },
+            //   xAxis: {
+            //     type: 'category',
+            //     boundaryGap: false,
+            //     data: resp.data.xdata
+            //   },
+            //   yAxis: {
+            //     type: 'value'
+            //   },
+            //   series: resp.data.series
+            // };
+            //xxxx
+            // let option = {
+            //   title: {
+            //     text: 'Step Line'
+            //   },
+            //   tooltip: {
+            //     trigger: 'axis'
+            //   },
+            //   legend: {
+            //     data:resp.data.legendData,
+            //     selected:resp.data.selected
+            //   },
+            //   grid: {
+            //     left: '3%',
+            //     right: '4%',
+            //     bottom: '3%',
+            //     containLabel: true
+            //   },
+            //   toolbox: {
+            //     feature: {
+            //       saveAsImage: {}
+            //     }
+            //   },
+            //   xAxis: {
+            //     type: 'category',
+            //     data: resp.data.xdata
+            //   },
+            //   yAxis: {
+            //     type: 'value'
+            //   },
+            //   series: resp.data.series
+            // };
+
+            echart.title = '多 X 轴示例';
+
+            var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+
+            let option = {
+              color: colors,
+
+              tooltip: {
+                trigger: 'none',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              legend: {
+                data:resp.data.legendData,
+                selected:resp.data.selected
+              },
+              grid: {
+                top: 70,
+                bottom: 50
+              },
+              xAxis: [
+                {
+                  type: 'category',
+                  axisTick: {
+                    alignWithLabel: true
+                  },
+                  axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                      color: colors[0]
+                    }
+                  },
+                  axisPointer: {
+                    label: {
+                      formatter: function (params) {
+                        return '吸收情况  ' + params.value
+                          + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                      }
+                    }
+                  },
+                  data: resp.data.xdata
+                }
+              ],
+              yAxis: [
+                {
+                  type: 'value'
+                }
+              ],
+              series: resp.data.series
+            };
+
+
+            // 使用刚指定的配置项和数据显示图表。
+            echart.setOption(option);
+
+            //给window添加一个resize事件
+            window.onresize=function () {
+              echart.resize();
+            }
+          })
+        }
+        else {
+          this.$Message.warning("必须选中班级查询");
+        }
+
+      }
+    },
+    mounted:function(){
+      //courseList
+      axios.request({
+        url: '/api/course/all',
+        method: 'get'
+      }).then((result) => {
+        result.data.data.forEach(course=>{
+          this.courseList.push(course);
+        })
+
+      }).catch((result)=>{
+        this.$Message.error("哦豁，操作异常："+result);
+      });
+
+      axios.request({
+        url: '/api/classes/all',
+        method: 'get'
+      }).then((result) => {
+        result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
+      }).catch((result)=>{
+        this.$Message.error("哦豁，操作异常："+result);
+      });
+
+
+      if(this.searchForm.stuName){
+        this.initReport();
+      }
+
+
+
+
+    },
+    watch:{
+      searchForm:{
+        handler(o,n){
+          this.initReport();
+        },
+        deep:true
+      }
+    }
+
+  }
+
+</script>

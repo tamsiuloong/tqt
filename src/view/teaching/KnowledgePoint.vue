@@ -105,12 +105,12 @@
     export default {
         data() {
             return {
-              courseList:[
-          {
-            id:"",
-            name:"--全部--"
-          }
-        ],
+                courseList:[
+                  {
+                    id:"",
+                    name:"--所有--"
+                  }
+                ],
                 loading:true,
                 count: 0,
                 gourpId: null,
@@ -302,7 +302,9 @@
             url: '/api/course/all',
             method: 'get'
           }).then((result) => {
-            this.courseList = result.data.data;
+            result.data.data.forEach(course=>{
+          this.courseList.push(course);
+        })
             this.courseList.splice(0,0,{
               id: "",
               name: "--全部课程--",

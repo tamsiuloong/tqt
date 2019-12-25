@@ -183,7 +183,12 @@ export default {
           { validator: this.validatePassword, trigger: 'blur' }
         ]
       },
-      classesList:[],
+      classesList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
       genderList: [
         {
           value: 'true',
@@ -312,7 +317,9 @@ export default {
       url: '/api/classes/all',
       method: 'get'
     }).then((result) => {
-      this.classesList = result.data.data;
+      result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
     }).catch((result)=>{
       this.$Message.error("哦豁，操作异常："+result);
     });

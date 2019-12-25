@@ -847,7 +847,12 @@
                     userName: "",
                     roleIds: {}
                 },
-                classesList:[],
+                classesList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
                 deptList: {},
                 userList:{},
                 roleList:{},
@@ -1267,7 +1272,9 @@
             url: '/api/classes/all',
             method: 'get'
           }).then((result) => {
-            this.classesList = result.data.data;
+            result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
           }).catch((result)=>{
             this.$Message.error("哦豁，操作异常："+result);
           });

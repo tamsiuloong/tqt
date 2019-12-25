@@ -254,7 +254,12 @@
                         {required: true, message:'状态不能为空',trigger:'blur'}
                     ]
                 },
-                classesList:[],
+                classesList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
                 stuList:[],
                 statusList:[
                   {id:1,name:"糟糕"},
@@ -409,7 +414,9 @@
             url: '/api/classes/all',
             method: 'get'
           }).then((result) => {
-            this.classesList = result.data.data;
+            result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
           }).catch((result)=>{
             this.$Message.error("哦豁，操作异常："+result);
           });

@@ -537,11 +537,11 @@
                 ]
               },
                 courseList:[
-          {
-            id:"",
-            name:"--全部--"
-          }
-        ],
+                  {
+                    id:"",
+                    name:"--所有--"
+                  }
+                ],
                 knowledgePointList:[],
                 //批量导入为每个面试题准备单独的知识点列表
                 knowledgePointLists:[],
@@ -817,7 +817,9 @@
               url: '/api/course/all',
               method: 'get'
             }).then((result) => {
-              this.courseList = result.data.data;
+              result.data.data.forEach(course=>{
+          this.courseList.push(course);
+        })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });

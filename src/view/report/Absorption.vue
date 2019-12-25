@@ -44,10 +44,15 @@
         courseList:[
           {
             id:"",
-            name:"--全部--"
+            name:"--所有--"
           }
         ],
-        classesList:[],
+        classesList:[
+          {
+            id:"",
+            name:"--所有--"
+          }
+        ],
         searchForm:{
           classId:"",
           stuName:"",
@@ -100,7 +105,9 @@
         url: '/api/course/all',
         method: 'get'
       }).then((result) => {
-        this.courseList = result.data.data;
+        result.data.data.forEach(course=>{
+          this.courseList.push(course);
+        })
       }).catch((result)=>{
         this.$Message.error("哦豁，操作异常："+result);
       });
@@ -109,7 +116,9 @@
         url: '/api/classes/all',
         method: 'get'
       }).then((result) => {
-        this.classesList = result.data.data;
+        result.data.data.forEach(classes=>{
+          this.classesList.push(classes);
+        })
       }).catch((result)=>{
         this.$Message.error("哦豁，操作异常："+result);
       });

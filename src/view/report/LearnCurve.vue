@@ -44,13 +44,13 @@
         courseList:[
           {
             id:"",
-            name:"--全部--"
+            name:"--所有--"
           }
         ],
         classesList:[
           {
             id:"",
-            name:"--全部--"
+            name:"--所有--"
           }
         ],
         searchForm:{
@@ -63,7 +63,7 @@
     },
     methods:{
       initReport:function () {
-        if(this.searchForm.stuName){
+        if(this.searchForm.stuName||this.searchForm.classId){
           axios.request({
             url:"/api/report/learncurve",
             method: "post",
@@ -96,7 +96,7 @@
           })
         }
         else {
-          this.$Message.warning("必须输入学生明查询");
+          this.$Message.warning("必须输入学生名字查询");
         }
 
       }
@@ -134,7 +134,16 @@
 
 
 
+    },
+    watch:{
+      searchForm:{
+        handler(o,n){
+          this.initReport();
+        },
+        deep:true
+      }
     }
+
   }
 
 </script>

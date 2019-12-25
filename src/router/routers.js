@@ -635,12 +635,21 @@ export default [
       ,
       {
         path: 'learnCurve',
-        name: '学习曲线',
+        name: '整体学习曲线',
         meta: {
           icon: 'md-funnel',
-          title: '学习曲线'
+          title: '整体学习曲线'
         },
         component: () => import('@/view/report/LearnCurve.vue')
+      },
+      {
+        path: 'learnCurvePro',
+        name: '个人学习曲线',
+        meta: {
+          icon: 'md-funnel',
+          title: '个人学习曲线'
+        },
+        component: () => import('@/view/report/LearnCurvePro.vue')
       }
     ]
   },
