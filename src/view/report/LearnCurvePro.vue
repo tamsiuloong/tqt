@@ -58,7 +58,8 @@
           stuName:"",
           courseId:"",
           dayNum:""
-        }
+        },
+        selected:[]
       }
     },
     methods:{
@@ -69,79 +70,11 @@
             method: "post",
             data:this.searchForm
           }).then((resp)=>{
-            let selected = {};
-
-
             let echart = echarts.init(document.getElementById("echarts"));
-            // 指定图表的配置项和数据
-            // let option = {
-            //   title: {
-            //     text: ''
-            //   },
-            //   tooltip: {
-            //     trigger: 'axis'
-            //   },
-            //   legend: {
-            //     data:resp.data.legendData,
-            //     selected:resp.data.selected
-            //   },
-            //   grid: {
-            //     left: '3%',
-            //     right: '4%',
-            //     bottom: '3%',
-            //     containLabel: true
-            //   },
-            //   toolbox: {
-            //     feature: {
-            //       saveAsImage: {}
-            //     }
-            //   },
-            //   xAxis: {
-            //     type: 'category',
-            //     boundaryGap: false,
-            //     data: resp.data.xdata
-            //   },
-            //   yAxis: {
-            //     type: 'value'
-            //   },
-            //   series: resp.data.series
-            // };
-            //xxxx
-            // let option = {
-            //   title: {
-            //     text: 'Step Line'
-            //   },
-            //   tooltip: {
-            //     trigger: 'axis'
-            //   },
-            //   legend: {
-            //     data:resp.data.legendData,
-            //     selected:resp.data.selected
-            //   },
-            //   grid: {
-            //     left: '3%',
-            //     right: '4%',
-            //     bottom: '3%',
-            //     containLabel: true
-            //   },
-            //   toolbox: {
-            //     feature: {
-            //       saveAsImage: {}
-            //     }
-            //   },
-            //   xAxis: {
-            //     type: 'category',
-            //     data: resp.data.xdata
-            //   },
-            //   yAxis: {
-            //     type: 'value'
-            //   },
-            //   series: resp.data.series
-            // };
 
-            echart.title = '多 X 轴示例';
+            echart.title = '学习曲线';
 
-            var colors = ['#5793f3', '#d14a61', '#675bba'];
+            var colors =['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'];
 
 
             let option = {
@@ -176,7 +109,7 @@
                   axisPointer: {
                     label: {
                       formatter: function (params) {
-                        return '吸收情况  ' + params.value
+                        return  params.value + params.seriesData[0].seriesName
                           + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
                       }
                     }
@@ -209,6 +142,16 @@
       }
     },
     mounted:function(){
+      //
+      this.$Notice.open({
+        title: '个人学习曲线说明',
+        desc: `1.需要指定班级才能查询。<br>
+               2.已根据吸收程度升序排名(吸收最差的排第一)。<br>
+               3.如果是一条直线，说明该同学没有提交反馈，取的他的平均值。<br>
+               4.默认只选中吸收情况最不好的同学，如需查看其他同学，需单击选中名字查看。<br>
+                `,
+        duration: 0
+      });
       //courseList
       axios.request({
         url: '/api/course/all',
