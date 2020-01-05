@@ -18,15 +18,8 @@ import 'v-org-tree/dist/v-org-tree.css'
 import VuePreview from 'vue-preview'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import { Slider } from 'vant';
 
-import Element from 'element-ui'
-// import 'normalize.css/normalize.css'
-import './styles/element-variables.scss'
 import '@/styles/index.scss' // global css
-// import './icons' // icon
-import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
 // 实际打包时应该不引入mock
 /* eslint-disable */
 if (process.env.NODE_ENV !== 'production') require('@/mock')
@@ -34,15 +27,12 @@ if (process.env.NODE_ENV !== 'production') require('@/mock')
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
 })
-Vue.use(Element, {
-  size: 'medium' // set element-ui default size
-})
+
 
 Vue.use(TreeTable)
 Vue.use(VOrgTree)
 Vue.use(VuePreview)
 Vue.use(mavonEditor)
-Vue.use(Slider);
 /**
  * @description 注册admin内置插件
  */
