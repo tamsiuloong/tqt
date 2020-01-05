@@ -11,11 +11,11 @@
                     <Button type="primary" icon="ios-add" @click="addFeedback()">新建</Button>
                     <Button type="success" icon="ios-build" @click="edit()">修改</Button>
                     <Poptip
-            confirm
-            title="确定要删除选中的内容吗?"
-            @on-ok="remove()" placement="bottom-start">
-            <Button type="error" icon="ios-trash" >删除</Button>
-          </Poptip>
+                      confirm
+                      title="确定要删除选中的内容吗?"
+                      @on-ok="remove()" placement="bottom-start">
+                      <Button type="error" icon="ios-trash" >删除</Button>
+                    </Poptip>
         </Row>
         <br>
         <Row>
@@ -537,8 +537,8 @@
               method: 'get'
             }).then((result) => {
               result.data.data.forEach(course=>{
-          this.courseList.push(course);
-        })
+                this.courseList.push(course);
+              })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });

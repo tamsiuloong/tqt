@@ -518,7 +518,7 @@
                 }
             },
             gopage(pageNo){
-                                this.tableLoding=true;
+                this.tableLoding=true;
                 this.pageNo = pageNo;
                 const pageSize = this.pageSize;
                 const keyWord = this.keyWord;
@@ -528,7 +528,7 @@
                     method: 'get',
                     params: {pageNo, pageSize,keyWord,interviewId}
                 }).then((result) => {
-                                        this.page = result.data.data;
+                    this.page = result.data.data;
                     this.tableLoding=false;
                 }).catch((result)=>{
                     this.$Message.error("哦豁，操作异常："+result);

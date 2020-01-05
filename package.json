@@ -38,7 +38,9 @@
     "vuex": "^3.0.1",
     "wangeditor": "^3.1.1",
     "xlsx": "^0.13.3",
-    "ztree": "^3.5.24"
+    "ztree": "^3.5.24",
+    "element-ui": "^2.10.1",
+    "nprogress": "0.2.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.1",
@@ -51,6 +53,8 @@
     "eslint-plugin-cypress": "^2.0.1",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
     "lint-staged": "^6.0.0",
     "mockjs": "^1.0.1-beta3",
     "vue-template-compiler": "^2.5.13"

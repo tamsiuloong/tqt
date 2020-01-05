@@ -502,11 +502,11 @@
                 //调查项
                 voteSubTopicList:[],
                 classesList:[
-          {
-            id:"",
-            name:"--所有--"
-          }
-        ],
+                  {
+                    id:"",
+                    name:"--所有--"
+                  }
+                ],
                 teacherList:[],
                 index: 1
             }
@@ -732,8 +732,8 @@
               method: 'get'
             }).then((result) => {
               result.data.data.forEach(classes=>{
-          this.classesList.push(classes);
-        })
+                this.classesList.push(classes);
+              })
             }).catch((result)=>{
               this.$Message.error("哦豁，操作异常："+result);
             });

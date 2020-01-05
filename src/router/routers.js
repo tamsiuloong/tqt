@@ -504,6 +504,24 @@ export default [
           title: '问卷调查管理'
         },
         component: () => import('@/view/teaching/VoteTopic.vue')
+      },
+      {
+        path: 'paper',
+        name: '试卷管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '试卷管理'
+        },
+        component: () => import('@/view/exam/paper/ExamPaper.vue')
+      },
+      {
+        path: 'question',
+        name: '题目管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '题目管理'
+        },
+        component: () => import('@/view/exam/question/Question.vue')
       }
     ]
   },
