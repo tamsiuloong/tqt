@@ -93,11 +93,16 @@
                             <!--:formatter="value => `${value}%`"-->
                             <!--:parser="value => value.replace('%', '')"></InputNumber>-->
                           <Select v-model="addForm.absorption" style="width:200px">
-                            <Option  value="0-30">0-30</Option>
-                            <Option  value="30-50">30-50</Option>
-                            <Option  value="50-70">50-70</Option>
-                            <Option  value="70-90">70-90</Option>
-                            <Option  value="90-100">90-100</Option>
+                            <Option  value="0-10">10%</Option>
+                            <Option  value="10-20">20%</Option>
+                            <Option  value="20-30">30%</Option>
+                            <Option  value="30-40">40%</Option>
+                            <Option  value="40-50">50%</Option>
+                            <Option  value="50-60">60%</Option>
+                            <Option  value="60-70">70%</Option>
+                            <Option  value="70-80">80%</Option>
+                            <Option  value="80-90">90%</Option>
+                            <Option  value="90-100">100%</Option>
                           </Select>
                         </FormItem>
                       </Col>
@@ -176,11 +181,16 @@
                 <Col span="6">
                   <FormItem label="吸收情况" prop="absorption">
                     <Select v-model="updateForm.absorption" >
-                      <Option  value="0-30">0-30</Option>
-                      <Option  value="30-50">30-50</Option>
-                      <Option  value="50-70">50-70</Option>
-                      <Option  value="70-90">70-90</Option>
-                      <Option  value="90-100">90-100</Option>
+                      <Option  value="0-10">10%</Option>
+                      <Option  value="10-20">20%</Option>
+                      <Option  value="20-30">30%</Option>
+                      <Option  value="30-40">40%</Option>
+                      <Option  value="40-50">50%</Option>
+                      <Option  value="50-60">60%</Option>
+                      <Option  value="60-70">70%</Option>
+                      <Option  value="70-80">80%</Option>
+                      <Option  value="80-90">90%</Option>
+                      <Option  value="90-100">100%</Option>
                     </Select>
                   </FormItem>
                 </Col>
