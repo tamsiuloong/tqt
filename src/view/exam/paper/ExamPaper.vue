@@ -647,7 +647,7 @@
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                                    this.$Message.success('Success!');
+                            this.$Message.success('Success!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
                             this.$Message.error("操作异常："+result);

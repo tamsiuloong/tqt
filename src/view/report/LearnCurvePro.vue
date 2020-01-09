@@ -9,6 +9,7 @@
         <Select v-model="searchForm.courseId"  placeholder="课程" style="width:200px">
           <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
+        <DatePicker type="daterange" @on-change="chooseDate"  placement="bottom-end" placeholder="选择起始日期" style="width: 200px"></DatePicker>
 <!--        <InputNumber :max="20" :min="1" placeholder="课程第几天"  v-model="searchForm.dayNum"/>-->
 <!--        <Input v-model="searchForm.stuName" placeholder="学员名字" style="width:200px"/>-->
         <Button type="primary" shape="circle" icon="ios-search" @click="initReport()">搜索</Button>
@@ -57,12 +58,18 @@
           classId:"",
           stuName:"",
           courseId:"",
-          dayNum:""
+          dayNum:"",
+          startDate:"",
+          endDate:""
         },
         selected:[]
       }
     },
     methods:{
+      chooseDate(e1){
+        this.searchForm.startDate = e1[0];
+        this.searchForm.endDate = e1[1];
+      },
       initReport:function () {
         if(this.searchForm.classId){
           axios.request({

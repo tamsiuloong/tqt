@@ -32,102 +32,119 @@
         <br>
 
         <Modal
-                v-model="addModal"
-                title="添加试卷试题"
+                v-model="richEditor.dialogVisible"
+                title="编辑"
                 :mask-closable="false"
                 :loading="loading"
-                @on-ok="add"
-                @on-cancel="cancel"
+                @on-ok="editorConfirm"
+                @on-cancel="richEditor.dialogVisible = false"
                 width="90%">
-            <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
-                <!--一次性取两个元素放在row集合中 -->
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                        <Col span="11">
-                        <FormItem label="题型" prop="questionType">
-                          <Select :filterable="true" placeholder="题型" @on-change="changeQuestionType($event,addForm)" v-model="addForm.questionType" style="width:200px">
-                            <Option v-for="c in questionTypeList" :value="c.id">{{c.name}}</Option>
-                          </Select>
-                        </FormItem>
-                        </Col>
-                      <Col span="2" style="text-align: center"/>
-                      <Col span="11">
-                        <FormItem label="课程" prop="course.id">
-                          <Select v-model="addForm.course.id" filterable style="width:200px">
-                            <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                          </Select>
-                        </FormItem>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                            <Col span="11">
-                            <FormItem label="难度">
-                              <Rate v-model="addForm.difficult" />
-                            </FormItem>
-                            </Col>
-                                <Col span="2" style="text-align: center"/>
-                            <Col span="11">
-                              <FormItem label="分数">
-                                <InputNumber :max="1000" :min="1" v-model="addForm.score"></InputNumber>
-                              </FormItem>
-
-                            </Col>
-                    </Row>
-                    <Row>
-                      <Col span="22">
-                        <FormItem label="题干">
-                          <Input v-model="addForm.title"  />
-                        </FormItem>
-                      </Col>
-                    </Row>
-                    <Row v-if="addForm.questionType==='1' || addForm.questionType==='2' || addForm.questionType==='3'">
-                      <Col span="22">
-                        <FormItem label="选项">
-                          <FormItem v-for="(item,index) in addForm.items" :key="item.prefix" :label="item.prefix" >
-                            <Input v-model="item.prefix"  style="width: 50px" />
-                            <Input v-model="item.content"  style="width: 60%" />
-                            <Button v-if="addForm.questionType==='1' || addForm.questionType==='2'" type="error" icon="ios-trash" @click="questionItemRemove(index,addForm)">删除</Button>
-                          </FormItem>
-                          <Button type="success" v-if="addForm.questionType==='1' || addForm.questionType==='2'" icon="ios-add" @click="questionItemAdd(addForm)">添加选项</Button>
-                        </FormItem>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col span="22">
-                        <FormItem label="解析">
-                          <Input v-model="addForm.analyze"  />
-                        </FormItem>
-                      </Col>
-                      <Col span="2" style="text-align: center"/>
-
-                    </Row>
-                    <Row>
-                      <Col span="22">
-                        <FormItem label="正确答案">
-                          <RadioGroup v-model="addForm.correct" v-if="addForm.questionType==='1'||addForm.questionType==='3'">
-                            <Radio v-for="i in addForm.items" :label="i.prefix"></Radio>
-                          </RadioGroup>
-                          <CheckboxGroup v-model="addForm.correctArray" v-else-if="addForm.questionType==='2'">
-                            <Checkbox v-for="i in addForm.items" :label="i.prefix"></Checkbox>
-                          </CheckboxGroup>
-                          <Input v-model="addForm.correct" type="textarea" v-else-if="addForm.questionType==='5'"  />
-                        </FormItem>
-                      </Col>
-                      <Col span="2" style="text-align: center"/>
-
-                    </Row>
-
-            </Form>
+          <Form ref="editorForm"  :label-width="80">
+              <quill-editor v-model="richEditor.instance"
+                            ref="myQuillEditor"
+                            :options="editorOption"
+              >
+              </quill-editor>
+          </Form>
         </Modal>
+      <Modal
+        v-model="addModal"
+        title="添加试卷试题"
+        :mask-closable="false"
+        :loading="loading"
+        @on-ok="add"
+        @on-cancel="cancel"
+        fullscreen="true"
+        width="90%">
+        <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
+          <!--一次性取两个元素放在row集合中 -->
+          <Row>
+            <!-- 循环便利row中的两个元素-->
+            <Col span="11">
+              <FormItem label="题型" prop="questionType">
+                <Select :filterable="true" placeholder="题型" @on-change="changeQuestionType($event,addForm)" v-model="addForm.questionType" style="width:200px">
+                  <Option v-for="c in questionTypeList" :value="c.id">{{c.name}}</Option>
+                </Select>
+              </FormItem>
+            </Col>
+            <Col span="2" style="text-align: center"/>
+            <Col span="11">
+              <FormItem label="课程" prop="course.id">
+                <Select v-model="addForm.course.id" filterable style="width:200px">
+                  <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+              </FormItem>
+            </Col>
+          </Row>
 
+          <Row>
+            <!-- 循环便利row中的两个元素-->
+            <Col span="11">
+              <FormItem label="难度">
+                <Rate v-model="addForm.difficult" />
+              </FormItem>
+            </Col>
+            <Col span="2" style="text-align: center"/>
+            <Col span="11">
+              <FormItem label="分数">
+                <InputNumber :max="1000" :min="1" v-model="addForm.score"></InputNumber>
+              </FormItem>
+
+            </Col>
+          </Row>
+          <Row>
+            <Col span="22">
+              <FormItem label="题干">
+                <Input v-model="addForm.title"  @on-focus="inputClick(addForm,'title')" />
+              </FormItem>
+            </Col>
+          </Row>
+          <Row v-if="addForm.questionType==='1' || addForm.questionType==='2' || addForm.questionType==='3'">
+            <Col span="22">
+              <FormItem label="选项">
+                <FormItem v-for="(item,index) in addForm.items" :key="item.prefix" :label="item.prefix" >
+                  <Input v-model="item.prefix"  style="width: 50px" />
+                  <Input v-model="item.content"  style="width: 60%" @on-focus="inputClick(item,'content')"/>
+                  <Button v-if="addForm.questionType==='1' || addForm.questionType==='2'" type="error" icon="ios-trash" @click="questionItemRemove(index,addForm)">删除</Button>
+                </FormItem>
+                <Button type="success" v-if="addForm.questionType==='1' || addForm.questionType==='2'" icon="ios-add" @click="questionItemAdd(addForm)">添加选项</Button>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="22">
+              <FormItem label="解析">
+                <Input v-model="addForm.analyze"  @on-focus="inputClick(addForm,'analyze')"/>
+              </FormItem>
+            </Col>
+            <Col span="2" style="text-align: center"/>
+
+          </Row>
+          <Row>
+            <Col span="22">
+              <FormItem label="正确答案">
+                <RadioGroup v-model="addForm.correct" v-if="addForm.questionType==='1'||addForm.questionType==='3'">
+                  <Radio v-for="i in addForm.items" :label="i.prefix"></Radio>
+                </RadioGroup>
+                <CheckboxGroup v-model="addForm.correctArray" v-else-if="addForm.questionType==='2'">
+                  <Checkbox v-for="i in addForm.items" :label="i.prefix"></Checkbox>
+                </CheckboxGroup>
+                <Input v-model="addForm.correct" type="textarea" v-else-if="addForm.questionType==='5'"  />
+              </FormItem>
+            </Col>
+            <Col span="2" style="text-align: center"/>
+
+          </Row>
+
+        </Form>
+      </Modal>
 
         <Modal
                 v-model="updateModal"
                 title="编辑试卷试题"
                 :mask-closable="false"
                 :loading="loading"
+                fullscreen="true"
                 @on-ok="update"
                 @on-cancel="cancel"
                 width="60%">
@@ -170,7 +187,7 @@
               <Row>
                 <Col span="22">
                   <FormItem label="题干">
-                    <Input v-model="updateForm.title"  />
+                    <Input v-model="updateForm.title"  @on-focus="inputClick(updateForm,'title')"/>
                   </FormItem>
                 </Col>
               </Row>
@@ -179,7 +196,7 @@
                   <FormItem label="选项" v-if="updateForm.questionType==='1' || updateForm.questionType==='2' || updateForm.questionType==='3'">
                     <FormItem v-for="(item,index) in updateForm.items" :key="item.prefix" :label="item.prefix" >
                       <Input v-model="item.prefix"  style="width: 50px" />
-                      <Input v-model="item.content"  style="width: 60%" />
+                      <Input v-model="item.content"  style="width: 60%" @on-focus="inputClick(item,'content')"/>
                       <Button type="error" v-if="updateForm.questionType==='1' || updateForm.questionType==='2'" icon="ios-trash" @click="questionItemRemove(index,updateForm)">删除</Button>
                     </FormItem>
                     <Button type="success" v-if="updateForm.questionType==='1' || updateForm.questionType==='2'" icon="ios-add" @click="questionItemAdd(updateForm)">添加选项</Button>
@@ -189,7 +206,7 @@
               <Row>
                 <Col span="22">
                   <FormItem label="解析">
-                    <Input v-model="updateForm.analyze"  />
+                    <Input v-model="updateForm.analyze"  @on-focus="inputClick(updateForm,'analyze')"/>
                   </FormItem>
                 </Col>
                 <Col span="2" style="text-align: center"/>
@@ -220,9 +237,36 @@
     // import fetch from '../../utils/fetch';
     // import {dateFormat} from '../../utils/date';
     import axios from '@/libs/api.request'
+
+    import { quillEditor } from 'vue-quill-editor'
     export default {
+        components: {
+          quillEditor
+        },
         data() {
             return {
+                editorOption: {
+                  modules: {
+                    toolbar: [
+                      ['bold', 'italic', 'underline', 'strike'],
+                      ['blockquote', 'code-block'],
+                      [{ 'header': 1 }, { 'header': 2 }],
+                      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                      [{ 'script': 'sub' }, { 'script': 'super' }],
+                      [{ 'indent': '-1' }, { 'indent': '+1' }],
+                      [{ 'direction': 'rtl' }],
+                      [{ 'size': ['small', false, 'large', 'huge'] }],
+                      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                      [{ 'font': [] }],
+                      [{ 'color': [] }, { 'background': [] }],
+                      [{ 'align': [] }],
+                      ['clean'],
+                      ['link', 'image', 'video']
+                    ]
+                  },
+                  readOnly: true,
+                  theme: 'snow'
+                },
                 tableLoding:true,
                 loading:true,
                 count: 0,
@@ -439,10 +483,31 @@
                 searchForm:{
                   courseId:"",
                   title:""
+                },
+                richEditor: {
+                  dialogVisible: false,
+                  object: null,
+                  parameterName: '',
+                  instance: null
                 }
             }
         },
         methods: {
+            editorReady (instance) {
+              this.richEditor.instance = instance
+              let currentContent = this.richEditor.object[this.richEditor.parameterName]
+              this.richEditor.instance.setContent(currentContent)
+            },
+            inputClick (object, parameterName) {
+              this.richEditor.object = object
+              this.richEditor.parameterName = parameterName
+              this.richEditor.dialogVisible = true
+            },
+            editorConfirm () {
+              let content = this.richEditor.instance
+              this.richEditor.object[this.richEditor.parameterName] = content
+              this.richEditor.dialogVisible = false
+            },
             changeQuestionType(e,form){
               if(e==='1'||e==='2')
               {
@@ -491,7 +556,7 @@
                     //如果是多选
                     if(e[0].questionType==="2")
                     {
-                      e[0].correctArray = JSON.parse(e[0].correct);
+                      e[0].correctArray = e[0].correct.split(",");
                     }
                     this.updateForm = e[0];
                 }
@@ -558,7 +623,7 @@
                             data: this.updateForm
                         }).then((result) => {
                             this.updateModal = false,
-                                    this.$Message.success('Success!');
+                            this.$Message.success('Success!');
                             this.gopage(this.pageNo);
                         }).catch((result)=>{
                             this.$Message.error("操作异常："+result);
