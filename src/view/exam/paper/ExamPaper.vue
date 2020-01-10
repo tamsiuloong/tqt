@@ -83,7 +83,7 @@
                       </Col>
                         <Col span="2"/>
                         <Col span="11">
-                          <FormItem label="建议时间" >
+                          <FormItem label="建议时间"  >
                             <InputNumber :max="1000" :min="1" v-model="addForm.suggestTime"></InputNumber>
                           </FormItem>
                         </Col>
@@ -229,16 +229,20 @@
         title="添加题目"
         :mask-closable=true
         :loading="loading"
-        @on-ok="questionModal = false"
+        @on-ok="confirmSelectedQuestionList()"
         @on-cancel="questionModal=false"
         ok-text="确认选中题目"
         width="80%">
         <Row>
           <Col span="22">
-            <Input v-model="questionForm.title" placeholder="题目名字" style="width:200px"/>
+
             <Select v-model="questionForm.courseId" placeholder="课程" style="width:200px">
               <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
+            <Select :filterable="true" placeholder="题型" @on-change="changeQuestionType($event,questionForm)" v-model="questionForm.questionType" style="width:200px">
+              <Option v-for="c in questionTypeList" :value="c.id">{{c.name}}</Option>
+            </Select>
+            <Input v-model="questionForm.title" placeholder="题目名字" style="width:200px"/>
             <Button type="primary" shape="circle" icon="ios-search" @click="searchQuestion(1)">搜索</Button>
           </Col>
         </Row>
@@ -351,8 +355,31 @@
               ],
                 questionForm:{
                   courseId:"",
-                  title:""
+                  title:"",
+                  questionType:""
                 },
+                questionTypeList:[
+                  {
+                    id:"1",
+                    name:"单选题"
+                  },
+                  {
+                    id:"2",
+                    name:"多选题"
+                  },
+                  {
+                    id:"3",
+                    name:"判断题"
+                  },
+                  // {
+                  //   id:"4",
+                  //   name:"填空题"
+                  // },
+                  {
+                    id:"5",
+                    name:"简答题"
+                  }
+                ],
                 loading:true,
                 count: 0,
                 gourpId: null,
@@ -559,7 +586,8 @@
                   classId:"",
                   name:"",
                   courseId:"",
-                }
+                },
+                selectedQuestionList:[]
 
             }
         },
@@ -596,6 +624,16 @@
                 this.$refs['addForm'].validate((valid)=>{
                     if(valid)
                     {
+                      if(!this.addForm.suggestTime){
+                        this.$Message.error("建议时间不能为空");
+                        this.resetLoading();
+                        return;
+                      }
+                      if(!this.addForm.titleItems||this.addForm.titleItems.length==0){
+                        this.$Message.error("试卷题目不能为空");
+                        this.resetLoading();
+                        return;
+                      }
                         const examPaper = this.addForm;
                         axios.request({
                             url: '/api/examPaper',
@@ -606,6 +644,8 @@
                             this.$refs['addForm'].resetFields();
                             this.$Message.success('Success!');
                             this.addModal = false;
+                        }).catch((result)=>{
+                          this.$Message.error("操作异常："+result);
                         });
                     }
                     else
@@ -641,6 +681,16 @@
                 this.$refs['updateForm'].validate((valid)=>{
                     if(valid)
                     {
+                      if(!this.updateForm.suggestTime){
+                        this.$Message.error("建议时间不能为空");
+                        this.resetLoading();
+                        return;
+                      }
+                      if(!this.updateForm.titleItems||this.updateForm.titleItems.length==0){
+                        this.$Message.error("试卷题目不能为空");
+                        this.resetLoading();
+                        return;
+                      }
                         axios.request({
                             url: '/api/examPaper',
                             method: 'put',
@@ -724,7 +774,19 @@
               });
             },
             changeQuestion(e){
-              e.forEach(item=>this.currentTitleItem.questionItems.push(item));
+              this.selectedQuestionList = e;
+            },
+            confirmSelectedQuestionList(){
+              this.selectedQuestionList.forEach(item=>this.currentTitleItem.questionItems.push(item));
+              this.questionModal = false;
+            },
+            resetLoading(){
+              setTimeout(()=>{
+                this.loading=false;
+                this.$nextTick(()=>{
+                  this.loading=true;
+                });
+              },1000);
             }
         },
         mounted: function () {

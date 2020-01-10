@@ -2,10 +2,14 @@
     <Card>
         <Row>
             <Col span="22">
-              <Input v-model="searchForm.title" placeholder="题目名字" style="width:200px"/>
+
               <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
                 <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
               </Select>
+              <Select :filterable="true" placeholder="题型" @on-change="changeQuestionType($event,searchForm)" v-model="searchForm.questionType" style="width:200px">
+                <Option v-for="c in questionTypeList" :value="c.id">{{c.name}}</Option>
+              </Select>
+              <Input v-model="searchForm.title" placeholder="题目名字" style="width:200px"/>
                 <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
             </Col>
         </Row>
@@ -38,14 +42,13 @@
                 :loading="loading"
                 @on-ok="editorConfirm"
                 @on-cancel="richEditor.dialogVisible = false"
+
                 width="90%">
-          <Form ref="editorForm"  :label-width="80">
               <quill-editor v-model="richEditor.instance"
                             ref="myQuillEditor"
                             :options="editorOption"
               >
               </quill-editor>
-          </Form>
         </Modal>
       <Modal
         v-model="addModal"
@@ -234,10 +237,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-    // import fetch from '../../utils/fetch';
-    // import {dateFormat} from '../../utils/date';
     import axios from '@/libs/api.request'
-
+    import 'quill/dist/quill.core.css'
+    import 'quill/dist/quill.snow.css'
+    import 'quill/dist/quill.bubble.css'
     import { quillEditor } from 'vue-quill-editor'
     export default {
         components: {
@@ -482,13 +485,14 @@
                 ],
                 searchForm:{
                   courseId:"",
-                  title:""
+                  title:"",
+                  questionType:""
                 },
                 richEditor: {
                   dialogVisible: false,
                   object: null,
                   parameterName: '',
-                  instance: null
+                  instance: ""
                 }
             }
         },
@@ -499,6 +503,7 @@
               this.richEditor.instance.setContent(currentContent)
             },
             inputClick (object, parameterName) {
+              this.richEditor.instance = '';
               this.richEditor.object = object
               this.richEditor.parameterName = parameterName
               this.richEditor.dialogVisible = true
@@ -509,31 +514,38 @@
               this.richEditor.dialogVisible = false
             },
             changeQuestionType(e,form){
-              if(e==='1'||e==='2')
+              if(form.items)
               {
-                form.items=[{
-                  prefix:"A",
-                  content:""
-                },{
-                  prefix:"B",
-                  content:""
-                },{
-                  prefix:"C",
-                  content:""
-                },{
-                  prefix:"D",
-                  content:""
-                }];
-              }
-              else if(e==='3')
-              {
-                form.items=[{
-                  prefix:"A",
-                  content:"对"
-                },{
-                  prefix:"B",
-                  content:"错"
-                }];
+                if(e==='1'||e==='2')
+                {
+                  form.items=[{
+                    prefix:"A",
+                    content:""
+                  },{
+                    prefix:"B",
+                    content:""
+                  },{
+                    prefix:"C",
+                    content:""
+                  },{
+                    prefix:"D",
+                    content:""
+                  }];
+                }
+                else if(e==='3')
+                {
+                  form.items=[{
+                    prefix:"A",
+                    content:"对"
+                  },{
+                    prefix:"B",
+                    content:"错"
+                  }];
+                }
+                else if(e==='5')
+                {
+                  form.items=null;
+                }
               }
             },
             questionItemRemove (index,form) {
