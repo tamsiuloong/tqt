@@ -257,6 +257,26 @@
         </Row>
 
       </Modal>
+
+
+      <Modal
+        v-model="customerAnswerModal"
+        title="答卷列表"
+        :mask-closable="true"
+        :loading="loading"
+        @on-ok="cancel"
+        @on-cancel="cancel"
+        ok-text="确定"
+        width="80%">
+        <Row>
+          <Table :total="answerPage.total" :columns="columns3" :page-size="answerPage.size" :current="answerPage.pageNum" :data="answerPage.list"></Table>
+        </Row>
+        <br>
+        <Row>
+          <Page :total="answerPage.total" :page-size="answerPage.size" :current="answerPage.pageNum" @on-change="searchAnswer"
+                align="center"></Page>
+        </Row>
+      </Modal>
     </Card>
 </template>
 
@@ -269,13 +289,20 @@
       components: {  QuestionShow },
         data() {
             return {
+                customerAnswerForm:{
+                  examPaperId:"",
+                  pageIndex:1,
+                  pageSize:20
+                },
+                customerAnswerModal:false,
                 questionTotalCount:0,
                 questionModal:false,
                 currentTitleItem:{},
                 questionPage: {
-                  number:0,
+                  pageNum:0,
                   size:20,
-                  totalElements:0
+                  total:0,
+                  list:[]
                 },
                 columns2: [
                 {
@@ -434,33 +461,34 @@
                           h('strong', time)
                         ]);
                       }
+                    },
+                  {
+                    title: '操作',
+                    key: 'action',
+                    fixed: 'right',
+                    width: 120,
+                    render: (h, params) => {
+                      return h('div', [
+                        h('Button', {
+                          props: {
+                            type: 'text',
+                            size: 'small'
+                          },
+                          on: {
+                            click: () => {
+                              //获取该调查的调查项目list
+                              let paperId = params.row.id;
+                              this.queryCustomerAnswerList(paperId);
+
+
+                              this.customerAnswerModal = true;
+                            }
+                          }
+                        }, '答卷管理')
+                      ]);
                     }
-                    // {
-                    //     title: '阶段',
-                    //     key: 'gradeLevel'
-                    // },
-                    // {
-                    //   title: '操作',
-                    //   key: 'action',
-                    //   fixed: 'right',
-                    //   width: 120,
-                    //   render: (h, params) => {
-                    //     return h('div', [
-                    //       h('Button', {
-                    //         props: {
-                    //           type: 'text',
-                    //           size: 'small'
-                    //         },
-                    //         on: {
-                    //           click: () => {
-                    //             this.updateForm = params.row;
-                    //             this.updateModal = true;
-                    //           }
-                    //         }
-                    //       }, '详情')
-                    //     ]);
-                    //   }
-                    // }
+                  }
+
                 ],
                 self: this,
                 page: [],
@@ -587,11 +615,130 @@
                   name:"",
                   courseId:"",
                 },
-                selectedQuestionList:[]
+                selectedQuestionList:[],
+                answerPage: {
+                  number:0,
+                  size:20,
+                  totalElements:0,
+                  content:[]
+                },
+                columns3: [
+                {
+                  type: 'selection',
+                  width: 60,
+                  align: 'center'
+                },
+                {
+                  title: 'id',
+                  key: 'id'
+                },
+                {
+                  title: '名字',
+                  key: 'userName'
+                },
 
+                {
+                  title: '状态',
+                  key: 'status',
+                  render: (h, params) => {
+                    let result = "未知";
+                    if(params.row.status===2)
+                    {
+                      result="完成";
+                    }
+                    else if(params.row.status===1)
+                    {
+                      result="待批改";
+                    }
+                    return h('div', [
+                      h('strong', result)
+                    ]);
+                  }
+                },
+
+                {
+                  title: '题数',
+                  key: 'questionCount'
+                },
+                {
+                  title: '正确题数',
+                  key: 'questionCorrect'
+                },
+                {
+                  title: '试卷总分',
+                  key: 'paperScore'
+                },
+                {
+                  title: '系统评分',
+                  key: 'systemScore'
+                },
+                {
+                  title: '最终分数',
+                  key: 'userScore'
+                },
+                {
+                  title: '创建日期',
+                  key: 'createTime',
+                  render: (h, params) => {
+                    let time = "未知";
+                    if(params.row.createTime)
+                    {
+                      time=params.row.createTime.substr(0,10);
+                    }
+                    return h('div', [
+                      h('strong', time)
+                    ]);
+                  }
+                },
+                  {
+                    title: '操作',
+                    key: 'action',
+                    fixed: 'right',
+                    width: 120,
+                    render: (h, params) => {
+                      return h('div', [
+
+                        h('Button', {
+                          props: {
+                            type: 'text',
+                            size: 'small'
+                          },
+                          on: {
+                            click: () => {
+                              let id = params.row.id;
+                              if(params.row.status==2)
+                              {
+                                window.open('http://localhost:1024/#/read?id=' + id+"&cl=1")
+                              }
+                              else if(params.row.status==1)
+                              {
+                                window.open(' http://localhost:1024/#/edit?id=' + id+"&cl=1")
+                              }
+                            }
+                          }
+                        }, params.row.status==1?"批改试卷":"查看试卷")
+                      ]);
+                    }
+                  }
+              ],
             }
         },
         methods: {
+          searchAnswer(pageNo){
+            axios.request({
+              url: '/api/examPaperAnswer/pageList',
+              method: 'post',
+              data:this.customerAnswerForm
+            }).then((result) => {
+              this.answerPage = result.data.response;
+            }).catch((result)=>{
+              this.$Message.error("哦豁，操作异常："+result);
+            });
+          },
+          queryCustomerAnswerList(id){
+              this.customerAnswerForm.examPaperId = id;
+              this.searchAnswer(1);
+            },
             addTitle (form) {
               form.titleItems.push({
                 name: '',

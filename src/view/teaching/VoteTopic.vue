@@ -2,7 +2,7 @@
     <Card>
         <Row>
             <Col span="8">
-                <Input v-model="keyWord" placeholder="请输入投票主题..." style="width:200px"/>
+                <Input v-model="keyWord" placeholdevoteResultModalr="请输入投票主题..." style="width:200px"/>
                 <Button type="primary" shape="circle" icon="ios-search" @click="gopage(1)">搜索</Button>
             </Col>
         </Row>
@@ -235,14 +235,14 @@
         </Modal>
 
 
-        <Modal
+      <Modal
         v-model="voteResultModal"
         :title="'调查结果'"
         :mask-closable="true"
         :loading="loading"
         @on-ok="submitVote"
         @on-cancel="cancel"
-        ok-text="提交问卷调查"
+        ok-text="确定"
         width="80%">
           <Table :loading="tableLoding" border :columns="columns2" :data="voteRecordList"></Table>
       </Modal>
