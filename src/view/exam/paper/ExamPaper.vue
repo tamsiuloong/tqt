@@ -264,6 +264,7 @@
         title="答卷列表"
         :mask-closable="true"
         :loading="loading"
+        :fullscreen=true
         @on-ok="cancel"
         @on-cancel="cancel"
         ok-text="确定"
@@ -624,37 +625,11 @@
                 },
                 columns3: [
                 {
-                  type: 'selection',
-                  width: 60,
-                  align: 'center'
-                },
-                {
-                  title: 'id',
-                  key: 'id'
-                },
-                {
                   title: '名字',
                   key: 'userName'
                 },
 
-                {
-                  title: '状态',
-                  key: 'status',
-                  render: (h, params) => {
-                    let result = "未知";
-                    if(params.row.status===2)
-                    {
-                      result="完成";
-                    }
-                    else if(params.row.status===1)
-                    {
-                      result="待批改";
-                    }
-                    return h('div', [
-                      h('strong', result)
-                    ]);
-                  }
-                },
+
 
                 {
                   title: '题数',
@@ -675,6 +650,28 @@
                 {
                   title: '最终分数',
                   key: 'userScore'
+                },
+                {
+                  title: '用时',
+                  key: 'doTime'
+                },
+                {
+                  title: '状态',
+                  key: 'status',
+                  render: (h, params) => {
+                    let result = "未知";
+                    if(params.row.status===2)
+                    {
+                      result="完成";
+                    }
+                    else if(params.row.status===1)
+                    {
+                      result="待批改";
+                    }
+                    return h('div', [
+                      h('strong', result)
+                    ]);
+                  }
                 },
                 {
                   title: '创建日期',

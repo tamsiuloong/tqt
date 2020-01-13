@@ -497,13 +497,8 @@
             }
         },
         methods: {
-            editorReady (instance) {
-              this.richEditor.instance = instance
-              let currentContent = this.richEditor.object[this.richEditor.parameterName]
-              this.richEditor.instance.setContent(currentContent)
-            },
             inputClick (object, parameterName) {
-              this.richEditor.instance = '';
+              this.richEditor.instance = object[parameterName];
               this.richEditor.object = object
               this.richEditor.parameterName = parameterName
               this.richEditor.dialogVisible = true
@@ -514,8 +509,8 @@
               this.richEditor.dialogVisible = false
             },
             changeQuestionType(e,form){
-              if(form.items)
-              {
+              // if(form.items)
+              // {
                 if(e==='1'||e==='2')
                 {
                   form.items=[{
@@ -546,7 +541,7 @@
                 {
                   form.items=null;
                 }
-              }
+              // }
             },
             questionItemRemove (index,form) {
               form.items.splice(index, 1)
@@ -586,6 +581,7 @@
                 this.$refs[form].resetFields();
             },
             addQuestion(){
+
                 this.addModal = true;
             },
             add(){
@@ -602,6 +598,32 @@
                             this.$refs['addForm'].resetFields();
                             this.$Message.success('Success!');
                             this.addModal = false;
+                            //清空表单
+                            this.addForm =  {
+                            questionType:"1",
+                            course:{},
+                            score:"",
+                            difficult:"",
+                            correct:"",
+                            correctArray:[],
+                            userId:"",
+                            status:"",
+                            deleted:"",
+                            items:[{
+                              prefix:"A",
+                              content:""
+                            },{
+                              prefix:"B",
+                              content:""
+                            },{
+                              prefix:"C",
+                              content:""
+                            },{
+                              prefix:"D",
+                              content:""
+                            }],
+                            analyze:""
+                          };
                         });
                     }
                     else
