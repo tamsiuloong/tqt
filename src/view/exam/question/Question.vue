@@ -224,7 +224,7 @@
                     <CheckboxGroup v-model="updateForm.correctArray" v-else-if="updateForm.questionType==='2'">
                       <Checkbox v-for="i in updateForm.items" :label="i.prefix"></Checkbox>
                     </CheckboxGroup>
-                    <Input v-model="addForm.correct" type="textarea" v-else-if="updateForm.questionType==='5'"  />
+                    <Input v-model="updateForm.correct" type="textarea" v-else-if="updateForm.questionType==='5'"  />
                   </FormItem>
                 </Col>
                 <Col span="2" style="text-align: center"/>
@@ -291,7 +291,17 @@
                     },
                     {
                       title: '题干',
-                      key: 'title'
+                      key: 'shortTitle',
+                      render: (h, params) => {
+                        let result = "未知";
+                        if(params.row.createTime)
+                        {
+                          result=params.row.shortTitle.substr(0,20);
+                        }
+                        return h('div', [
+                          h('strong', result)
+                        ]);
+                      }
                     },
                     {
                         title: '题型',

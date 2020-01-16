@@ -293,7 +293,7 @@
                 customerAnswerForm:{
                   examPaperId:"",
                   pageIndex:1,
-                  pageSize:20
+                  pageSize:1
                 },
                 customerAnswerModal:false,
                 questionTotalCount:0,
@@ -618,10 +618,10 @@
                 },
                 selectedQuestionList:[],
                 answerPage: {
-                  number:0,
-                  size:20,
-                  totalElements:0,
-                  content:[]
+                  pageNum:1,
+                  size:1,
+                  total:0,
+                  list:[]
                 },
                 columns3: [
                 {
@@ -705,11 +705,11 @@
                               let id = params.row.id;
                               if(params.row.status==2)
                               {
-                                window.open('http://localhost:1024/#/read?id=' + id+"&cl=1")
+                                window.open('http://exam.yaorange.com:88/#/read?id=' + id+"&cl=1")
                               }
                               else if(params.row.status==1)
                               {
-                                window.open(' http://localhost:1024/#/edit?id=' + id+"&cl=1")
+                                window.open(' http://exam.yaorange.com:88/#/edit?id=' + id+"&cl=1")
                               }
                             }
                           }
@@ -722,6 +722,7 @@
         },
         methods: {
           searchAnswer(pageNo){
+            this.customerAnswerForm.pageIndex = pageNo;
             axios.request({
               url: '/api/examPaperAnswer/pageList',
               method: 'post',

@@ -18,7 +18,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://localhost:9999/',
-    pro: 'http://www.coachtam.cn:9999/'
+    pro: 'http://www.yaorange.com:9999/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
