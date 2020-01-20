@@ -60,7 +60,7 @@
                             <FormItem label="班级" prop="classes.id">
 
                               <Select filterable="true" placeholder="班级" v-model="addForm.classes.id" style="width:200px">
-                                <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+                                <Option v-for="c in classesList" :value="c.id">{{c.name}}<span v-if="c.type">-</span>{{c.type}}</Option>
                               </Select>
                             </FormItem>
                             </Col>
@@ -91,7 +91,6 @@
                     </Row>
                   </FormItem>
 
-
                   <FormItem>
                     <Row>
                       <Col span="12">
@@ -101,7 +100,6 @@
                   </FormItem>
             </Form>
         </Modal>
-
 
         <Modal
                 v-model="updateModal"
@@ -234,7 +232,6 @@
             </Form>
         </Modal>
 
-
       <Modal
         v-model="voteResultModal"
         :title="'调查结果'"
@@ -250,504 +247,473 @@
 </template>
 
 <script type="text/ecmascript-6">
-    // import fetch from '../../utils/fetch';
-    // import {dateFormat} from '../../utils/date';
-    import axios from '@/libs/api.request'
-    export default {
-        data() {
-            return {
+// import fetch from '../../utils/fetch';
+// import {dateFormat} from '../../utils/date';
+import axios from '@/libs/api.request'
+export default {
+  data () {
+    return {
 
-                tableLoding:true,
-                loading:true,
-                count: 0,
-                gourpId: null,
-                pageSize: 20,
-                pageNo: 1,
-                totalPage: 0,
-                totalCount: 0,
-                keyWord:"",
-                columns1: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                        title: '标题',
-                        key: 'title'
-                    },
-                    {
-                        title: '描述',
-                        key: 'description'
-                    },
-                    {
-                        title: '总投票数',
-                        key: 'totalCount'
-                    },
-                  {
-                    title: '班级',
-                    key: 'classId',
-                    render: (h, params) => {
-                      return h('div', [
-                        h('strong', params.row.classes.name+"_"+params.row.classes.type)
-                      ]);
-                    }
-                  },
-                  {
-                    title: '教师',
-                    key: 'teacherName'
-                  },
-                  {
-                    title: '操作',
-                    key: 'action',
-                    fixed: 'right',
-                    width: 120,
-                    render: (h, params) => {
-                      return h('div', [
-                        h('Button', {
-                          props: {
-                            type: 'text',
-                            size: 'small'
-                          },
-                          on: {
-                            click: () => {
-                              //获取该调查的调查项目list
-                              let votetopicId = params.row.id;
-                              this.queryVoteRecordList(votetopicId);
-                              this.queryVoteSubTopicList(votetopicId);
-
-
-                              this.voteResultModal = true;
-                            }
-                          }
-                        }, '调查结果')
-                      ]);
-                    }
-                  }
-                ],
-                columns2: [
-                  {
-                    title: '学员',
-                    key: 'stuName'
-                  }
-                ],
-                self: this,
-                page: [],
-                updateModal: false,
-                addModal: false,
-                updateForm: {
-                        id:"",
-                        siteId:"",
-                        title:"",
-                        description:"",
-                        startTime:"",
-                        endTime:"",
-                        repeateHour:"",
-                        totalCount:"",
-                        multiSelect:"",
-                        isRestrictMember:"",
-                        isRestrictIp:"",
-                        isRestrictCookie:"",
-                        isDisabled:"",
-                        isDef:"",
-                        limitWeixin:"",
-                        voteDay:"",
-                        classId:"",
-                        teacher:""
-                },
-                addForm: {
-                        title:"",
-                        description:"",
-                        classes:{
-                          id:""
-                        },
-                        teacher:{
-                          id:""
-                        },
-                        voteSubtopicList:[],
-                        items: [
-                          {
-                            value: '总体评价(百分制)',
-                            index: 1,
-                            status: 1
-                          },
-                          {
-                            value: '学习方法和解决问题能力(十分制)',
-                            index: 2,
-                            status: 1
-                          },
-                          {
-                            value: '上课激情(十分制)',
-                            index: 3,
-                            status: 1
-                          },
-                          {
-                            value: '备课充分(十分制)',
-                            index: 4,
-                            status: 1
-                          },
-                          {
-                            value: '讲课清晰(十分制)',
-                            index: 5,
-                            status: 1
-                          },
-                          {
-                            value: '课程信息量(十分制)',
-                            index: 6,
-                            status: 1
-                          },
-                          {
-                            value: '重点难点突出(十分制)',
-                            index: 7,
-                            status: 1
-                          },
-                          {
-                            value: '关注学员消化(十分制)',
-                            index: 8,
-                            status: 1
-                          },
-                          {
-                            value: '学生学习效果(十分制)',
-                            index: 9,
-                            status: 1
-                          },
-                          {
-                            value: '激发学生学习兴趣(十分制)',
-                            index: 10,
-                            status: 1
-                          },
-                          {
-                            value: '建议',
-                            index: 11,
-                            status: 1
-                          }
-                        ]
-                },
-                formRule: {
-                    votetopicId: [
-                        {required: true, message:'不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    siteId: [
-                        {required: true, message:'不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    title: [
-                        {required: true, message:'标题不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    description: [
-                        {required: true, message:'描述不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    startTime: [
-                        {required: true, message:'开始时间不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    endTime: [
-                        {required: true, message:'结束时间不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    repeateHour: [
-                        {required: true, message:'重复投票限制时间，单位小时，为空不允许重复投票不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    totalCount: [
-                        {required: true, message:'总投票数不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    multiSelect: [
-                        {required: true, message:'最多可以选择几项不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    isRestrictMember: [
-                        {required: true, message:'是否限制会员不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    isRestrictIp: [
-                        {required: true, message:'是否限制IP不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    isRestrictCookie: [
-                        {required: true, message:'是否限制COOKIE不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    isDisabled: [
-                        {required: true, message:'是否禁用不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    isDef: [
-                        {required: true, message:'是否默认主题不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    limitWeixin: [
-                        {required: true, message:'是否限制微信不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    voteDay: [
-                        {required: true, message:'限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    "classes.id": [
-                        {required: true, message:'班级不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    "teacher.id": [
-                        {required: true, message:'教师不能为空',trigger:'blur'}
-                    ]
-                },
-                voteResultModal:false,
-                //调查记录
-                voteRecordList:[],
-                //调查项
-                voteSubTopicList:[],
-                classesList:[
-                  {
-                    id:"",
-                    name:"--所有--"
-                  }
-                ],
-                teacherList:[],
-                index: 1
-            }
+      tableLoding: true,
+      loading: true,
+      count: 0,
+      gourpId: null,
+      pageSize: 20,
+      pageNo: 1,
+      totalPage: 0,
+      totalCount: 0,
+      keyWord: '',
+      columns1: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
         },
-        methods: {
-            change(e){
-                this.count = e.length;
-                if (e.length == 1) {
-                    this.updateForm = e[0];
-                }
-                this.setGroupId(e);
-            },
-            setGroupId(e)
-            {
-                this.groupId = [];
-
-                for (var i = 0; i < e.length; i++) {
-                    this.groupId.push(e[i].id);
-                }
-            },
-            reset(form){
-                this.$refs[form].resetFields();
-            },
-            addVoteTopic(){
-                // this.index = 1;
-                this.addModal = true;
-                //清空投票项列表
-                this.addForm.voteSubtopicList=[];
-                // this.addForm.items.splice(0,this.addForm.items.length);
-              //   this.$refs['addForm'].resetFields();
-              // this.addForm.items.push({
-              //   value: '',
-              //   index: 1,
-              //   status: 1
-              // })
-            },
-            add(){
-                this.$refs['addForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        const voteTopic = JSON.parse(JSON.stringify(this.addForm));
-
-                        voteTopic.voteSubtopicList=[];
-
-                        this.addForm.items.forEach(item=>{
-                          if(item.status===1)
-                          {
-                            voteTopic.voteSubtopicList.push({
-                              title:item.value,
-                              priority:item.index,
-                              subtopicType:3
-                            })
-                          }
-                        })
-                        //删除无用属性
-                        delete voteTopic.items;
-                        // delete voteTopic.items;
-                        voteTopic.teacherId = voteTopic.teacher.id;
-                        axios.request({
-                            url: '/api/voteTopic',
-                            method: 'post',
-                            data: voteTopic
-                        }).then((result) => {
-
-                            this.addModal = false;
-
-                            this.gopage(this.pageNo);
-
-                            this.$Message.success('操作成功!');
-
-                            this.$refs['addForm'].resetFields();
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            edit () {
-                if (this.count != 1) {
-                    this.updateModal = false;
-                    this.$Message.warning('请至少并只能选择一项');
-                }
-                else {
-                    this.updateModal = true;
-                }
-            },
-            update () {
-                this.$refs['updateForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        axios.request({
-                            url: '/api/voteTopic',
-                            method: 'put',
-                            data: this.updateForm
-                        }).then((result) => {
-                            this.updateModal = false,
-                            this.$Message.success('操作成功!');
-                            this.gopage(this.pageNo);
-                        }).catch((result)=>{
-                            this.$Message.error("哦豁，操作异常："+result);
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            remove () {
-                if (this.groupId != null && this.groupId != "") {
-                    axios.request({
-                        url: '/api/voteTopic',
-                        method: 'delete',
-                        data: this.groupId
-                    }).then((result) => {
-                        if (result.data.code === 1) {
-                            this.$Message.success('操作成功!');
-                            this.gopage(this.pageNo);
-                        }
-                    }).catch((result)=>{
-                        this.$Message.error("哦豁，操作异常：已经参与调查后不可以被删除!"+result);
-                    });
-                } else {
-                    this.$Message.warning('请至少选择一项');
-                }
-            },
-            gopage(pageNo){
-                                this.tableLoding=true;
-                this.pageNo = pageNo;
-                const pageSize = this.pageSize;
-                const keyWord = this.keyWord;
-                axios.request({
-                    url: '/api/voteTopic',
-                    method: 'get',
-                    params: {pageNo, pageSize,keyWord}
-                }).then((result) => {
-                                        this.page = result.data.data;
-                    this.tableLoding=false;
-                }).catch((result)=>{
-                    this.$Message.error("哦豁，操作异常："+result);
-                });
-            },
-            cancel () {
-                this.$Message.info('点击了取消');
-            },
-            queryVoteRecordList(votetopicId){
-              axios.request({
-                url: '/api/voteRecord/all/'+votetopicId,
-                method: 'get'
-              }).then((result) => {
-                this.voteRecordList = result.data.data;
-              }).catch((result)=>{
-                this.$Message.error("哦豁，操作异常："+result);
-              });
-            },
-            queryVoteSubTopicList(votetopicId){
-              axios.request({
-                url: '/api/voteSubtopic/all/'+votetopicId,
-                method: 'get'
-              }).then((result) => {
-                this.voteSubTopicList = result.data.data;
-
-                this.columns2=[
-                  {
-                    title: '学员',
-                    key: 'stuName'
-                  }
-                ];
-                //拼接表头
-                let i = 0;
-                this.voteSubTopicList.forEach(subTopic=>{
-                  this.columns2.push({
-                    title: subTopic.title,
-                    key: subTopic.id,
-                    render: (h, params) => {
-                      if(i>=this.voteSubTopicList.length)
-                      {
-                        i=0;
-                      }
-                      return h('div', [
-                        h('strong',params.row.voteReplyList[i++].reply )
-                      ]);
-                    }
-                  })
-                })
-              }).catch((result)=>{
-                this.$Message.error("哦豁，操作异常："+result);
-              });
-            },
-            handleAdd () {
-              this.index++;
-              this.addForm.items.push({
-                value: '',
-                index: this.index,
-                status: 1
-              });
-            },
-            handleRemove (index) {
-              this.addForm.items.splice(index, 1);
-              //this.addForm.items[index].status = 0;
-            }
+        {
+          title: '标题',
+          key: 'title'
         },
-        created: function () {
+        {
+          title: '描述',
+          key: 'description'
+        },
+        {
+          title: '总投票数',
+          key: 'totalCount'
+        },
+        {
+          title: '班级',
+          key: 'classId',
+          render: (h, params) => {
+            return h('div', [
+              h('strong', params.row.classes.name + '_' + params.row.classes.type)
+            ])
+          }
+        },
+        {
+          title: '教师',
+          key: 'teacherName'
+        },
+        {
+          title: '操作',
+          key: 'action',
+          fixed: 'right',
+          width: 120,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    // 获取该调查的调查项目list
+                    let votetopicId = params.row.id
+                    this.queryVoteRecordList(votetopicId)
+                    this.queryVoteSubTopicList(votetopicId)
 
-            this.gopage(this.pageNo);
-
-            axios.request({
-              url: '/api/classes/all',
-              method: 'get'
-            }).then((result) => {
-              result.data.data.forEach(classes=>{
-                this.classesList.push(classes);
-              })
-            }).catch((result)=>{
-              this.$Message.error("哦豁，操作异常："+result);
-            });
-
-            axios.request({
-              url: '/api/user/teachers',
-              method: 'get'
-            }).then((result) => {
-              this.teacherList = result.data.data;
-            }).catch((result)=>{
-              this.$Message.error("哦豁，操作异常："+result);
-            });
+                    this.voteResultModal = true
+                  }
+                }
+              }, '调查结果')
+            ])
+          }
         }
+      ],
+      columns2: [
+        {
+          title: '学员',
+          key: 'stuName'
+        }
+      ],
+      self: this,
+      page: [],
+      updateModal: false,
+      addModal: false,
+      updateForm: {
+        id: '',
+        siteId: '',
+        title: '',
+        description: '',
+        startTime: '',
+        endTime: '',
+        repeateHour: '',
+        totalCount: '',
+        multiSelect: '',
+        isRestrictMember: '',
+        isRestrictIp: '',
+        isRestrictCookie: '',
+        isDisabled: '',
+        isDef: '',
+        limitWeixin: '',
+        voteDay: '',
+        classId: '',
+        teacher: ''
+      },
+      addForm: {
+        title: '',
+        description: '',
+        classes: {
+          id: ''
+        },
+        teacher: {
+          id: ''
+        },
+        voteSubtopicList: [],
+        items: [
+          {
+            value: '总体评价(百分制)',
+            index: 1,
+            status: 1
+          },
+          {
+            value: '学习方法和解决问题能力(十分制)',
+            index: 2,
+            status: 1
+          },
+          {
+            value: '上课激情(十分制)',
+            index: 3,
+            status: 1
+          },
+          {
+            value: '备课充分(十分制)',
+            index: 4,
+            status: 1
+          },
+          {
+            value: '讲课清晰(十分制)',
+            index: 5,
+            status: 1
+          },
+          {
+            value: '课程信息量(十分制)',
+            index: 6,
+            status: 1
+          },
+          {
+            value: '重点难点突出(十分制)',
+            index: 7,
+            status: 1
+          },
+          {
+            value: '关注学员消化(十分制)',
+            index: 8,
+            status: 1
+          },
+          {
+            value: '学生学习效果(十分制)',
+            index: 9,
+            status: 1
+          },
+          {
+            value: '激发学生学习兴趣(十分制)',
+            index: 10,
+            status: 1
+          },
+          {
+            value: '建议',
+            index: 11,
+            status: 1
+          }
+        ]
+      },
+      formRule: {
+        votetopicId: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        siteId: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        title: [
+          { required: true, message: '标题不能为空', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '描述不能为空', trigger: 'blur' }
+        ],
+        startTime: [
+          { required: true, message: '开始时间不能为空', trigger: 'blur' }
+        ],
+        endTime: [
+          { required: true, message: '结束时间不能为空', trigger: 'blur' }
+        ],
+        repeateHour: [
+          { required: true, message: '重复投票限制时间，单位小时，为空不允许重复投票不能为空', trigger: 'blur' }
+        ],
+        totalCount: [
+          { required: true, message: '总投票数不能为空', trigger: 'blur' }
+        ],
+        multiSelect: [
+          { required: true, message: '最多可以选择几项不能为空', trigger: 'blur' }
+        ],
+        isRestrictMember: [
+          { required: true, message: '是否限制会员不能为空', trigger: 'blur' }
+        ],
+        isRestrictIp: [
+          { required: true, message: '是否限制IP不能为空', trigger: 'blur' }
+        ],
+        isRestrictCookie: [
+          { required: true, message: '是否限制COOKIE不能为空', trigger: 'blur' }
+        ],
+        isDisabled: [
+          { required: true, message: '是否禁用不能为空', trigger: 'blur' }
+        ],
+        isDef: [
+          { required: true, message: '是否默认主题不能为空', trigger: 'blur' }
+        ],
+        limitWeixin: [
+          { required: true, message: '是否限制微信不能为空', trigger: 'blur' }
+        ],
+        voteDay: [
+          { required: true, message: '限定微信投票每个用户每日投票次数,为0时则投票期内限定投票一次不能为空', trigger: 'blur' }
+        ],
+        'classes.id': [
+          { required: true, message: '班级不能为空', trigger: 'blur' }
+        ],
+        'teacher.id': [
+          { required: true, message: '教师不能为空', trigger: 'blur' }
+        ]
+      },
+      voteResultModal: false,
+      // 调查记录
+      voteRecordList: [],
+      // 调查项
+      voteSubTopicList: [],
+      classesList: [
+        {
+          id: '',
+          name: '--所有--'
+        }
+      ],
+      teacherList: [],
+      index: 1
     }
+  },
+  methods: {
+    change (e) {
+      this.count = e.length
+      if (e.length == 1) {
+        this.updateForm = e[0]
+      }
+      this.setGroupId(e)
+    },
+    setGroupId (e) {
+      this.groupId = []
 
+      for (var i = 0; i < e.length; i++) {
+        this.groupId.push(e[i].id)
+      }
+    },
+    reset (form) {
+      this.$refs[form].resetFields()
+    },
+    addVoteTopic () {
+      // this.index = 1;
+      this.addModal = true
+      // 清空投票项列表
+      this.addForm.voteSubtopicList = []
+      // this.addForm.items.splice(0,this.addForm.items.length);
+      //   this.$refs['addForm'].resetFields();
+      // this.addForm.items.push({
+      //   value: '',
+      //   index: 1,
+      //   status: 1
+      // })
+    },
+    add () {
+      this.$refs['addForm'].validate((valid) => {
+        if (valid) {
+          const voteTopic = JSON.parse(JSON.stringify(this.addForm))
+
+          voteTopic.voteSubtopicList = []
+
+          this.addForm.items.forEach(item => {
+            if (item.status === 1) {
+              voteTopic.voteSubtopicList.push({
+                title: item.value,
+                priority: item.index,
+                subtopicType: 3
+              })
+            }
+          })
+          // 删除无用属性
+          delete voteTopic.items
+          // delete voteTopic.items;
+          voteTopic.teacherId = voteTopic.teacher.id
+          axios.request({
+            url: '/api/voteTopic',
+            method: 'post',
+            data: voteTopic
+          }).then((result) => {
+            this.addModal = false
+
+            this.gopage(this.pageNo)
+
+            this.$Message.success('操作成功!')
+
+            this.$refs['addForm'].resetFields()
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    edit () {
+      if (this.count != 1) {
+        this.updateModal = false
+        this.$Message.warning('请至少并只能选择一项')
+      } else {
+        this.updateModal = true
+      }
+    },
+    update () {
+      this.$refs['updateForm'].validate((valid) => {
+        if (valid) {
+          axios.request({
+            url: '/api/voteTopic',
+            method: 'put',
+            data: this.updateForm
+          }).then((result) => {
+            this.updateModal = false,
+            this.$Message.success('操作成功!')
+            this.gopage(this.pageNo)
+          }).catch((result) => {
+            this.$Message.error('哦豁，操作异常：' + result)
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    remove () {
+      if (this.groupId != null && this.groupId != '') {
+        axios.request({
+          url: '/api/voteTopic',
+          method: 'delete',
+          data: this.groupId
+        }).then((result) => {
+          if (result.data.code === 1) {
+            this.$Message.success('操作成功!')
+            this.gopage(this.pageNo)
+          }
+        }).catch((result) => {
+          this.$Message.error('哦豁，操作异常：已经参与调查后不可以被删除!' + result)
+        })
+      } else {
+        this.$Message.warning('请至少选择一项')
+      }
+    },
+    gopage (pageNo) {
+      this.tableLoding = true
+      this.pageNo = pageNo
+      const pageSize = this.pageSize
+      const keyWord = this.keyWord
+      axios.request({
+        url: '/api/voteTopic',
+        method: 'get',
+        params: { pageNo, pageSize, keyWord }
+      }).then((result) => {
+        this.page = result.data.data
+        this.tableLoding = false
+      }).catch((result) => {
+        this.$Message.error('哦豁，操作异常：' + result)
+      })
+    },
+    cancel () {
+      this.$Message.info('点击了取消')
+    },
+    queryVoteRecordList (votetopicId) {
+      axios.request({
+        url: '/api/voteRecord/all/' + votetopicId,
+        method: 'get'
+      }).then((result) => {
+        this.voteRecordList = result.data.data
+      }).catch((result) => {
+        this.$Message.error('哦豁，操作异常：' + result)
+      })
+    },
+    queryVoteSubTopicList (votetopicId) {
+      axios.request({
+        url: '/api/voteSubtopic/all/' + votetopicId,
+        method: 'get'
+      }).then((result) => {
+        this.voteSubTopicList = result.data.data
+
+        this.columns2 = [
+          {
+            title: '学员',
+            key: 'stuName'
+          }
+        ]
+        // 拼接表头
+        let i = 0
+        this.voteSubTopicList.forEach(subTopic => {
+          this.columns2.push({
+            title: subTopic.title,
+            key: subTopic.id,
+            render: (h, params) => {
+              if (i >= this.voteSubTopicList.length) {
+                i = 0
+              }
+              return h('div', [
+                h('strong', params.row.voteReplyList[i++].reply)
+              ])
+            }
+          })
+        })
+      }).catch((result) => {
+        this.$Message.error('哦豁，操作异常：' + result)
+      })
+    },
+    handleAdd () {
+      this.index++
+      this.addForm.items.push({
+        value: '',
+        index: this.index,
+        status: 1
+      })
+    },
+    handleRemove (index) {
+      this.addForm.items.splice(index, 1)
+      // this.addForm.items[index].status = 0;
+    }
+  },
+  created: function () {
+    this.gopage(this.pageNo)
+
+    axios.request({
+      url: '/api/classes/all/false',
+      method: 'get'
+    }).then((result) => {
+      result.data.data.forEach(classes => {
+        this.classesList.push(classes)
+      })
+    }).catch((result) => {
+      this.$Message.error('哦豁，操作异常：' + result)
+    })
+
+    axios.request({
+      url: '/api/user/teachers',
+      method: 'get'
+    }).then((result) => {
+      this.teacherList = result.data.data
+    }).catch((result) => {
+      this.$Message.error('哦豁，操作异常：' + result)
+    })
+  }
+}
 
 </script>

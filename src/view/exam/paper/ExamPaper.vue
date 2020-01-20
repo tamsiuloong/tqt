@@ -4,7 +4,7 @@
             <Col span="24">
               <Input v-model="searchForm.name" placeholder="试卷名字" style="width:200px"/>
               <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
-                <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+                <Option v-for="c in classesList" :value="c.id">{{c.name}}<span v-if="c.type">-</span>{{c.type}}</Option>
               </Select>
               <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
                 <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -59,7 +59,7 @@
                       <Col span="11">
                         <FormItem label="班级" prop="classes.id">
                           <Select filterable="true" placeholder="班级" v-model="addForm.classes.id" style="width:200px">
-                            <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+                            <Option v-for="c in classesList" :value="c.id">{{c.name}}<span v-if="c.type">-</span>{{c.type}}</Option>
                           </Select>
                         </FormItem>
                       </Col>
@@ -152,7 +152,7 @@
                 <Col span="11">
                   <FormItem label="班级" prop="classes.id">
                     <Select filterable="true" placeholder="班级" v-model="updateForm.classes.id" style="width:200px">
-                      <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+                      <Option v-for="c in classesList" :value="c.id">{{c.name}}<span v-if="c.type">-</span>{{c.type}}</Option>
                     </Select>
                   </FormItem>
                 </Col>
@@ -941,7 +941,7 @@ export default {
       this.$Message.error('哦豁，操作异常：' + result)
     })
     axios.request({
-      url: '/api/classes/all',
+      url: '/api/classes/all/false',
       method: 'get'
     }).then((result) => {
       result.data.data.forEach(classes => {

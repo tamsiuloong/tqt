@@ -5,7 +5,7 @@
 
         <Col span="24">
           <Select filterable="true" placeholder="班级" v-model="searchForm.classId" style="width:200px">
-            <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+            <Option v-for="c in classesList" :value="c.id">{{c.name}}<span v-if="c.type">-</span>{{c.type}}</Option>
           </Select>
           <Select v-model="searchForm.courseId" placeholder="课程" style="width:200px">
             <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -151,7 +151,6 @@
             </Form>
         </Modal>
 
-
         <Modal
                 v-model="updateModal"
                 title="学习反馈详情"
@@ -242,383 +241,369 @@
 </template>
 
 <script type="text/ecmascript-6">
-    // import fetch from '../../utils/fetch';
-    // import {dateFormat} from '../../utils/date';
-    import axios from '@/libs/api.request'
-    export default {
-        data() {
-            return {
-                tableLoding:true,
-                loading:true,
-                count: 0,
-                gourpId: null,
-                pageSize: 20,
-                pageNo: 1,
-                totalPage: 0,
-                totalCount: 0,
-                keyWord:"",
-                columns1: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                      title: '学员',
-                      key: 'stuName'
-                    },
-                    {
-                      title: '课程',
-                      width: 100,
-                      key: 'courseId',
-                      render: (h, params) => {
-                        return h('div', [
-                          h('strong', params.row.course.name)
-                        ]);
-                      }
-                    },
-                    {
-                        title: '第几天',
-                        width: 50,
-                        key: 'dayNum'
-                    },{
-                        title: '吸收情况',
-                        key: 'absorption',
-                        sortable: true
-                    },
-                    {
-                        title: '不清楚的地方',
-                        key: 'notClear',
-                        render: (h, params) => {
-                          return h('div', [
-                            h('strong',params.row.notClear.length>10? params.row.notClear.substring(0,30):params.row.notClear)
-                          ]);
-                        }
-                    },
-                    // {
-                    //     title: '明日目标',
-                    //     key: 'plan',
-                    //   render: (h, params) => {
-                    //     return h('div', [
-                    //       h('strong',params.row.plan.length>10? params.row.plan.substring(0,10):params.row.plan)
-                    //     ]);
-                    //   }
-                    // },
-                    // {
-                    //   title: '实施方案',
-                    //   key: 'todo',
-                    //   render: (h, params) => {
-                    //     return h('div', [
-                    //       h('strong',params.row.todo.length>10? params.row.todo.substring(0,10):params.row.todo)
-                    //     ]);
-                    //   }
-                    // },
-                    // {
-                    //     title: '自我觉察',
-                    //     key: 'selfCheck',
-                    //     render: (h, params) => {
-                    //       return h('div', [
-                    //         h('strong',params.row.selfCheck.length>10? params.row.selfCheck.substring(0,10):params.row.selfCheck)
-                    //       ]);
-                    //     }
-                    // },
-                    // {
-                    //   title: '调整方案',
-                    //   key: 'adjustment',
-                    //   render: (h, params) => {
-                    //     return h('div', [
-                    //       h('strong',params.row.adjustment.length>10? params.row.adjustment.substring(0,10):params.row.adjustment)
-                    //     ]);
-                    //   }
-                    // },
-                    {
-                      title: '时间',
-                      key: 'backTime',
-                      width: 160
-                    },
-                    // {
-                    //   title: '笔记地址',
-                    //   key: 'noteUrl',
-                    //   render: (h, params) => {
-                    //     return h('div', [
-                    //
-                    //     ]);
-                    //   }
-                    // },
-                    {
-                      title: '操作',
-                      key: 'action',
-                      fixed: 'right',
-                      width: 160,
-                      render: (h, params) => {
-                        return h('div', [
-                          h('Button', {
-                            props: {
-                              type: 'info',
-                              size: 'small',
-                              ghost:''
-                            },
-                            on: {
-                              click: () => {
-                                this.updateForm = params.row;
-                                this.updateModal = true;
-                              }
-                            }
-                          }, '详情'),
-                          h('Button', {
-                            props: {
-                              type: 'success',
-                              size: 'small',
-                              ghost:''
-                            },
-                            on: {
-                              click: () => {
-                                window.open(params.row.noteUrl);
-                              }
-                            }
-                          },"查看笔记")
-                        ]);
-                      }
-                    }
-
-                ],
-                self: this,
-                page: [],
-                updateModal: false,
-                addModal: false,
-                updateForm: {
-                        adjustment:"",
-                        dayNum:1,
-                        notClear:"",
-                        plan:"",
-                        selfCheck:"",
-                        absorption:null,
-                        todo:"",
-                        course:{
-                          id:null,
-                          name:''
-                        }
-                },
-                addForm: {
-                        adjustment:"测试",
-                        dayNum:1,
-                        notClear:"清楚",
-                        plan:"预习hibernate",
-                        selfCheck:"睡得太晚",
-                        absorption:null,
-                        todo:"11：30之前一定要睡觉",
-                        course:{
-                          id:"1",
-                          name:null
-                        }
-                },
-                //未提交名单
-                uncommitList:[],
-                formRule: {
-                    adjustment: [
-                        {required: true, message:'强迫自己跳出舒适区，先自己画图梳理出代码思路，然后再打代码',trigger:'blur'}
-                    ],
-                    "absorption":[
-                      {required: true, message:'吸收情况是必须要让老师知道滴',trigger:'blur'}
-                    ],
-                    'dayNum': [
-                      {required: true, message:'课程天数不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    notClear: [
-                        {required: true, message:'当日知识点还有哪些不清楚的？',trigger:'blur'}
-                    ]
-                    ,
-                    plan: [
-                        {required: true, message:'小目标是必须滴，是你通过努力一定可以做到的哟，比如学懂什么是hibernate，hibernate的核心api怎么用等',trigger:'blur'}
-                    ]
-                    ,
-                    selfCheck: [
-                        {required: true, message:'你该不会以为自己完美了吧！比如：经过今天的执行，感觉自己太喜欢停留在舒适区，不太主动思考，全是照着打代码。',trigger:'blur'}
-                    ]
-                    ,
-                    todo: [
-                        {required: true, message:'针对于目标，你打算采取什么样的措施来帮助你达到目标？比如，1，提前预习，带着问题去听课。2，如果课程听明白了，不看视频，直接看讲义做练习。',trigger:'blur'}
-                    ]
-                    ,
-                    'course.id': [
-                        {required: true, message:'课程都不选，你想干嘛',trigger:'blur'}
-                    ]
-
-                },
-                courseList:[
-                  {
-                    id:"",
-                    name:"--所有--"
-                  }
-                ],
-                classesList:[
-          {
-            id:"",
-            name:"--所有--"
+// import fetch from '../../utils/fetch';
+// import {dateFormat} from '../../utils/date';
+import axios from '@/libs/api.request'
+export default {
+  data () {
+    return {
+      tableLoding: true,
+      loading: true,
+      count: 0,
+      gourpId: null,
+      pageSize: 20,
+      pageNo: 1,
+      totalPage: 0,
+      totalCount: 0,
+      keyWord: '',
+      columns1: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: '学员',
+          key: 'stuName'
+        },
+        {
+          title: '课程',
+          width: 100,
+          key: 'courseId',
+          render: (h, params) => {
+            return h('div', [
+              h('strong', params.row.course.name)
+            ])
           }
-        ],
-                searchForm:{
-                  classId:"",
-                  stuName:"",
-                  courseId:"",
-                  dayNum:""
-                }
-            }
         },
-        methods: {
-            change(e){
-                this.count = e.length;
-                if (e.length == 1) {
-                    this.updateForm = e[0];
-                }
-                this.setGroupId(e);
-            },
-            setGroupId(e)
-            {
-                this.groupId = [];
-
-                for (var i = 0; i < e.length; i++) {
-                    this.groupId.push(e[i].id);
-                }
-            },
-            reset(form){
-                this.$refs[form].resetFields();
-            },
-            addFeedback(){
-                this.addModal = true;
-            },
-            add(){
-                this.$refs['addForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        const feedback = this.addForm;
-                        axios.request({
-                            url: '/api/feedback',
-                            method: 'post',
-                            data: feedback
-                        }).then((result) => {
-                            this.gopage(this.pageNo);
-                            this.$refs['addForm'].resetFields();
-                            this.$Message.success('操作成功!');
-                            this.addModal = false;
-                        }).catch((result)=>{
-                          this.$Message.error("添加失败："+result);
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            edit () {
-                if (this.count != 1) {
-                    this.updateModal = false;
-                    this.$Message.warning('请至少并只能选择一项');
-                }
-                else {
-                    this.updateModal = true;
-                }
-            },
-            update () {
-                this.$refs['updateForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        axios.request({
-                            url: '/api/feedback',
-                            method: 'put',
-                            data: this.updateForm
-                        }).then((result) => {
-                            this.updateModal = false,
-                                    this.$Message.success('操作成功!');
-                            this.gopage(this.pageNo);
-                        }).catch((result)=>{
-                          this.$Message.error("哦豁，操作异常："+result);
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            remove () {
-                if (this.groupId != null && this.groupId != "") {
-                    axios.request({
-                        url: '/api/feedback',
-                        method: 'delete',
-                        data: this.groupId
-                    }).then((result) => {
-                        if (result.data.code === 1) {
-                            this.$Message.success('操作成功!');
-                            this.gopage(this.pageNo);
-                        }
-                    }).catch((result)=>{
-                      this.$Message.error("哦豁，操作异常："+result);
-                    });
-                } else {
-                    this.$Message.warning('请至少选择一项');
-                }
-            },
-            gopage(pageNo){
-                this.tableLoding=true;
-                this.pageNo = pageNo;
-                const pageSize = this.pageSize;
-                axios.request({
-                    url: '/api/feedback/teaching',
-                    method: 'post',
-                    params: {pageNo, pageSize},
-                    data:this.searchForm
-                }).then((result) => {
-                    this.page = result.data.data.page;
-                    this.uncommitList = result.data.data.unCommitedList;
-                    this.tableLoding=false;
-                })
-            },
-            cancel () {
-                this.$Message.info('点击了取消');
-            }
+        {
+          title: '第几天',
+          width: 50,
+          key: 'dayNum'
+        }, {
+          title: '吸收情况',
+          key: 'absorption',
+          sortable: true
         },
-        created: function () {
-            this.gopage(this.pageNo);
-
-            //courseList
-            axios.request({
-              url: '/api/course/all',
-              method: 'get'
-            }).then((result) => {
-              result.data.data.forEach(course=>{
-          this.courseList.push(course);
-        })
-            }).catch((result)=>{
-              this.$Message.error("哦豁，操作异常："+result);
-            });
-
-            axios.request({
-              url: '/api/classes/all',
-              method: 'get'
-            }).then((result) => {
-              result.data.data.forEach(classes=>{
-          this.classesList.push(classes);
-        })
-            }).catch((result)=>{
-              this.$Message.error("哦豁，操作异常："+result);
-            });
+        {
+          title: '不清楚的地方',
+          key: 'notClear',
+          render: (h, params) => {
+            return h('div', [
+              h('strong', params.row.notClear.length > 10 ? params.row.notClear.substring(0, 30) : params.row.notClear)
+            ])
+          }
+        },
+        // {
+        //     title: '明日目标',
+        //     key: 'plan',
+        //   render: (h, params) => {
+        //     return h('div', [
+        //       h('strong',params.row.plan.length>10? params.row.plan.substring(0,10):params.row.plan)
+        //     ]);
+        //   }
+        // },
+        // {
+        //   title: '实施方案',
+        //   key: 'todo',
+        //   render: (h, params) => {
+        //     return h('div', [
+        //       h('strong',params.row.todo.length>10? params.row.todo.substring(0,10):params.row.todo)
+        //     ]);
+        //   }
+        // },
+        // {
+        //     title: '自我觉察',
+        //     key: 'selfCheck',
+        //     render: (h, params) => {
+        //       return h('div', [
+        //         h('strong',params.row.selfCheck.length>10? params.row.selfCheck.substring(0,10):params.row.selfCheck)
+        //       ]);
+        //     }
+        // },
+        // {
+        //   title: '调整方案',
+        //   key: 'adjustment',
+        //   render: (h, params) => {
+        //     return h('div', [
+        //       h('strong',params.row.adjustment.length>10? params.row.adjustment.substring(0,10):params.row.adjustment)
+        //     ]);
+        //   }
+        // },
+        {
+          title: '时间',
+          key: 'backTime',
+          width: 160
+        },
+        // {
+        //   title: '笔记地址',
+        //   key: 'noteUrl',
+        //   render: (h, params) => {
+        //     return h('div', [
+        //
+        //     ]);
+        //   }
+        // },
+        {
+          title: '操作',
+          key: 'action',
+          fixed: 'right',
+          width: 160,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small',
+                  ghost: ''
+                },
+                on: {
+                  click: () => {
+                    this.updateForm = params.row
+                    this.updateModal = true
+                  }
+                }
+              }, '详情'),
+              h('Button', {
+                props: {
+                  type: 'success',
+                  size: 'small',
+                  ghost: ''
+                },
+                on: {
+                  click: () => {
+                    window.open(params.row.noteUrl)
+                  }
+                }
+              }, '查看笔记')
+            ])
+          }
         }
-    }
 
+      ],
+      self: this,
+      page: [],
+      updateModal: false,
+      addModal: false,
+      updateForm: {
+        adjustment: '',
+        dayNum: 1,
+        notClear: '',
+        plan: '',
+        selfCheck: '',
+        absorption: null,
+        todo: '',
+        course: {
+          id: null,
+          name: ''
+        }
+      },
+      addForm: {
+        adjustment: '测试',
+        dayNum: 1,
+        notClear: '清楚',
+        plan: '预习hibernate',
+        selfCheck: '睡得太晚',
+        absorption: null,
+        todo: '11：30之前一定要睡觉',
+        course: {
+          id: '1',
+          name: null
+        }
+      },
+      // 未提交名单
+      uncommitList: [],
+      formRule: {
+        adjustment: [
+          { required: true, message: '强迫自己跳出舒适区，先自己画图梳理出代码思路，然后再打代码', trigger: 'blur' }
+        ],
+        'absorption': [
+          { required: true, message: '吸收情况是必须要让老师知道滴', trigger: 'blur' }
+        ],
+        'dayNum': [
+          { required: true, message: '课程天数不能为空', trigger: 'blur' }
+        ],
+        notClear: [
+          { required: true, message: '当日知识点还有哪些不清楚的？', trigger: 'blur' }
+        ],
+        plan: [
+          { required: true, message: '小目标是必须滴，是你通过努力一定可以做到的哟，比如学懂什么是hibernate，hibernate的核心api怎么用等', trigger: 'blur' }
+        ],
+        selfCheck: [
+          { required: true, message: '你该不会以为自己完美了吧！比如：经过今天的执行，感觉自己太喜欢停留在舒适区，不太主动思考，全是照着打代码。', trigger: 'blur' }
+        ],
+        todo: [
+          { required: true, message: '针对于目标，你打算采取什么样的措施来帮助你达到目标？比如，1，提前预习，带着问题去听课。2，如果课程听明白了，不看视频，直接看讲义做练习。', trigger: 'blur' }
+        ],
+        'course.id': [
+          { required: true, message: '课程都不选，你想干嘛', trigger: 'blur' }
+        ]
+
+      },
+      courseList: [
+        {
+          id: '',
+          name: '--所有--'
+        }
+      ],
+      classesList: [
+        {
+          id: '',
+          name: '--所有--'
+        }
+      ],
+      searchForm: {
+        classId: '',
+        stuName: '',
+        courseId: '',
+        dayNum: ''
+      }
+    }
+  },
+  methods: {
+    change (e) {
+      this.count = e.length
+      if (e.length == 1) {
+        this.updateForm = e[0]
+      }
+      this.setGroupId(e)
+    },
+    setGroupId (e) {
+      this.groupId = []
+
+      for (var i = 0; i < e.length; i++) {
+        this.groupId.push(e[i].id)
+      }
+    },
+    reset (form) {
+      this.$refs[form].resetFields()
+    },
+    addFeedback () {
+      this.addModal = true
+    },
+    add () {
+      this.$refs['addForm'].validate((valid) => {
+        if (valid) {
+          const feedback = this.addForm
+          axios.request({
+            url: '/api/feedback',
+            method: 'post',
+            data: feedback
+          }).then((result) => {
+            this.gopage(this.pageNo)
+            this.$refs['addForm'].resetFields()
+            this.$Message.success('操作成功!')
+            this.addModal = false
+          }).catch((result) => {
+            this.$Message.error('添加失败：' + result)
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    edit () {
+      if (this.count != 1) {
+        this.updateModal = false
+        this.$Message.warning('请至少并只能选择一项')
+      } else {
+        this.updateModal = true
+      }
+    },
+    update () {
+      this.$refs['updateForm'].validate((valid) => {
+        if (valid) {
+          axios.request({
+            url: '/api/feedback',
+            method: 'put',
+            data: this.updateForm
+          }).then((result) => {
+            this.updateModal = false,
+            this.$Message.success('操作成功!')
+            this.gopage(this.pageNo)
+          }).catch((result) => {
+            this.$Message.error('哦豁，操作异常：' + result)
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    remove () {
+      if (this.groupId != null && this.groupId != '') {
+        axios.request({
+          url: '/api/feedback',
+          method: 'delete',
+          data: this.groupId
+        }).then((result) => {
+          if (result.data.code === 1) {
+            this.$Message.success('操作成功!')
+            this.gopage(this.pageNo)
+          }
+        }).catch((result) => {
+          this.$Message.error('哦豁，操作异常：' + result)
+        })
+      } else {
+        this.$Message.warning('请至少选择一项')
+      }
+    },
+    gopage (pageNo) {
+      this.tableLoding = true
+      this.pageNo = pageNo
+      const pageSize = this.pageSize
+      axios.request({
+        url: '/api/feedback/teaching',
+        method: 'post',
+        params: { pageNo, pageSize },
+        data: this.searchForm
+      }).then((result) => {
+        this.page = result.data.data.page
+        this.uncommitList = result.data.data.unCommitedList
+        this.tableLoding = false
+      })
+    },
+    cancel () {
+      this.$Message.info('点击了取消')
+    }
+  },
+  created: function () {
+    this.gopage(this.pageNo)
+
+    // courseList
+    axios.request({
+      url: '/api/course/all',
+      method: 'get'
+    }).then((result) => {
+      result.data.data.forEach(course => {
+        this.courseList.push(course)
+      })
+    }).catch((result) => {
+      this.$Message.error('哦豁，操作异常：' + result)
+    })
+
+    axios.request({
+      url: '/api/classes/all/false',
+      method: 'get'
+    }).then((result) => {
+      result.data.data.forEach(classes => {
+        this.classesList.push(classes)
+      })
+    }).catch((result) => {
+      this.$Message.error('哦豁，操作异常：' + result)
+    })
+  }
+}
 
 </script>
