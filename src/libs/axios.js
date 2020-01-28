@@ -37,17 +37,16 @@ class HttpRequest {
   interceptors (instance, url) {
     // 请求拦截
     instance.interceptors.request.use(config => {
-
-      let access_token = getToken();
+      let access_token = getToken()
       if (access_token) {
-        var params = config.params;
+        var params = config.params
         if (!params) {
           config.params =
             {
               'access_token': access_token // 让每个请求携带参数access_token
-            };
+            }
         } else {
-          params.access_token = access_token;// 追加
+          params.access_token = access_token// 追加
         }
       }
       // 添加全局的loading...
@@ -76,9 +75,8 @@ class HttpRequest {
         }
       }
       // console.log(error);
-      if(error&&error.message.indexOf('401')!=-1)
-      {
-        window.location.href="/";
+      if (error && error.message.indexOf('401') != -1 || error.message == 'Network Error') {
+        window.location.href = '/'
       }
       // addErrorLog(errorInfo)
       return Promise.reject(error)

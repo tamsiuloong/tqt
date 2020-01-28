@@ -9,8 +9,8 @@ const { title, cookieExpires, useI18n } = config
 export const TOKEN_KEY = 'token'
 
 export const setToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 ,domain:'.yaorange.com'})
-  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
+  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 7, domain: '.yaorange.com' })
+  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 7 })
 }
 
 export const getToken = () => {
@@ -48,8 +48,7 @@ export const getMenuByRouter = (list, access) => {
       if (item.meta && item.meta.href) obj.href = item.meta.href
       if (showThisMenuEle(item, access)) res.push(obj)
     }
-  });
-
+  })
 
   return res
 }
