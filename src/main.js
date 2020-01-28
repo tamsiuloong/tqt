@@ -18,7 +18,7 @@ import 'v-org-tree/dist/v-org-tree.css'
 import VuePreview from 'vue-preview'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-
+import { Slider } from 'vant'
 import '@/styles/index.scss' // global css
 // 实际打包时应该不引入mock
 /* eslint-disable */
@@ -33,6 +33,7 @@ Vue.use(TreeTable)
 Vue.use(VOrgTree)
 Vue.use(VuePreview)
 Vue.use(mavonEditor)
+Vue.use(Slider)
 /**
  * @description 注册admin内置插件
  */
