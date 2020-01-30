@@ -132,7 +132,7 @@
                 <CheckboxGroup v-model="addForm.correctArray" v-else-if="addForm.questionType==='2'">
                   <Checkbox v-for="i in addForm.items" :label="i.prefix"></Checkbox>
                 </CheckboxGroup>
-                <Input v-model="addForm.correct" type="textarea" v-else-if="addForm.questionType==='5'"  />
+                <Input v-model="addForm.correct" type="textarea" @on-focus="inputClick(addForm,'correct')" v-else-if="addForm.questionType==='5'"  />
               </FormItem>
             </Col>
             <Col span="2" style="text-align: center"/>
@@ -224,7 +224,7 @@
                     <CheckboxGroup v-model="updateForm.correctArray" v-else-if="updateForm.questionType==='2'">
                       <Checkbox v-for="i in updateForm.items" :label="i.prefix"></Checkbox>
                     </CheckboxGroup>
-                    <Input v-model="updateForm.correct" type="textarea" v-else-if="updateForm.questionType==='5'"  />
+                    <Input v-model="updateForm.correct" type="textarea" @on-focus="inputClick(updateForm,'correct')" v-else-if="updateForm.questionType==='5'"  />
                   </FormItem>
                 </Col>
                 <Col span="2" style="text-align: center"/>
@@ -237,516 +237,486 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import axios from '@/libs/api.request'
-    import 'quill/dist/quill.core.css'
-    import 'quill/dist/quill.snow.css'
-    import 'quill/dist/quill.bubble.css'
-    import { quillEditor } from 'vue-quill-editor'
-    export default {
-        components: {
-          quillEditor
+import axios from '@/libs/api.request'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
+export default {
+  components: {
+    quillEditor
+  },
+  data () {
+    return {
+      editorOption: {
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            ['clean'],
+            ['link', 'image', 'video']
+          ]
         },
-        data() {
-            return {
-                editorOption: {
-                  modules: {
-                    toolbar: [
-                      ['bold', 'italic', 'underline', 'strike'],
-                      ['blockquote', 'code-block'],
-                      [{ 'header': 1 }, { 'header': 2 }],
-                      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                      [{ 'script': 'sub' }, { 'script': 'super' }],
-                      [{ 'indent': '-1' }, { 'indent': '+1' }],
-                      [{ 'direction': 'rtl' }],
-                      [{ 'size': ['small', false, 'large', 'huge'] }],
-                      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                      [{ 'font': [] }],
-                      [{ 'color': [] }, { 'background': [] }],
-                      [{ 'align': [] }],
-                      ['clean'],
-                      ['link', 'image', 'video']
-                    ]
-                  },
-                  readOnly: true,
-                  theme: 'snow'
-                },
-                tableLoding:true,
-                loading:true,
-                count: 0,
-                gourpId: null,
-                pageSize: 20,
-                pageNo: 1,
-                totalPage: 0,
-                totalCount: 0,
-                keyWord:"",
-                columns1: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                      title: 'id',
-                      key: 'id'
-                    },
-                    {
-                      title: '题干',
-                      key: 'shortTitle',
-                      render: (h, params) => {
-                        let result = "未知";
-                        if(params.row.createTime)
-                        {
-                          result=params.row.shortTitle.substr(0,20);
-                        }
-                        return h('div', [
-                          h('strong', result)
-                        ]);
-                      }
-                    },
-                    {
-                        title: '题型',
-                        key: 'questionType',
-                        render: (h, params) => {
-                          let questionType = "未知";
-                          if(params.row.questionType==='1')
-                          {
-                            questionType="单选";
-                          }
-                          else if(params.row.questionType==='2')
-                          {
-                            questionType="多选";
-                          }
-                          else if(params.row.questionType==='3')
-                          {
-                            questionType="判断";
-                          }
-                          else if(params.row.questionType==='4')
-                          {
-                            questionType="填空";
-                          }
-                          else if(params.row.questionType==='5')
-                          {
-                            questionType="简答";
-                          }
-                          return h('div', [
-                            h('strong', questionType)
-                          ]);
-                        }
-                    },
-                    {
-                        title: '课程',
-                        key: 'courseId',
-                        render: (h, params) => {
-                          return h('div', [
-                            h('strong', params.row.course.name)
-                          ]);
-                        }
-                    },
-                    {
-                        title: '分数',
-                        key: 'score'
-                    },
-                    {
-                        title: '难度',
-                        key: 'difficult'
-                    },
-                    {
-                        title: '创建日期',
-                        key: 'createTime',
-                        render: (h, params) => {
-                          let time = "未知";
-                          if(params.row.createTime)
-                          {
-                            time=params.row.createTime.substr(0,10);
-                          }
-                          return h('div', [
-                            h('strong', time)
-                          ]);
-                        }
-                    }
-                ],
-                self: this,
-                page: [],
-                updateModal: false,
-                addModal: false,
-                updateForm: {
-                  questionType:"1",
-                  course:{},
-                  score:"",
-                  difficult:"",
-                  correct:"",
-                  correctArray:[],
-                  userId:"",
-                  status:"",
-                  deleted:"",
-                  items:[{
-                    prefix:"A",
-                    content:""
-                  },{
-                    prefix:"B",
-                    content:""
-                  },{
-                    prefix:"C",
-                    content:""
-                  },{
-                    prefix:"D",
-                    content:""
-                  }],
-                  analyze:""
-                },
-                addForm: {
-                        questionType:"1",
-                        course:{},
-                        score:"",
-                        difficult:"",
-                        correct:"",
-                        correctArray:[],
-                        userId:"",
-                        status:"",
-                        deleted:"",
-                        items:[{
-                          prefix:"A",
-                          content:""
-                        },{
-                          prefix:"B",
-                          content:""
-                        },{
-                          prefix:"C",
-                          content:""
-                        },{
-                          prefix:"D",
-                          content:""
-                        }],
-                        analyze:""
-                },
-                formRule: {
-                    id: [
-                        {required: true, message:'不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    questionType: [
-                        {required: true, message:'问题类型不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    'course.id': [
-                        {required: true, message:'不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    score: [
-                        {required: true, message:'分数不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    difficult: [
-                        {required: true, message:'难度不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    correct: [
-                        {required: true, message:'正确答案不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    userId: [
-                        {required: true, message:'创建用户不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    status: [
-                        {required: true, message:'状态不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    createTime: [
-                        {required: true, message:'创建日期不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    deleted: [
-                        {required: true, message:'删除不能为空',trigger:'blur'}
-                    ]
-                },
-                classesList:[
-                  {
-                    id:"",
-                    name:"--所有--"
-                  }
-                ],
-                courseList:[
-                {
-                  id:"",
-                  name:"--所有--"
-                }],
-                questionTypeList:[
-                  {
-                    id:"1",
-                    name:"单选题"
-                  },
-                  {
-                    id:"2",
-                    name:"多选题"
-                  },
-                  {
-                    id:"3",
-                    name:"判断题"
-                  },
-                  // {
-                  //   id:"4",
-                  //   name:"填空题"
-                  // },
-                  {
-                    id:"5",
-                    name:"简答题"
-                  }
-                ],
-                searchForm:{
-                  courseId:"",
-                  title:"",
-                  questionType:""
-                },
-                richEditor: {
-                  dialogVisible: false,
-                  object: null,
-                  parameterName: '',
-                  instance: ""
-                }
+        readOnly: true,
+        theme: 'snow'
+      },
+      tableLoding: true,
+      loading: true,
+      count: 0,
+      gourpId: null,
+      pageSize: 20,
+      pageNo: 1,
+      totalPage: 0,
+      totalCount: 0,
+      keyWord: '',
+      columns1: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: 'id',
+          key: 'id'
+        },
+        {
+          title: '题干',
+          key: 'shortTitle',
+          render: (h, params) => {
+            let result = '未知'
+            if (params.row.createTime) {
+              result = params.row.shortTitle.substr(0, 20)
             }
+            return h('div', [
+              h('strong', result)
+            ])
+          }
         },
-        methods: {
-            inputClick (object, parameterName) {
-              this.richEditor.instance = object[parameterName];
-              this.richEditor.object = object
-              this.richEditor.parameterName = parameterName
-              this.richEditor.dialogVisible = true
-            },
-            editorConfirm () {
-              let content = this.richEditor.instance
-              this.richEditor.object[this.richEditor.parameterName] = content
-              this.richEditor.dialogVisible = false
-            },
-            changeQuestionType(e,form){
-              // if(form.items)
-              // {
-                if(e==='1'||e==='2')
-                {
-                  form.items=[{
-                    prefix:"A",
-                    content:""
-                  },{
-                    prefix:"B",
-                    content:""
-                  },{
-                    prefix:"C",
-                    content:""
-                  },{
-                    prefix:"D",
-                    content:""
-                  }];
-                }
-                else if(e==='3')
-                {
-                  form.items=[{
-                    prefix:"A",
-                    content:"对"
-                  },{
-                    prefix:"B",
-                    content:"错"
-                  }];
-                }
-                else if(e==='5')
-                {
-                  form.items=null;
-                }
-              // }
-            },
-            questionItemRemove (index,form) {
-              form.items.splice(index, 1)
-            },
-            questionItemAdd (form) {
-              let items = form.items
-              let last = items[items.length - 1]
-              let newLastPrefix = String.fromCharCode(last.prefix.charCodeAt() + 1)
-              items.push({ id: null, prefix: newLastPrefix, content: '' })
-
-            },
-            change(e){
-                this.count = e.length;
-                if (e.length == 1) {
-                    if(e[0].questionItems.content)
-                    {
-                      e[0].items = JSON.parse(e[0].questionItems.content);
-                    }
-                    //如果是多选
-                    if(e[0].questionType==="2")
-                    {
-                      e[0].correctArray = e[0].correct.split(",");
-                    }
-                    this.updateForm = e[0];
-                }
-                this.setGroupId(e);
-            },
-            setGroupId(e)
-            {
-                this.groupId = [];
-
-                for (var i = 0; i < e.length; i++) {
-                    this.groupId.push(e[i].id);
-                }
-            },
-            reset(form){
-                this.$refs[form].resetFields();
-            },
-            addQuestion(){
-
-                this.addModal = true;
-            },
-            add(){
-                this.$refs['addForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        const question = this.addForm;
-                        axios.request({
-                            url: '/api/question',
-                            method: 'post',
-                            data: question
-                        }).then((result) => {
-                            this.gopage(this.pageNo);
-                            this.$refs['addForm'].resetFields();
-                            this.$Message.success('Success!');
-                            this.addModal = false;
-                            //清空表单
-                            this.addForm =  {
-                            questionType:"1",
-                            course:{},
-                            score:"",
-                            difficult:"",
-                            correct:"",
-                            correctArray:[],
-                            userId:"",
-                            status:"",
-                            deleted:"",
-                            items:[{
-                              prefix:"A",
-                              content:""
-                            },{
-                              prefix:"B",
-                              content:""
-                            },{
-                              prefix:"C",
-                              content:""
-                            },{
-                              prefix:"D",
-                              content:""
-                            }],
-                            analyze:""
-                          };
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            edit () {
-                if (this.count != 1) {
-                    this.updateModal = false;
-                    this.$Message.warning('请至少并只能选择一项');
-                }
-                else {
-                    this.updateModal = true;
-                }
-            },
-            update () {
-                this.$refs['updateForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        axios.request({
-                            url: '/api/question',
-                            method: 'put',
-                            data: this.updateForm
-                        }).then((result) => {
-                            this.updateModal = false,
-                            this.$Message.success('Success!');
-                            this.gopage(this.pageNo);
-                        }).catch((result)=>{
-                            this.$Message.error("操作异常："+result);
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            remove () {
-                if (this.groupId != null && this.groupId != "") {
-                    axios.request({
-                        url: '/api/question',
-                        method: 'delete',
-                        data: this.groupId
-                    }).then((result) => {
-                        if (result.data.code === 1) {
-                            this.$Message.success('Success!');
-                            this.gopage(this.pageNo);
-                        }
-                    }).catch((result)=>{
-                        this.$Message.error("操作异常："+result);
-                    });
-                } else {
-                    this.$Message.warning('请至少选择一项');
-                }
-            },
-            gopage(pageNo){
-                this.tableLoding=true;
-                const pageSize = this.pageSize;
-                const keyWord = this.keyWord;
-                axios.request({
-                    url: '/api/question/page',
-                    method: 'post',
-                    params: {pageNo, pageSize,keyWord},
-                    data:this.searchForm
-                }).then((result) => {
-                    this.page = result.data.data;
-                    this.tableLoding=false;
-                }).catch((result)=>{
-                    this.$Message.error("操作异常："+result);
-                });
-            },
-            cancel () {
-                this.$Message.info('点击了取消');
+        {
+          title: '题型',
+          key: 'questionType',
+          render: (h, params) => {
+            let questionType = '未知'
+            if (params.row.questionType === 1) {
+              questionType = '单选'
+            } else if (params.row.questionType === 2) {
+              questionType = '多选'
+            } else if (params.row.questionType === 3) {
+              questionType = '判断'
+            } else if (params.row.questionType === 4) {
+              questionType = '填空'
+            } else if (params.row.questionType === 5) {
+              questionType = '简答'
             }
+            return h('div', [
+              h('strong', questionType)
+            ])
+          }
         },
-        mounted: function () {
-            this.gopage(1);
-            axios.request({
-              url: '/api/course/all',
-              method: 'get'
-            }).then((result) => {
-              result.data.data.forEach(course=>{
-                this.courseList.push(course);
-              })
-            }).catch((result)=>{
-              this.$Message.error("哦豁，操作异常："+result);
-            });
-            axios.request({
-              url: '/api/classes/all',
-              method: 'get'
-            }).then((result) => {
-              result.data.data.forEach(classes=>{
-                this.classesList.push(classes);
-              })
-            }).catch((result)=>{
-              this.$Message.error("哦豁，操作异常："+result);
-            });
+        {
+          title: '课程',
+          key: 'courseName'
+        },
+        {
+          title: '分数',
+          key: 'score'
+        },
+        {
+          title: '难度',
+          key: 'difficult'
+        },
+        {
+          title: '创建日期',
+          key: 'createTime',
+          render: (h, params) => {
+            let time = '未知'
+            if (params.row.createTime) {
+              time = params.row.createTime.substr(0, 10)
+            }
+            return h('div', [
+              h('strong', time)
+            ])
+          }
+        },
+        {
+          title: '创建者',
+          key: 'createUser'
         }
+      ],
+      self: this,
+      page: [],
+      updateModal: false,
+      addModal: false,
+      updateForm: {
+        questionType: '1',
+        course: {},
+        score: '',
+        difficult: '',
+        correct: '',
+        correctArray: [],
+        userId: '',
+        status: '',
+        deleted: '',
+        items: [{
+          prefix: 'A',
+          content: ''
+        }, {
+          prefix: 'B',
+          content: ''
+        }, {
+          prefix: 'C',
+          content: ''
+        }, {
+          prefix: 'D',
+          content: ''
+        }],
+        analyze: ''
+      },
+      addForm: {
+        questionType: '1',
+        course: {},
+        score: '',
+        difficult: '',
+        correct: '',
+        correctArray: [],
+        userId: '',
+        status: '',
+        deleted: '',
+        items: [{
+          prefix: 'A',
+          content: ''
+        }, {
+          prefix: 'B',
+          content: ''
+        }, {
+          prefix: 'C',
+          content: ''
+        }, {
+          prefix: 'D',
+          content: ''
+        }],
+        analyze: ''
+      },
+      formRule: {
+        id: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        questionType: [
+          { required: true, message: '问题类型不能为空', trigger: 'blur' }
+        ],
+        'course.id': [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        score: [
+          { required: true, message: '分数不能为空', trigger: 'blur' }
+        ],
+        difficult: [
+          { required: true, message: '难度不能为空', trigger: 'blur' }
+        ],
+        correct: [
+          { required: true, message: '正确答案不能为空', trigger: 'blur' }
+        ],
+        userId: [
+          { required: true, message: '创建用户不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '状态不能为空', trigger: 'blur' }
+        ],
+        createTime: [
+          { required: true, message: '创建日期不能为空', trigger: 'blur' }
+        ],
+        deleted: [
+          { required: true, message: '删除不能为空', trigger: 'blur' }
+        ]
+      },
+      classesList: [
+        {
+          id: '',
+          name: '--所有--'
+        }
+      ],
+      courseList: [
+        {
+          id: '',
+          name: '--所有--'
+        }],
+      questionTypeList: [
+        {
+          id: '1',
+          name: '单选题'
+        },
+        {
+          id: '2',
+          name: '多选题'
+        },
+        {
+          id: '3',
+          name: '判断题'
+        },
+        // {
+        //   id:"4",
+        //   name:"填空题"
+        // },
+        {
+          id: '5',
+          name: '简答题'
+        }
+      ],
+      searchForm: {
+        courseId: '',
+        title: '',
+        questionType: ''
+      },
+      richEditor: {
+        dialogVisible: false,
+        object: null,
+        parameterName: '',
+        instance: ''
+      }
     }
+  },
+  methods: {
+    inputClick (object, parameterName) {
+      this.richEditor.instance = object[parameterName]
+      this.richEditor.object = object
+      this.richEditor.parameterName = parameterName
+      this.richEditor.dialogVisible = true
+    },
+    editorConfirm () {
+      let content = this.richEditor.instance
+      this.richEditor.object[this.richEditor.parameterName] = content
+      this.richEditor.dialogVisible = false
+    },
+    changeQuestionType (e, form) {
+      // if(form.items)
+      // {
+      if (e === '1' || e === '2') {
+        form.items = [{
+          prefix: 'A',
+          content: ''
+        }, {
+          prefix: 'B',
+          content: ''
+        }, {
+          prefix: 'C',
+          content: ''
+        }, {
+          prefix: 'D',
+          content: ''
+        }]
+      } else if (e === '3') {
+        form.items = [{
+          prefix: 'A',
+          content: '对'
+        }, {
+          prefix: 'B',
+          content: '错'
+        }]
+      } else if (e === '5') {
+        form.items = null
+      }
+      // }
+    },
+    questionItemRemove (index, form) {
+      form.items.splice(index, 1)
+    },
+    questionItemAdd (form) {
+      let items = form.items
+      let last = items[items.length - 1]
+      let newLastPrefix = String.fromCharCode(last.prefix.charCodeAt() + 1)
+      items.push({ id: null, prefix: newLastPrefix, content: '' })
+    },
+    change (e) {
+      this.count = e.length
+      if (e.length == 1) {
+        let id = e[0].id
+        axios.request({
+          url: '/api/question/' + id,
+          method: 'get'
+        }).then((result) => {
+          let data = result.data.data
+          if (data.questionItems.content) {
+            data.items = JSON.parse(data.questionItems.content)
+          }
+          // 如果是多选
+          if (data.questionType === '2') {
+            data.correctArray = data.correct.split(',')
+          }
+          this.updateForm = data
+        }).catch((result) => {
+          this.$Message.error('哦豁，操作异常：' + result)
+        })
+      }
+      this.setGroupId(e)
+    },
+    setGroupId (e) {
+      this.groupId = []
 
+      for (var i = 0; i < e.length; i++) {
+        this.groupId.push(e[i].id)
+      }
+    },
+    reset (form) {
+      this.$refs[form].resetFields()
+    },
+    addQuestion () {
+      this.addModal = true
+    },
+    add () {
+      this.$refs['addForm'].validate((valid) => {
+        if (valid) {
+          const question = this.addForm
+          axios.request({
+            url: '/api/question',
+            method: 'post',
+            data: question
+          }).then((result) => {
+            this.gopage(this.pageNo)
+            this.$refs['addForm'].resetFields()
+            this.$Message.success('Success!')
+            this.addModal = false
+            // 清空表单
+            this.addForm = {
+              questionType: '1',
+              course: {},
+              score: '',
+              difficult: '',
+              correct: '',
+              correctArray: [],
+              userId: '',
+              status: '',
+              deleted: '',
+              items: [{
+                prefix: 'A',
+                content: ''
+              }, {
+                prefix: 'B',
+                content: ''
+              }, {
+                prefix: 'C',
+                content: ''
+              }, {
+                prefix: 'D',
+                content: ''
+              }],
+              analyze: ''
+            }
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    edit () {
+      if (this.count != 1) {
+        this.updateModal = false
+        this.$Message.warning('请至少并只能选择一项')
+      } else {
+        this.updateModal = true
+      }
+    },
+    update () {
+      this.$refs['updateForm'].validate((valid) => {
+        if (valid) {
+          axios.request({
+            url: '/api/question',
+            method: 'put',
+            data: this.updateForm
+          }).then((result) => {
+            this.updateModal = false,
+            this.$Message.success('Success!')
+            this.gopage(this.pageNo)
+          }).catch((result) => {
+            this.$Message.error('操作异常：' + result)
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    remove () {
+      if (this.groupId != null && this.groupId != '') {
+        axios.request({
+          url: '/api/question',
+          method: 'delete',
+          data: this.groupId
+        }).then((result) => {
+          if (result.data.code === 1) {
+            this.$Message.success('Success!')
+            this.gopage(this.pageNo)
+          }
+        }).catch((result) => {
+          this.$Message.error('操作异常：' + result)
+        })
+      } else {
+        this.$Message.warning('请至少选择一项')
+      }
+    },
+    gopage (pageNo) {
+      this.tableLoding = true
+      const pageSize = this.pageSize
+      const keyWord = this.keyWord
+      axios.request({
+        url: '/api/question/page',
+        method: 'post',
+        params: { pageNo, pageSize, keyWord },
+        data: this.searchForm
+      }).then((result) => {
+        this.page = result.data.data
+        this.tableLoding = false
+      }).catch((result) => {
+        this.$Message.error('操作异常：' + result)
+      })
+    },
+    cancel () {
+      this.$Message.info('点击了取消')
+    }
+  },
+  mounted: function () {
+    this.gopage(1)
+    axios.request({
+      url: '/api/course/all',
+      method: 'get'
+    }).then((result) => {
+      result.data.data.forEach(course => {
+        this.courseList.push(course)
+      })
+    }).catch((result) => {
+      this.$Message.error('哦豁，操作异常：' + result)
+    })
+    axios.request({
+      url: '/api/classes/all',
+      method: 'get'
+    }).then((result) => {
+      result.data.data.forEach(classes => {
+        this.classesList.push(classes)
+      })
+    }).catch((result) => {
+      this.$Message.error('哦豁，操作异常：' + result)
+    })
+  }
+}
 
 </script>

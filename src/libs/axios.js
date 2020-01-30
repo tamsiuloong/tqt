@@ -75,7 +75,7 @@ class HttpRequest {
         }
       }
       // console.log(error);
-      if (error && error.message.indexOf('401') != -1 || error.message == 'Network Error') {
+      if (error && error.message.indexOf('401') != -1) {
         window.location.href = '/'
       }
       // addErrorLog(errorInfo)
