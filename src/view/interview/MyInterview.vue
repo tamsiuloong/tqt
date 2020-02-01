@@ -94,7 +94,7 @@
                             <FormItem label="附件" >
                               <Upload
                                 multiple ref="appendixs" :on-success="handleSuccess4Add" :format="['jpg','jpeg','png','doc','docx','doc','docx']"
-                                :max-size="204800" :on-error="handleError"
+                                :max-size="204800" :on-error="handleAppendixError"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleExceededError"
                                 :on-remove="handleRemove"
@@ -103,6 +103,8 @@
                                 :action="uploadImagePath">
                                 <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
                               </Upload>
+                              <span v-if="uploadAppendixFlag==1" style="color: red">正在上传...</span>
+                              <span v-if="uploadAppendixFlag==2" style="color: green" v-for="a in updateForm.appendixs.split(',')">{{a}}<br></span>
                             </FormItem>
                             </Col>
                                 <Col span="2" style="text-align: center"/>
@@ -110,15 +112,18 @@
                             <FormItem label="录音" >
                               <Upload ref="soundRecording"
                                 :on-success="Success4Add" :format="['mp3','aac','m4a']"
-                                :max-size="204800" :on-error="handleError"
+                                :max-size="204800"
+                                :on-error="handleSoundError"
                                 :on-format-error="handleSoundFormatError"
                                 :on-exceeded-size="handleSoundExceededError"
                                 :show-upload-list="true"
                                 :before-upload="handleSoundBeforeUpload4Add"
                                 :data="{companyName:addForm.companyName}"
                                 :action="uploadSoundPath">
-                                <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
+                                <Button icon="ios-cloud-upload-outline">上传录音附件</Button>
                               </Upload>
+                              <span v-if="uploadSoundFlag==1" style="color: red">正在上传...</span>
+                              <span v-if="uploadSoundFlag==2" style="color: green">{{addForm.soundRecording}}</span>
                             </FormItem>
                             </Col>
                     </Row>
@@ -202,15 +207,17 @@
                 <FormItem label="附件" >
                   <Upload ref="updateAppendixs"
                     multiple :on-success="handleSuccess4Add" :format="['jpg','jpeg','png','doc','docx']"
-                    :max-size="10240" :on-error="handleError"
+                    :max-size="10240" :on-error="handleAppendixError4Update"
                     :on-format-error="handleFormatError"
                     :on-exceeded-size="handleExceededError"
                     :on-remove="handleRemove"
                     :before-upload="handleBeforeUpload4Update"
                     :data="{companyName:updateForm.companyName}"
-                    :action="uploadImagePath">
-                    <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
+                    action="">
+                    <Button icon="ios-cloud-upload-outline">上传附件</Button>
                   </Upload>
+                  <span v-if="uploadAppendixFlag==1" style="color: red">正在上传...</span>
+                  <span v-if="uploadAppendixFlag==2" style="color: green" v-for="a in updateForm.appendixs.split(',')">{{a}}<br></span>
                 </FormItem>
               </Col>
               <Col span="2" style="text-align: center"/>
@@ -218,15 +225,17 @@
                 <FormItem label="录音" >
                   <Upload ref="updateSoundRecording"
                           :on-success="handleSoundSuccess" :format="['mp3','aac','m4a']"
-                          :max-size="102400" :on-error="handleSoundError"
+                          :max-size="102400" :on-error="handleSoundError4Update"
                           :on-format-error="handleSoundFormatError"
                           :on-exceeded-size="handleSoundExceededError"
                           :show-upload-list="true"
                           :before-upload="handleSoundBeforeUpload4Update"
                           :data="{companyName:updateForm.companyName}"
-                          :action="uploadSoundPath">
-                    <Button icon="ios-cloud-upload-outline">上传照片附件</Button>
+                          action="">
+                    <Button icon="ios-cloud-upload-outline">上传录音附件</Button>
                   </Upload>
+                  <span v-if="uploadSoundFlag==1" style="color: red">正在上传...</span>
+                  <span v-if="uploadSoundFlag==2" style="color: green">{{updateForm.soundRecording}}</span>
                 </FormItem>
               </Col>
             </Row>
@@ -280,7 +289,15 @@
     import AudioX from '_c/audiox'
     import { quillEditor } from 'vue-quill-editor'
     const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
+    let OSS = require('ali-oss')
 
+    let client = new OSS({
+      region: 'oss-cn-chengdu',
+      //云账号AccessKey有所有API访问权限，建议遵循阿里云安全最佳实践，部署在服务端使用RAM子账号或STS，部署在客户端使用STS。
+      accessKeyId: 'LTAI4Ftor1qjUDyduRFqiD4V',
+      accessKeySecret: 'tfWJ4rSlpmsykiLZjcdj2K8lnYJIgB',
+      bucket: 'tqt2020'
+    });
     export default {
       components: {
         quillEditor,
@@ -288,6 +305,8 @@
       },
         data() {
             return {
+                uploadAppendixFlag:0,
+                uploadSoundFlag : 0,
                 editorOptionForShow: {
                   // modules: {
                   //   toolbar: [
@@ -817,8 +836,70 @@
               this.addForm.appendixs = str;
               this.updateForm.appendixs = str;
             },
-            handleError ( error, file, fileList) {
-             this.$Message.error(error);
+            handleAppendixError ( error, file, fileList) {
+              // object表示上传到OSS的Object名称，localfile表示本地文件或者文件路径
+              let fileName = this.addForm.companyName+"_"+fileList.name;
+              this.uploadAppendixFlag = 1;
+              client.put('appendix/'+fileName, fileList).then( (r1)=> {
+                if(this.addForm.appendixs!='')
+                {
+                  this.addForm.appendixs+=","+fileName;
+                }
+                else
+                {
+                  this.addForm.appendixs+=fileName;
+                }
+
+                this.uploadAppendixFlag = 2;
+              }).catch( (err)=> {
+                this.uploadAppendixFlag = 1;
+              });
+            },
+            handleAppendixError4Update ( error, file, fileList) {
+              // object表示上传到OSS的Object名称，localfile表示本地文件或者文件路径
+              let fileName = this.updateForm.companyName+"_"+fileList.name;
+              this.uploadAppendixFlag = 1;
+              client.put('appendix/'+fileName, fileList).then( (r1)=> {
+                if(this.updateForm.appendixs!='')
+                {
+                  this.updateForm.appendixs+=","+fileName;
+                }
+                else
+                {
+                  this.updateForm.appendixs+=fileName;
+                }
+
+                this.uploadAppendixFlag = 2;
+              }).catch( (err)=> {
+                this.uploadAppendixFlag = 1;
+              });
+            },
+            handleSoundError ( error, file, fileList) {
+              // object表示上传到OSS的Object名称，localfile表示本地文件或者文件路径
+              let fileName = this.addForm.companyName+"_"+fileList.name;
+              this.uploadSoundFlag = 1;
+              client.put('sound/'+fileName, fileList).then( (r1)=> {
+                // console.log('put success: %j', r1);
+                this.addForm.soundRecording=fileName;
+                this.uploadSoundFlag = 2;
+              }).catch( (err)=> {
+                // console.error('error: %j', err);
+                this.uploadSoundFlag = 1;
+              });
+             // this.$Message.error(error);
+            },
+            handleSoundError4Update ( error, file, fileList) {
+              // object表示上传到OSS的Object名称，localfile表示本地文件或者文件路径
+              let fileName = this.updateForm.companyName+"_"+fileList.name;
+              this.uploadSoundFlag = 1;
+              client.put('sound/'+fileName, fileList).then( (r1)=> {
+                // console.log('put success: %j', r1);
+                this.updateForm.soundRecording=fileName;
+                this.uploadSoundFlag = 2;
+              }).catch( (err)=> {
+                // console.error('error: %j', err);
+                this.uploadSoundFlag = 1;
+              });
             },
             handleFormatError(file) {
               this.$Message.error("文件["+file.name+"]格式不对，只能是'jpg','jpeg','png','doc','docx'");
