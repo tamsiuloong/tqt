@@ -307,15 +307,15 @@ export default {
           key: 'questionType',
           render: (h, params) => {
             let questionType = '未知'
-            if (params.row.questionType === 1) {
+            if (params.row.questionType === '1') {
               questionType = '单选'
-            } else if (params.row.questionType === 2) {
+            } else if (params.row.questionType === '2') {
               questionType = '多选'
-            } else if (params.row.questionType === 3) {
+            } else if (params.row.questionType === '3') {
               questionType = '判断'
-            } else if (params.row.questionType === 4) {
+            } else if (params.row.questionType === '4') {
               questionType = '填空'
-            } else if (params.row.questionType === 5) {
+            } else if (params.row.questionType === '5') {
               questionType = '简答'
             }
             return h('div', [

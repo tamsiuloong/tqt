@@ -315,7 +315,7 @@ export default {
         },
         {
           title: '题干',
-          key: 'title'
+          key: 'shortTitle'
         },
         {
           title: '题型',
@@ -340,12 +340,7 @@ export default {
         },
         {
           title: '课程',
-          key: 'courseId',
-          render: (h, params) => {
-            return h('div', [
-              h('strong', params.row.course.name)
-            ])
-          }
+          key: 'courseName'
         },
         {
           title: '分数',
@@ -413,32 +408,27 @@ export default {
         },
         {
           title: 'id',
+          width: 60,
           key: 'id'
         },
         {
           title: '试卷名字',
+          width: 120,
           key: 'name'
         },
         {
           title: '课程',
-          key: 'courseId',
-          render: (h, params) => {
-            return h('div', [
-              h('strong', params.row.course.name)
-            ])
-          }
+          width: 120,
+          key: 'courseName'
         },
         {
           title: '班级',
-          key: 'courseId',
-          render: (h, params) => {
-            return h('div', [
-              h('strong', params.row.classes.name + '_' + params.row.classes.type)
-            ])
-          }
+          width: 120,
+          key: 'classesName'
         },
         {
           title: '状态',
+          width: 80,
           key: 'deleted',
           render: (h, params) => {
             return h('div', [
@@ -448,6 +438,7 @@ export default {
         },
         {
           title: '创建日期',
+          width: 120,
           key: 'createTime',
           render: (h, params) => {
             let time = '未知'
@@ -460,10 +451,15 @@ export default {
           }
         },
         {
+          title: '创建者',
+          width: 100,
+          key: 'createUser'
+        },
+        {
           title: '操作',
           key: 'action',
           fixed: 'right',
-          width: 220,
+
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -481,6 +477,20 @@ export default {
                   }
                 }
               }, '答卷管理'),
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    // 获取该调查的调查项目list
+                    let id = params.row.id
+                    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:1024' : 'http://exam.yaorange.com:88'
+                    window.open(baseUrl + '/#/do?id=' + id + '&cl=1')
+                  }
+                }
+              }, '预览'),
               h('Button', {
                 props: {
                   type: 'text',
