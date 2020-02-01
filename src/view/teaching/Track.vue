@@ -5,7 +5,7 @@
 
           <Col span="24">
             <Select filterable="true" placeholder="班级" v-model="searchForm.classId" @on-change="initStuList" style="width:200px">
-              <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+              <Option v-for="c in classesList" :value="c.id">{{c.name}}<span v-if="c.type">-</span>{{c.type}}</Option>
             </Select>
             <Select filterable="true" v-model="searchForm.stuName" placeholder="学生" style="width:200px">
               <Option v-for="s in stuList" :value="s.userInfo.name">{{s.userInfo.name}}</Option>
@@ -52,7 +52,7 @@
                             <Col span="11">
                             <FormItem label="班级" >
                               <Select filterable="true" placeholder="班级" style="width:200px" @on-change="initStuList">
-                                <Option v-for="c in classesList" :value="c.id">{{c.name}}-{{c.type}}</Option>
+                                <Option v-for="c in classesList" :value="c.id">{{c.name}}<span v-if="c.type">-</span>{{c.type}}</Option>
                               </Select>
                             </FormItem>
                             </Col>
@@ -89,7 +89,6 @@
               </Row>
             </Form>
         </Modal>
-
 
         <Modal
                 v-model="updateModal"
@@ -147,283 +146,266 @@
 </template>
 
 <script type="text/ecmascript-6">
-    // import fetch from '../../utils/fetch';
-    // import {dateFormat} from '../../utils/date';
-    import axios from '@/libs/api.request'
-    export default {
-        data() {
-            return {
-                tableLoding:true,
-                loading:true,
-                count: 0,
-                gourpId: null,
-                pageSize: 20,
-                pageNo: 1,
-                totalPage: 0,
-                totalCount: 0,
-                keyWord:"",
-                columns1: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                      title: '学生',
-                      key: 'userId',
-                      render: (h, params) => {
-                        return h('div', [
-                          h('strong', params.row.user.userInfo.name)
-                        ]);
-                      }
-                    },
-                    {
-                      title: '状态',
-                      key: 'status',
-                      render: (h, params) => {
-                        const status = parseInt(params.row.status);
-                        let statusToStr = "未知";
-                        if (status === 1) {
-                          statusToStr= "糟糕";
-                        }
-                        else if (status === 2) {
-                          statusToStr= "不好";
-                        }
-                        else if (status === 3) {
-                          statusToStr= "一般";
-                        }
-                        else if (status === 4) {
-                          statusToStr= "良好";
-                        }
-                        return h('div', [
-                          h('strong', statusToStr)
-                        ]);
-                      }
-                    },
-                    {
-                        title: '描述',
-                        key: 'description'
-                    },
-                    {
-                      title: '时间',
-                      key: 'createTime',
-                      width: 160
-                    },
-                ],
-                self: this,
-                page: [],
-                updateModal: false,
-                addModal: false,
-                updateForm: {
-                        id:"",
-                        description:"",
-                        user:{
-                          id:""
-                        },
-                        status:""
-                },
-                addForm: {
-                        description:"",
-                        user:{
-                          id:""
-                        },
-                        status:3
-                },
-                formRule: {
-                    id: [
-                        {required: true, message:'不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    description: [
-                        {required: true, message:'描述不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    "user.id": [
-                        {required: true, message:'学生不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    createTime: [
-                        {required: true, message:'创建日期不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    createBy: [
-                        {required: true, message:'创建者不能为空',trigger:'blur'}
-                    ]
-                    ,
-                    "status": [
-                        {required: true, message:'状态不能为空',trigger:'blur'}
-                    ]
-                },
-                classesList:[
-          {
-            id:"",
-            name:"--所有--"
+// import fetch from '../../utils/fetch';
+// import {dateFormat} from '../../utils/date';
+import axios from '@/libs/api.request'
+export default {
+  data () {
+    return {
+      tableLoding: true,
+      loading: true,
+      count: 0,
+      gourpId: null,
+      pageSize: 20,
+      pageNo: 1,
+      totalPage: 0,
+      totalCount: 0,
+      keyWord: '',
+      columns1: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: '学生',
+          key: 'userId',
+          render: (h, params) => {
+            return h('div', [
+              h('strong', params.row.user.userInfo.name)
+            ])
           }
-        ],
-                stuList:[],
-                statusList:[
-                  {id:1,name:"糟糕"},
-                  {id:2,name:"不好"},
-                  {id:3,name:"一般"},
-                  {id:4,name:"良好"}
-                ],
-                searchForm:{
-                  classId:"",
-                  stuName:"",
-                }
-            }
         },
-        methods: {
-            change(e){
-                this.count = e.length;
-                if (e.length == 1) {
-                    this.updateForm = e[0];
-                }
-                this.setGroupId(e);
-            },
-            setGroupId(e)
-            {
-                this.groupId = [];
-
-                for (var i = 0; i < e.length; i++) {
-                    this.groupId.push(e[i].id);
-                }
-            },
-            reset(form){
-                this.$refs[form].resetFields();
-            },
-            addTrack(){
-                this.addModal = true;
-            },
-            add(){
-                this.$refs['addForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        const track = this.addForm;
-                        axios.request({
-                            url: '/api/track',
-                            method: 'post',
-                            data: track
-                        }).then((result) => {
-                            this.gopage(this.pageNo);
-                            this.$refs['addForm'].resetFields();
-                            this.$Message.success('操作成功!');
-                            this.addModal = false;
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            edit () {
-                if (this.count != 1) {
-                    this.updateModal = false;
-                    this.$Message.warning('请至少并只能选择一项');
-                }
-                else {
-                    this.updateModal = true;
-                }
-            },
-            update () {
-                this.$refs['updateForm'].validate((valid)=>{
-                    if(valid)
-                    {
-                        axios.request({
-                            url: '/api/track',
-                            method: 'put',
-                            data: this.updateForm
-                        }).then((result) => {
-                            this.updateModal = false,
-                                    this.$Message.success('操作成功!');
-                            this.gopage(this.pageNo);
-                        }).catch((result)=>{
-                            this.$Message.error("哦豁，操作异常："+result);
-                        });
-                    }
-                    else
-                    {
-                        this.$Message.error("表单验证失败");
-                        setTimeout(()=>{
-                            this.loading=false;
-                            this.$nextTick(()=>{
-                                this.loading=true;
-                            });
-                        },1000);
-                    }
-                })
-            },
-            remove () {
-                if (this.groupId != null && this.groupId != "") {
-                    axios.request({
-                        url: '/api/track',
-                        method: 'delete',
-                        data: this.groupId
-                    }).then((result) => {
-                        if (result.data.code === 1) {
-                            this.$Message.success('操作成功!');
-                            this.gopage(this.pageNo);
-                        }
-                    }).catch((result)=>{
-                        this.$Message.error("哦豁，操作异常："+result);
-                    });
-                } else {
-                    this.$Message.warning('请至少选择一项');
-                }
-            },
-            gopage(pageNo){
-                                this.tableLoding=true;
-                this.pageNo = pageNo;
-                const pageSize = this.pageSize;
-                const keyWord = this.keyWord;
-                axios.request({
-                    url: '/api/track/search',
-                    method: 'post',
-                    params: {pageNo, pageSize,keyWord},
-                    data:this.searchForm
-                }).then((result) => {
-                                        this.page = result.data.data;
-                    this.tableLoding=false;
-                }).catch((result)=>{
-                    this.$Message.error("哦豁，操作异常："+result);
-                });
-            },
-            cancel () {
-                this.$Message.info('点击了取消');
-            },
-            initStuList(classId){
-              axios.request({
-                url: '/api/user/stu_list/'+classId,
-                method: 'get'
-              }).then((result) => {
-                this.stuList = result.data.data;
-              }).catch((result)=>{
-                this.$Message.error("哦豁，操作异常："+result);
-              });
+        {
+          title: '状态',
+          key: 'status',
+          render: (h, params) => {
+            const status = parseInt(params.row.status)
+            let statusToStr = '未知'
+            if (status === 1) {
+              statusToStr = '糟糕'
+            } else if (status === 2) {
+              statusToStr = '不好'
+            } else if (status === 3) {
+              statusToStr = '一般'
+            } else if (status === 4) {
+              statusToStr = '良好'
             }
+            return h('div', [
+              h('strong', statusToStr)
+            ])
+          }
         },
-        mounted: function () {
-          axios.request({
-            url: '/api/classes/all',
-            method: 'get'
-          }).then((result) => {
-            result.data.data.forEach(classes=>{
-          this.classesList.push(classes);
-        })
-          }).catch((result)=>{
-            this.$Message.error("哦豁，操作异常："+result);
-          });
-
-            this.gopage(this.pageNo);
+        {
+          title: '描述',
+          key: 'description'
+        },
+        {
+          title: '时间',
+          key: 'createTime',
+          width: 160
         }
+      ],
+      self: this,
+      page: [],
+      updateModal: false,
+      addModal: false,
+      updateForm: {
+        id: '',
+        description: '',
+        user: {
+          id: ''
+        },
+        status: ''
+      },
+      addForm: {
+        description: '',
+        user: {
+          id: ''
+        },
+        status: 3
+      },
+      formRule: {
+        id: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '描述不能为空', trigger: 'blur' }
+        ],
+        'user.id': [
+          { required: true, message: '学生不能为空', trigger: 'blur' }
+        ],
+        createTime: [
+          { required: true, message: '创建日期不能为空', trigger: 'blur' }
+        ],
+        createBy: [
+          { required: true, message: '创建者不能为空', trigger: 'blur' }
+        ],
+        'status': [
+          { required: true, message: '状态不能为空', trigger: 'blur' }
+        ]
+      },
+      classesList: [
+        {
+          id: '',
+          name: '--所有--'
+        }
+      ],
+      stuList: [],
+      statusList: [
+        { id: 1, name: '糟糕' },
+        { id: 2, name: '不好' },
+        { id: 3, name: '一般' },
+        { id: 4, name: '良好' }
+      ],
+      searchForm: {
+        classId: '',
+        stuName: ''
+      }
     }
+  },
+  methods: {
+    change (e) {
+      this.count = e.length
+      if (e.length == 1) {
+        this.updateForm = e[0]
+      }
+      this.setGroupId(e)
+    },
+    setGroupId (e) {
+      this.groupId = []
 
+      for (var i = 0; i < e.length; i++) {
+        this.groupId.push(e[i].id)
+      }
+    },
+    reset (form) {
+      this.$refs[form].resetFields()
+    },
+    addTrack () {
+      this.addModal = true
+    },
+    add () {
+      this.$refs['addForm'].validate((valid) => {
+        if (valid) {
+          const track = this.addForm
+          axios.request({
+            url: '/api/track',
+            method: 'post',
+            data: track
+          }).then((result) => {
+            this.gopage(this.pageNo)
+            this.$refs['addForm'].resetFields()
+            this.$Message.success('操作成功!')
+            this.addModal = false
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    edit () {
+      if (this.count != 1) {
+        this.updateModal = false
+        this.$Message.warning('请至少并只能选择一项')
+      } else {
+        this.updateModal = true
+      }
+    },
+    update () {
+      this.$refs['updateForm'].validate((valid) => {
+        if (valid) {
+          axios.request({
+            url: '/api/track',
+            method: 'put',
+            data: this.updateForm
+          }).then((result) => {
+            this.updateModal = false,
+            this.$Message.success('操作成功!')
+            this.gopage(this.pageNo)
+          }).catch((result) => {
+            this.$Message.error('哦豁，操作异常：' + result)
+          })
+        } else {
+          this.$Message.error('表单验证失败')
+          setTimeout(() => {
+            this.loading = false
+            this.$nextTick(() => {
+              this.loading = true
+            })
+          }, 1000)
+        }
+      })
+    },
+    remove () {
+      if (this.groupId != null && this.groupId != '') {
+        axios.request({
+          url: '/api/track',
+          method: 'delete',
+          data: this.groupId
+        }).then((result) => {
+          if (result.data.code === 1) {
+            this.$Message.success('操作成功!')
+            this.gopage(this.pageNo)
+          }
+        }).catch((result) => {
+          this.$Message.error('哦豁，操作异常：' + result)
+        })
+      } else {
+        this.$Message.warning('请至少选择一项')
+      }
+    },
+    gopage (pageNo) {
+      this.tableLoding = true
+      this.pageNo = pageNo
+      const pageSize = this.pageSize
+      const keyWord = this.keyWord
+      axios.request({
+        url: '/api/track/search',
+        method: 'post',
+        params: { pageNo, pageSize, keyWord },
+        data: this.searchForm
+      }).then((result) => {
+        this.page = result.data.data
+        this.tableLoding = false
+      }).catch((result) => {
+        this.$Message.error('哦豁，操作异常：' + result)
+      })
+    },
+    cancel () {
+      this.$Message.info('点击了取消')
+    },
+    initStuList (classId) {
+      axios.request({
+        url: '/api/user/stu_list/' + classId,
+        method: 'get'
+      }).then((result) => {
+        this.stuList = result.data.data
+      }).catch((result) => {
+        this.$Message.error('哦豁，操作异常：' + result)
+      })
+    }
+  },
+  mounted: function () {
+    axios.request({
+      url: '/api/classes/all/false',
+      method: 'get'
+    }).then((result) => {
+      result.data.data.forEach(classes => {
+        this.classesList.push(classes)
+      })
+    }).catch((result) => {
+      this.$Message.error('哦豁，操作异常：' + result)
+    })
+
+    this.gopage(this.pageNo)
+  }
+}
 
 </script>
