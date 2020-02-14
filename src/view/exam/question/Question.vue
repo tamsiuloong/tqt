@@ -83,13 +83,13 @@
           <Row>
             <!-- 循环便利row中的两个元素-->
             <Col span="11">
-              <FormItem label="难度">
+              <FormItem label="难度" >
                 <Rate v-model="addForm.difficult" />
               </FormItem>
             </Col>
             <Col span="2" style="text-align: center"/>
             <Col span="11">
-              <FormItem label="分数">
+              <FormItem label="分数" >
                 <InputNumber :max="1000" :min="1" v-model="addForm.score"></InputNumber>
               </FormItem>
 
@@ -97,7 +97,7 @@
           </Row>
           <Row>
             <Col span="22">
-              <FormItem label="题干">
+              <FormItem label="题干" >
                 <Input v-model="addForm.title"  @on-focus="inputClick(addForm,'title')" />
               </FormItem>
             </Col>
@@ -116,7 +116,7 @@
           </Row>
           <Row>
             <Col span="22">
-              <FormItem label="解析">
+              <FormItem label="解析" >
                 <Input v-model="addForm.analyze"  @on-focus="inputClick(addForm,'analyze')"/>
               </FormItem>
             </Col>
@@ -125,7 +125,7 @@
           </Row>
           <Row>
             <Col span="22">
-              <FormItem label="正确答案">
+              <FormItem label="正确答案" >
                 <RadioGroup v-model="addForm.correct" v-if="addForm.questionType==='1'||addForm.questionType==='3'">
                   <Radio v-for="i in addForm.items" :label="i.prefix"></Radio>
                 </RadioGroup>
@@ -208,7 +208,7 @@
               </Row>
               <Row>
                 <Col span="22">
-                  <FormItem label="解析">
+                  <FormItem label="解析" >
                     <Input v-model="updateForm.analyze"  @on-focus="inputClick(updateForm,'analyze')"/>
                   </FormItem>
                 </Col>
@@ -217,7 +217,7 @@
               </Row>
               <Row>
                 <Col span="22">
-                  <FormItem label="正确答案">
+                  <FormItem label="正确答案" >
                     <RadioGroup v-model="updateForm.correct" v-if="updateForm.questionType==='1'||updateForm.questionType==='3'">
                       <Radio v-for="i in updateForm.items" :label="i.prefix"></Radio>
                     </RadioGroup>
@@ -437,6 +437,21 @@ export default {
         ],
         deleted: [
           { required: true, message: '删除不能为空', trigger: 'blur' }
+        ],
+        analyze: [
+          { required: true, message: '给大家梳理一下思路', trigger: 'blur' }
+        ],
+        score: [
+          { required: true, message: '分数不能为空', trigger: 'blur' }
+        ],
+        'title': [
+          { required: true, message: '题干不能为空', trigger: 'blur' }
+        ],
+        difficult: [
+          { required: true, message: '难度不能为空', trigger: 'blur' }
+        ],
+        correct: [
+          { required: true, message: '正确答案不能为空', trigger: 'blur' }
         ]
       },
       classesList: [
@@ -572,56 +587,103 @@ export default {
     addQuestion () {
       this.addModal = true
     },
-    add () {
-      this.$refs['addForm'].validate((valid) => {
-        if (valid) {
-          const question = this.addForm
-          axios.request({
-            url: '/api/question',
-            method: 'post',
-            data: question
-          }).then((result) => {
-            this.gopage(this.pageNo)
-            this.$refs['addForm'].resetFields()
-            this.$Message.success('Success!')
-            this.addModal = false
-            // 清空表单
-            this.addForm = {
-              questionType: '1',
-              course: {},
-              score: '',
-              difficult: '',
-              correct: '',
-              correctArray: [],
-              userId: '',
-              status: '',
-              deleted: '',
-              items: [{
-                prefix: 'A',
-                content: ''
-              }, {
-                prefix: 'B',
-                content: ''
-              }, {
-                prefix: 'C',
-                content: ''
-              }, {
-                prefix: 'D',
-                content: ''
-              }],
-              analyze: ''
-            }
+    validateForm (form) {
+      if (!form.score) {
+        this.$Message.error('分数不能为空')
+        setTimeout(() => {
+          this.loading = false
+          this.$nextTick(() => {
+            this.loading = true
           })
-        } else {
-          this.$Message.error('表单验证失败')
-          setTimeout(() => {
-            this.loading = false
-            this.$nextTick(() => {
-              this.loading = true
+        }, 1000)
+        return false
+      }
+      if (!form.title) {
+        this.$Message.error('题干不能为空')
+        setTimeout(() => {
+          this.loading = false
+          this.$nextTick(() => {
+            this.loading = true
+          })
+        }, 1000)
+        return false
+      }
+      if (!form.analyze) {
+        this.$Message.error('解析不能为空')
+        setTimeout(() => {
+          this.loading = false
+          this.$nextTick(() => {
+            this.loading = true
+          })
+        }, 1000)
+        return false
+      }
+      if (!form.correct) {
+        this.$Message.error('正确答案不能为空')
+        setTimeout(() => {
+          this.loading = false
+          this.$nextTick(() => {
+            this.loading = true
+          })
+        }, 1000)
+        return false
+      }
+      return true
+    },
+    add () {
+      // 由于ui bug，有些验证需要自己来
+      if (this.validateForm(this.addForm)) {
+        this.$refs['addForm'].validate((valid) => {
+          if (valid) {
+            const question = this.addForm
+
+            axios.request({
+              url: '/api/question',
+              method: 'post',
+              data: question
+            }).then((result) => {
+              this.gopage(this.pageNo)
+              this.$refs['addForm'].resetFields()
+              this.$Message.success('Success!')
+              this.addModal = false
+              // 清空表单
+              this.addForm = {
+                questionType: '1',
+                course: {},
+                score: '',
+                difficult: '',
+                correct: '',
+                correctArray: [],
+                userId: '',
+                status: '',
+                deleted: '',
+                items: [{
+                  prefix: 'A',
+                  content: ''
+                }, {
+                  prefix: 'B',
+                  content: ''
+                }, {
+                  prefix: 'C',
+                  content: ''
+                }, {
+                  prefix: 'D',
+                  content: ''
+                }],
+                analyze: ''
+              }
             })
-          }, 1000)
-        }
-      })
+          } else {
+            this.$Message.error('表单验证失败')
+            setTimeout(() => {
+              this.loading = false
+              this.$nextTick(() => {
+                this.loading = true
+              })
+            }, 1000)
+          }
+        })
+      }
     },
     edit () {
       if (this.count != 1) {
@@ -632,29 +694,31 @@ export default {
       }
     },
     update () {
-      this.$refs['updateForm'].validate((valid) => {
-        if (valid) {
-          axios.request({
-            url: '/api/question',
-            method: 'put',
-            data: this.updateForm
-          }).then((result) => {
-            this.updateModal = false,
-            this.$Message.success('Success!')
-            this.gopage(this.pageNo)
-          }).catch((result) => {
-            this.$Message.error('操作异常：' + result)
-          })
-        } else {
-          this.$Message.error('表单验证失败')
-          setTimeout(() => {
-            this.loading = false
-            this.$nextTick(() => {
-              this.loading = true
+      if (this.validateForm(this.updateForm)) {
+        this.$refs['updateForm'].validate((valid) => {
+          if (valid) {
+            axios.request({
+              url: '/api/question',
+              method: 'put',
+              data: this.updateForm
+            }).then((result) => {
+              this.updateModal = false,
+              this.$Message.success('Success!')
+              this.gopage(this.pageNo)
+            }).catch((result) => {
+              this.$Message.error('操作异常：' + result)
             })
-          }, 1000)
-        }
-      })
+          } else {
+            this.$Message.error('表单验证失败')
+            setTimeout(() => {
+              this.loading = false
+              this.$nextTick(() => {
+                this.loading = true
+              })
+            }, 1000)
+          }
+        })
+      }
     },
     remove () {
       if (this.groupId != null && this.groupId != '') {

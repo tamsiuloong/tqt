@@ -58,100 +58,6 @@
         <br>
 
         <Modal
-                v-model="addModal"
-                title="添加学习反馈"
-                :mask-closable="true"
-                :loading="loading"
-                @on-ok="add"
-                @on-cancel="cancel"
-                width="80%"
-                height="90%"
-        >
-            <Form ref="addForm" :model="addForm" :rules="formRule" :label-width="80">
-                    <Row>
-                        <!-- 循环便利row中的两个元素-->
-                      <Col span="10">
-                        <FormItem label="课程" prop="course.id">
-                          <Select v-model="addForm.course.id" style="width:200px">
-                            <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                          </Select>
-                        </FormItem>
-                      </Col>
-                      <Col span="2" style="text-align: center"/>
-                      <Col span="6">
-                        <FormItem label="课程第几天" >
-                          <InputNumber :max="20" :min="1"  v-model="updateForm.dayNum"/>
-                        </FormItem>
-                      </Col>
-                      <Col span="2" style="text-align: center"/>
-                      <Col span="6">
-                        <FormItem label="吸收情况" prop="absorption">
-                          <!--<Input  :max="100" :min="0"  v-model="addForm.absorption"/>-->
-                          <!--<InputNumber-->
-                            <!--:max="100"-->
-                            <!--v-model="addForm.absorption"-->
-                            <!--:formatter="value => `${value}%`"-->
-                            <!--:parser="value => value.replace('%', '')"></InputNumber>-->
-                          <Select v-model="addForm.absorption" style="width:200px">
-                            <Option  value="0-10">10%</Option>
-                            <Option  value="10-20">20%</Option>
-                            <Option  value="20-30">30%</Option>
-                            <Option  value="30-40">40%</Option>
-                            <Option  value="40-50">50%</Option>
-                            <Option  value="50-60">60%</Option>
-                            <Option  value="60-70">70%</Option>
-                            <Option  value="70-80">80%</Option>
-                            <Option  value="80-90">90%</Option>
-                            <Option  value="90-100">100%</Option>
-                          </Select>
-                        </FormItem>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <!-- 循环便利row中的两个元素-->
-                      <Col span="22">
-                        <FormItem label="不清楚的地方" prop="notClear">
-                          <Input type="textarea" v-model="addForm.notClear"/>
-                        </FormItem>
-                      </Col>
-
-                    </Row>
-              <Row>
-                <Col span="22">
-                  <FormItem label="明日目标" prop="plan">
-                    <Input type="textarea" v-model="addForm.plan"/>
-                  </FormItem>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col span="22">
-                  <FormItem label="实施方案" prop="todo">
-                    <Input type="textarea" v-model="addForm.todo"/>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span="22">
-                  <FormItem label="自我觉察" >
-                    <Input type="textarea" v-model="addForm.selfCheck"/>
-                  </FormItem>
-                </Col>
-              </Row>
-
-                    <Row>
-                        <Col span="22">
-                          <FormItem label="调整方案" >
-                            <Input type="textarea" v-model="addForm.adjustment"/>
-                          </FormItem>
-                        </Col>
-
-                    </Row>
-
-            </Form>
-        </Modal>
-
-        <Modal
                 v-model="updateModal"
                 title="学习反馈详情"
                 :mask-closable="true"
@@ -163,7 +69,7 @@
 
               <Row>
                 <!-- 循环便利row中的两个元素-->
-                <Col span="10">
+                <Col span="6">
                   <FormItem label="课程" prop="course.id">
                     <Select v-model="updateForm.course.id" style="width:200px">
                       <Option v-for="item in courseList" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -176,7 +82,9 @@
                     <InputNumber :max="20" :min="1"  v-model="updateForm.dayNum"/>
                   </FormItem>
                 </Col>
-                <Col span="2" style="text-align: center"/>
+
+              </Row>
+              <Row>
                 <Col span="6">
                   <FormItem label="吸收情况" prop="absorption">
                     <Select v-model="updateForm.absorption" >
@@ -193,15 +101,42 @@
                     </Select>
                   </FormItem>
                 </Col>
+                <Col span="2" style="text-align: center"/>
+                <Col span="6">
+                  <FormItem label="任务进度" prop="progress">
+                    <Select v-model="updateForm.progress" >
+                      <Option  value="0">0%</Option>
+                      <Option  value="10">10%</Option>
+                      <Option  value="20">20%</Option>
+                      <Option  value="30">30%</Option>
+                      <Option  value="40">40%</Option>
+                      <Option  value="50">50%</Option>
+                      <Option  value="60">60%</Option>
+                      <Option  value="70">70%</Option>
+                      <Option  value="80">80%</Option>
+                      <Option  value="90">90%</Option>
+                      <Option  value="100">100%</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col span="2" style="text-align: center"/>
+                <Col span="6">
+                  <FormItem label="学习感受" prop="feeling">
+                    <Select v-model="updateForm.feeling" >
+                      <Option  value="优">优</Option>
+                      <Option  value="良">良</Option>
+                      <Option  value="中">中</Option>
+                      <Option  value="差">差</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
               </Row>
               <Row>
-                <!-- 循环便利row中的两个元素-->
                 <Col span="22">
-                  <FormItem label="不清楚的地方" prop="notClear">
+                  <FormItem label="不清楚的地方" prop="plan">
                     <Input type="textarea" readonly v-model="updateForm.notClear"/>
                   </FormItem>
                 </Col>
-
               </Row>
               <Row>
                 <Col span="22">
@@ -264,11 +199,12 @@ export default {
         },
         {
           title: '学员',
-          key: 'stuName'
+          key: 'stuName',
+          width: 80
         },
         {
           title: '课程',
-          width: 100,
+          width: 120,
           key: 'courseId',
           render: (h, params) => {
             return h('div', [
@@ -278,11 +214,35 @@ export default {
         },
         {
           title: '第几天',
-          width: 50,
+          width: 70,
           key: 'dayNum'
-        }, {
+        },
+        {
           title: '吸收情况',
           key: 'absorption',
+          width: 90,
+          sortable: true,
+          render: (h, params) => {
+            return h('div', [
+              h('strong', params.row.absorption ? params.row.absorption + '%' : '')
+            ])
+          }
+        },
+        {
+          title: '任务进度',
+          key: 'progress',
+          width: 70,
+          sortable: true,
+          render: (h, params) => {
+            return h('div', [
+              h('strong', params.row.progress ? params.row.progress + '%' : '')
+            ])
+          }
+        },
+        {
+          title: '学习感受',
+          key: 'feeling',
+          width: 70,
           sortable: true
         },
         {
@@ -517,47 +477,7 @@ export default {
       }
     },
     update () {
-      this.$refs['updateForm'].validate((valid) => {
-        if (valid) {
-          axios.request({
-            url: '/api/feedback',
-            method: 'put',
-            data: this.updateForm
-          }).then((result) => {
-            this.updateModal = false,
-            this.$Message.success('操作成功!')
-            this.gopage(this.pageNo)
-          }).catch((result) => {
-            this.$Message.error('哦豁，操作异常：' + result)
-          })
-        } else {
-          this.$Message.error('表单验证失败')
-          setTimeout(() => {
-            this.loading = false
-            this.$nextTick(() => {
-              this.loading = true
-            })
-          }, 1000)
-        }
-      })
-    },
-    remove () {
-      if (this.groupId != null && this.groupId != '') {
-        axios.request({
-          url: '/api/feedback',
-          method: 'delete',
-          data: this.groupId
-        }).then((result) => {
-          if (result.data.code === 1) {
-            this.$Message.success('操作成功!')
-            this.gopage(this.pageNo)
-          }
-        }).catch((result) => {
-          this.$Message.error('哦豁，操作异常：' + result)
-        })
-      } else {
-        this.$Message.warning('请至少选择一项')
-      }
+      this.updateModal = false
     },
     gopage (pageNo) {
       this.tableLoding = true
